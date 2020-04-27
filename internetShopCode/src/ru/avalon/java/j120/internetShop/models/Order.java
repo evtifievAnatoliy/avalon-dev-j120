@@ -15,6 +15,7 @@ import java.util.List;
  */
 public class Order {
     
+    private int orderNumber;
     private LocalDateTime dateTheOrderWasGreated;
     private String contactPerson;
     private Address adressToDelivery;

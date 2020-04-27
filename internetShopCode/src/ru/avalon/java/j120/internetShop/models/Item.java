@@ -10,7 +10,7 @@ package ru.avalon.java.j120.internetShop.models;
  * @author eag
  */
 public class Item {
-    private int article;
+    private final int article;
     private String name;
     private String color;
     private int price;
@@ -26,6 +26,26 @@ public class Item {
     public Item(int article, String name, String color, int price, int stockBalance) {
         this(article, name, price, stockBalance);
         this.color = color;  
+    }
+
+    public int getArticle() {
+        return article;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public int getStockBalance() {
+        return stockBalance;
     }
     
     

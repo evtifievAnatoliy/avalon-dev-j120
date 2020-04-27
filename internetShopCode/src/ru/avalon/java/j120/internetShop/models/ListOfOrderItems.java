@@ -11,7 +11,15 @@ import ru.avalon.java.j120.internetShop.commons.*;
  * @author eag
  */
 public class ListOfOrderItems{
-    private Item item;
-    private int numberOfItems;
-    private int sumOfItems;
+    private final Item item;
+    private final int numberOfItems;
+    private final int amountOfItems;
+
+    public ListOfOrderItems(Item item, int numberOfItems) {
+        this.item = item;
+        this.numberOfItems = numberOfItems;
+        this.amountOfItems = this.item.getPrice() * this.numberOfItems;
+    
+    }
+    
 }
