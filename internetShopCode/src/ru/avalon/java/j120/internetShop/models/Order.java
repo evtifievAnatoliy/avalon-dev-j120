@@ -13,16 +13,17 @@ import java.util.List;
  *
  * @author eag
  */
+// класс заказа
 public class Order {
     
-    private int orderNumber;
-    private LocalDateTime dateTheOrderWasGreated;
-    private String contactPerson;
-    private Address adressToDelivery;
-    private String contactPersonTelephone;
-    private byte disconte;
-    private StatusOrder statusOrder;
+    private int orderNumber; //порядковый номер заказа
+    private LocalDateTime dateTheOrderWasGreated; // текущая дата
+    private Person contactPerson; // данные клиента
+    private Address adressToDelivery; // адрес доставки
+    private String contactPersonTelephone; // номер телефона
+    private byte disconte; // скидка клиента
+    private StatusOrder statusOrder; // статус заказа
     
-    private List<ListOfOrderItems> orderItems;
+    private List<ListOfOrderItems> orderItems; // товары в заказе
     
 }

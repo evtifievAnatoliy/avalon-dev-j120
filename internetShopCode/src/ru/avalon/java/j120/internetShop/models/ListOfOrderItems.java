@@ -11,9 +11,9 @@ import ru.avalon.java.j120.internetShop.commons.*;
  * @author eag
  */
 public class ListOfOrderItems{
-    private final Item item;
-    private final int numberOfItems;
-    private final int amountOfItems;
+    private final Item item; // товар
+    private final int numberOfItems; // кол-во товара в заказе
+    private final int amountOfItems; // сумма (товар на кол-во)
 
     public ListOfOrderItems(Item item, int numberOfItems) {
         this.item = item;

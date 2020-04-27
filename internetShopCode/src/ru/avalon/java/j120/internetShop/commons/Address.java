@@ -9,13 +9,14 @@ package ru.avalon.java.j120.internetShop.commons;
  *
  * @author eag
  */
+// класс адрес
 public class Address {
     
-    private String contry;
-    private String region;
-    private String street;
-    private String house;
-    private int flat;
+    private String contry; // страна
+    private String region; // регион
+    private String street; // улица
+    private String house; // дом
+    private int flat; // квартира
 
     public Address(String contry, String region, String street, String house, int flat) {
         this.contry = contry;

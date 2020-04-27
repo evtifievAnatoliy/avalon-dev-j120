@@ -9,6 +9,9 @@ package ru.avalon.java.j120.internetShop.commons;
  *
  * @author eag
  */
+// статус заказа
+// выбирается из готовых вариантов
+
 public enum StatusOrder {
     ГОТОВИТСЯ,
     ОТГРУЖЕН,
