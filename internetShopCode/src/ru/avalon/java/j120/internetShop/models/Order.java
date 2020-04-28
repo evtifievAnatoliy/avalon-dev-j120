@@ -24,6 +24,6 @@ public class Order {
     private byte disconte; // скидка клиента
     private StatusOrder statusOrder; // статус заказа
     
-    private List<ListOfOrderItems> orderItems; // товары в заказе
+    private List<OrderPosition> orderItems; // товары в заказе
     
 }
