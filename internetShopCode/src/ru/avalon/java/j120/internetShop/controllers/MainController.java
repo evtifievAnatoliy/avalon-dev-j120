@@ -37,7 +37,7 @@ public class MainController {
         int price; // цена
         int stockBalance; //остаток на складе
         
-        Scanner in = new Scanner(System.in);
+        Scanner in = new Scanner(System.in, "Cp866");
         System.out.println("Добавление нового товара");
         System.out.println("Введите артикул товара: ");
         article = in.nextLine();
@@ -51,9 +51,16 @@ public class MainController {
         stockBalance = in.nextInt();
         in.close();
         
-        Item item = new Item (article, name, color, price, stockBalance);
-        items.add(item);
-        System.out.println("Товар: " + item.toString() + " добавлен.");
+        try{
+            Item item = new Item (new String(article.getBytes(), "UTF-8"), new String(name.getBytes(), "UTF-8"), new String(color.getBytes(), "UTF-8"), price, stockBalance);
+            items.add(item);
+            System.out.println("Товар: " + item.toString() + " добавлен.");
+        }
+        catch(Exception ex){
+            System.out.println("Error. Не удалось прочитать товар с артикулом: " + article + ". Exeption: " + ex.getMessage());
+            
+        }
+        
     }
     
     public void writeItems(){

@@ -53,7 +53,7 @@ public class ItemsReaderWriter {
                 String[] strSplit=str.split(";");
                 // пробуем создать объект товар и добавить его в коллекцию
                 try{
-                    Item item = new Item(new String(strSplit[0].getBytes(), "UTF-8"), new String(strSplit[1].getBytes(), "UTF-8"), new String(strSplit[2].getBytes(), "UTF-8"), Integer.parseInt(strSplit[3]), Integer.parseInt(strSplit[4]));
+                    Item item = new Item(strSplit[0], strSplit[1], strSplit[2], Integer.parseInt(strSplit[3]), Integer.parseInt(strSplit[4]));
                     items.add(item);
                 }
                 catch(Exception ex){
