@@ -8,7 +8,8 @@ package ru.avalon.java.j120.internetShop.models;
 /**
  *
  * @author eag
- */
+ */ 
+// класс товаров
 public class Item {
     private final String article; // артикул товара
     private String name; // название
@@ -48,7 +49,15 @@ public class Item {
     public int getStockBalance() {
         return stockBalance;
     }
-
+    
+    // метод уменьшения остатка
+    public void reduceTheStockBalance(int numberReduce) {
+        if (this.stockBalance >= numberReduce)
+            this.stockBalance = this.stockBalance - numberReduce;
+        else
+            System.out.println("Error. Остаток на складе меньше кол-ва заказанных позиций товара.");
+    }
+    
     @Override
     public String toString() {
         return article + ";" + name + ";" + color + ";" + price + ";" + stockBalance;

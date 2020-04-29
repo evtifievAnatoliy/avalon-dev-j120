@@ -23,26 +23,29 @@ import ru.avalon.java.j120.internetShop.models.Item;
 public class ItemsReaderWriter {
     
     // метод записи в файл. На входе путь записи и  коллекция Товаров
-    public static void writeItems(String itemsPath, ArrayList<Item> items){
+    public void writeItems(String itemsPath, ArrayList<Item> items){
         	
-        // пробуем записать в файл
-        try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(itemsPath)))
-        {
-            // перевод строки в байты
-            for (Item item : items)
+        if (items !=null) // проверяем на наличие элементов в коллекции
+        { 
+            // пробуем записать в файл
+            try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(itemsPath)))
             {
-                bufferedWriter.write(item.toString() + "\n");
-	    }       
+                // перевод строки в байты
+                for (Item item : items)
+                {
+                    bufferedWriter.write(item.toString() + "\n");
+                }       
+            }
+            catch(IOException ex){
+            //ex.printStackTrace();
+            }
         }
-        catch(IOException ex){
-            System.out.println("Error. Не удалось записать список товаров");
-            ex.printStackTrace();
-        }
-        
+        else
+            System.out.println("Товары в файл не записаны, т.к. список товаров пуст.");
     }
     
     // метод чтения из файла. На входе путь записи и  коллекция Товаров
-    public static ArrayList<Item> readItems(String itemsPath){
+    public ArrayList<Item> readItems(String itemsPath){
                 
         // создаем коллекцию товаров
         ArrayList<Item> items = new ArrayList<Item>();
@@ -58,7 +61,7 @@ public class ItemsReaderWriter {
                 }
                 catch(Exception ex){
                     System.out.println("Error. Не удалось прочитать товар с артикулом: " + strSplit[0] + ". Exeption: " + ex.getMessage());
-                    break;
+                    return null;
                 }
                
             }
@@ -66,8 +69,7 @@ public class ItemsReaderWriter {
         return items;
         }
         catch(IOException ex){
-            System.out.println("Error. Не удалось прочитать список товаров");
-            ex.printStackTrace();
+            //ex.printStackTrace();
             return null;
         }
     }
