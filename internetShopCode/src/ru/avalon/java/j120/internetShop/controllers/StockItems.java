@@ -35,5 +35,10 @@ public class StockItems {
     public Iterable<Item> getItems() {
         return items;
     }
+
+    public ArrayList<Item> getItemsAsList() {
+        return items;
+    }
+    
     
 }

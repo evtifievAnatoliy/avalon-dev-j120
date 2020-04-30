@@ -38,7 +38,7 @@ public class MainController {
     
         
     public void writeItems() throws IOException{
-        itemsReaderWriter.writeItems(itemsPath, stockItems.getItems());
+        itemsReaderWriter.writeItems(itemsPath, stockItems.getItemsAsList());
     }
     
     
