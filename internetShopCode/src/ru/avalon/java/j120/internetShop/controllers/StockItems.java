@@ -34,7 +34,7 @@ public class StockItems {
     }
 
     public ArrayList<Item> getItems() {
-        return items;
+        return this.items;
     }
     
 }

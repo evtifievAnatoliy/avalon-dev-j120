@@ -33,8 +33,10 @@ public class ItemsReaderWriter {
             for (Item item : items)
             {
                 bufferedWriter.write(item.toString() + "\n");
-            }       
+            }
+            bufferedWriter.write("Проверка" + "\n");
         }
+        
         else
             System.out.println("Товары в файл не записаны, т.к. список товаров пуст.");
     }
