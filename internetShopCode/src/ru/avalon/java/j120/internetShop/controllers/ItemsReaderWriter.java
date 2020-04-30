@@ -8,6 +8,7 @@ package ru.avalon.java.j120.internetShop.controllers;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -23,54 +24,35 @@ import ru.avalon.java.j120.internetShop.models.Item;
 public class ItemsReaderWriter {
     
     // метод записи в файл. На входе путь записи и  коллекция Товаров
-    public void writeItems(String itemsPath, ArrayList<Item> items){
+    public void writeItems(String itemsPath, ArrayList<Item> items) throws IOException{
         	
         if (items !=null) // проверяем на наличие элементов в коллекции
         { 
             // пробуем записать в файл
-            try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(itemsPath)))
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(itemsPath));
+            for (Item item : items)
             {
-                // перевод строки в байты
-                for (Item item : items)
-                {
-                    bufferedWriter.write(item.toString() + "\n");
-                }       
-            }
-            catch(IOException ex){
-            //ex.printStackTrace();
-            }
+                bufferedWriter.write(item.toString() + "\n");
+            }       
         }
         else
             System.out.println("Товары в файл не записаны, т.к. список товаров пуст.");
     }
     
     // метод чтения из файла. На входе путь записи и  коллекция Товаров
-    public ArrayList<Item> readItems(String itemsPath){
+    public ArrayList<Item> readItems(String itemsPath) throws FileNotFoundException, IOException{
                 
         // создаем коллекцию товаров
         ArrayList<Item> items = new ArrayList<Item>();
-        try (BufferedReader br = new BufferedReader(new FileReader(itemsPath))){
+        BufferedReader br = new BufferedReader(new FileReader(itemsPath));
             String str;
             while ((str = br.readLine()) != null) {
-                
                 String[] strSplit=str.split(";");
                 // пробуем создать объект товар и добавить его в коллекцию
-                try{
-                    Item item = new Item(strSplit[0], strSplit[1], strSplit[2], Integer.parseInt(strSplit[3]), Integer.parseInt(strSplit[4]));
-                    items.add(item);
-                }
-                catch(Exception ex){
-                    System.out.println("Error. Не удалось прочитать товар с артикулом: " + strSplit[0] + ". Exeption: " + ex.getMessage());
-                    return null;
-                }
-               
+                Item item = new Item(strSplit[0], strSplit[1], strSplit[2], Integer.parseInt(strSplit[3]), Integer.parseInt(strSplit[4]));
+                items.add(item);
             }
-              
         return items;
-        }
-        catch(IOException ex){
-            //ex.printStackTrace();
-            return null;
-        }
+        
     }
 }

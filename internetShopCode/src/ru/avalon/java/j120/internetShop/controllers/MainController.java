@@ -5,6 +5,7 @@
  */
 package ru.avalon.java.j120.internetShop.controllers;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import ru.avalon.java.j120.internetShop.models.Item;
@@ -18,23 +19,28 @@ import ru.avalon.java.j120.internetShop.models.Item;
 
 public class MainController {
     
-    ArrayList<Item> items;
-    String itemsPath;
+    private String itemsPath;
+    private StockItems stockItems;
 
     ItemsReaderWriter itemsReaderWriter = new ItemsReaderWriter();
     
-    public MainController(String itemsPath) {
+    public MainController(String itemsPath) throws IOException {
         this.itemsPath = itemsPath;
-        this.items = itemsReaderWriter.readItems(itemsPath);
+        stockItems = new StockItems(itemsReaderWriter.readItems(itemsPath));
+        
+    }
+
+    public StockItems getStockItems() {
+        return stockItems;
     }
     
-    // метод добавление нового товара в коллекцию товаров
-    public void addItem(Item item){
-        this.items.add(item);
+    
+    
+        
+    public void writeItems() throws IOException{
+        itemsReaderWriter.writeItems(itemsPath, stockItems.getItems());
     }
     
-    public void writeItems(){
-        itemsReaderWriter.writeItems(itemsPath, items);
-    }
+    
     
 }

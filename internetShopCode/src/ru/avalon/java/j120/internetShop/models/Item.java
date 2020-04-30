@@ -18,6 +18,9 @@ public class Item {
     private int stockBalance; //остаток на складе
 
     public Item(String article, String name, int price, int stockBalance) {
+        if (price <= 0){
+            throw new IllegalArgumentException("Цена не может быть меньше или равна 0");
+        }           
         this.article = article;
         this.name = name;
         this.price = price;
@@ -55,7 +58,7 @@ public class Item {
         if (this.stockBalance >= numberReduce)
             this.stockBalance = this.stockBalance - numberReduce;
         else
-            System.out.println("Error. Остаток на складе меньше кол-ва заказанных позиций товара.");
+            throw new IllegalArgumentException("Error. Остаток на складе меньше кол-ва заказанных позиций товара.");
     }
     
     @Override
