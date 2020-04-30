@@ -19,8 +19,8 @@ public class Main {
         
         MainController mainController = new MainController(itemsPath);
         StockItems stockItems = mainController.getStockItems();
-        stockItems.addItem(new Item("7000002001001", "Платье трикотажное", "Фиолетовый", 10, 9));
-        //mainController.writeItems();
+        stockItems.addItem(new Item("7000002001007", "Платье трикотажное", "Зеленый", 1800, 9));
+        mainController.writeItems();
         
         System.out.println("Hello");
     }
