@@ -14,15 +14,10 @@ public class Main {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        final String  itemsPath= "D:\\Java\\avalon-dev-j120\\internetShopCode\\items.csv";
+        final String  itemsPath= "D:\\Толик учеба\\Java\\avalon-dev-j120\\internetShopCode\\items.csv";
         
         MainController mainController = new MainController(itemsPath);
-        /*Scanner in = new Scanner(System.in, "Cp866");
-        System.out.println("KEY");
-        in.next();
-        in.close();*/
-        //mainController.addItem();
-        System.out.println("KEY");
+        mainController.addItem(new Item("7000002001005", "Платье трикотажное", "Серый", 1900, 9));
         mainController.writeItems();
         
         System.out.println("Hello");

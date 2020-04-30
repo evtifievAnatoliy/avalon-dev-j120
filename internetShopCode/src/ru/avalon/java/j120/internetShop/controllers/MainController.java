@@ -29,38 +29,8 @@ public class MainController {
     }
     
     // метод добавление нового товара в коллекцию товаров
-    public void addItem(){
-        
-        String article; // артикул товара
-        String name; // название
-        String color; //цвет
-        int price; // цена
-        int stockBalance; //остаток на складе
-        
-        Scanner in = new Scanner(System.in, "Cp866");
-        System.out.println("Добавление нового товара");
-        System.out.println("Введите артикул товара: ");
-        article = in.nextLine();
-        System.out.println("Введите название товара: ");
-        name = in.nextLine();
-        System.out.println("Введите цвет товара: ");
-        color = in.nextLine();
-        System.out.println("Введите цену товара: ");
-        price = in.nextInt();
-        System.out.println("Введите остаток товара на складе: ");
-        stockBalance = in.nextInt();
-        in.close();
-        
-        try{
-            Item item = new Item (new String(article.getBytes(), "UTF-8"), new String(name.getBytes(), "UTF-8"), new String(color.getBytes(), "UTF-8"), price, stockBalance);
-            items.add(item);
-            System.out.println("Товар: " + item.toString() + " добавлен.");
-        }
-        catch(Exception ex){
-            System.out.println("Error. Не удалось прочитать товар с артикулом: " + article + ". Exeption: " + ex.getMessage());
-            
-        }
-        
+    public void addItem(Item item){
+        this.items.add(item);
     }
     
     public void writeItems(){
