@@ -27,13 +27,12 @@ public class StockItems {
         for (Item i: items)
             if(i.getArticle().equals(item.getArticle()))
             {
-                System.out.println("Error. Не удалось записать товар. Товар с артикулом: " + item.getArticle() + " уже есть в базе. ");
-                break;
+                throw new IllegalArgumentException("Error. Не удалось записать товар. Товар с артикулом: " + item.getArticle() + " уже есть в базе. ");
             }
         this.items.add(item);
     }
 
-    public ArrayList<Item> getItems() {
+    public Iterable<Item> getItems() {
         return items;
     }
     

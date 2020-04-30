@@ -11,7 +11,27 @@ package ru.avalon.java.j120.internetShop.commons;
  */
 // класс клиента
 public class Person {
-    String name;
+    private String name;
+    private Address adressToDelivery; // адрес доставки
+    private String phoneNumber; // номер телефона
+
+    public Person(String name, Address adressToDelivery, String phoneNumber) {
+        this.name = name;
+        this.adressToDelivery = adressToDelivery;
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Address getAdressToDelivery() {
+        return adressToDelivery;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
     
     
 }

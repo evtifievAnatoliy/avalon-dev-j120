@@ -41,7 +41,7 @@ public class ItemsReaderWriter {
     }
     
     // метод чтения из файла. На входе путь записи и  коллекция Товаров
-    public ArrayList<Item> readItems(String itemsPath) throws FileNotFoundException, IOException{
+    public ArrayList<Item> readItems(String itemsPath) throws IOException{
                 
         // создаем коллекцию товаров
         ArrayList<Item> items = new ArrayList<Item>();
