@@ -5,9 +5,11 @@ import ru.avalon.java.j120.internetShop.controllers.StockItems;
 import ru.avalon.java.j120.internetShop.controllers.OrderManager;
 import ru.avalon.java.j120.internetShop.controllers.CustomersManager;
 import ru.avalon.java.j120.internetShop.commons.*;
+import ru.avalon.java.j120.internetShop.configuration.Configuration;
 
 import java.io.*;
-import java.util.Scanner;
+import java.util.Properties;
+
 
 
 
@@ -19,9 +21,13 @@ public class Main {
      */
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         // TODO code application logic here
-        final String  itemsPath= "D:\\Java\\avalon-dev-j120\\internetShopCode\\items.csv";
-        final String  ordersPath= "D:\\Java\\avalon-dev-j120\\internetShopCode\\orders.dat";
-        final String  customersPath= "D:\\Java\\avalon-dev-j120\\internetShopCode\\customers.dat";
+        
+        Configuration configuration = Configuration.getInstance();
+        final String  itemsPath = configuration.getProperties().getProperty("items.Path");
+        final String  ordersPath = configuration.getProperties().getProperty("orders.Path");
+        final String  customersPath= configuration.getProperties().getProperty("customers.Path");
+        
+        
         
         //общий объект работающий с товарами и заказами
         MainController mainController = new MainController(itemsPath, ordersPath, customersPath);
@@ -66,6 +72,22 @@ public class Main {
         
         System.out.println("Приложение закончило свою работу.");
     }
+    public static Properties getProperties(String path){
+        
+        FileInputStream fis;
+        Properties property = new Properties();
+        
+        try {
+            fis = new FileInputStream(path);
+            property.load(fis);
+
+            return property;
+            
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Error. Путь настройки: " + path + " отсуствует.");
+        }
+                
+    } 
 
    
 }
