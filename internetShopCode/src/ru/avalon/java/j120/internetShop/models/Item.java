@@ -5,12 +5,14 @@
  */
 package ru.avalon.java.j120.internetShop.models;
 
+import java.io.Serializable;
+
 /**
  *
  * @author eag
  */ 
 // класс товаров
-public class Item {
+public class Item implements Serializable{
     private final String article; // артикул товара
     private String name; // название
     private String color; //цвет

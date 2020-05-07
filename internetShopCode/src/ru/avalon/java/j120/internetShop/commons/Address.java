@@ -5,12 +5,14 @@
  */
 package ru.avalon.java.j120.internetShop.commons;
 
+import java.io.Serializable;
+
 /**
  *
  * @author eag
  */
 // класс адрес
-public class Address {
+public class Address implements Serializable{
     
     private String contry; // страна
     private String region; // регион

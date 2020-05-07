@@ -5,12 +5,14 @@
  */
 package ru.avalon.java.j120.internetShop.commons;
 
+import java.io.Serializable;
+
 /**
  *
  * @author user
  */
 // класс клиента
-public class Person {
+public class Person implements Serializable{
     private String name;
     private Address adressToDelivery; // адрес доставки
     private String phoneNumber; // номер телефона

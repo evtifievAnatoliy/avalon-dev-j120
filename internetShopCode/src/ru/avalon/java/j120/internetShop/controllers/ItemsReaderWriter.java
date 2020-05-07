@@ -37,7 +37,7 @@ public class ItemsReaderWriter {
             }
         }
         else
-            System.out.println("Товары в файл не записаны, т.к. список товаров пуст.");
+            throw new IllegalArgumentException("Error. Товары в файл не записаны, т.к. список товаров пуст. ");
     }
     
     // метод чтения из файла. На входе путь записи и  коллекция Товаров

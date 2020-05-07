@@ -4,13 +4,14 @@
  * and open the template in the editor.
  */
 package ru.avalon.java.j120.internetShop.models;
+import java.io.Serializable;
 import ru.avalon.java.j120.internetShop.commons.*;
 
 /**
  *
  * @author eag
  */
-public class OrderPosition{
+public class OrderPosition implements Serializable{
     private final Item item; // товар
     private final int numberOfItems; // кол-во товара в заказе
     private final int amountOfItems; // сумма (товар на кол-во)
@@ -21,5 +22,11 @@ public class OrderPosition{
         this.amountOfItems = this.item.getPrice() * this.numberOfItems;
     
     }
+
+    public Item getItem() {
+        return item;
+    }
+    
+    
     
 }
