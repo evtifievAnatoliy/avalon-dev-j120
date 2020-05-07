@@ -13,7 +13,7 @@ import ru.avalon.java.j120.internetShop.models.Item;
  * @author user
  */
 // Класс который редактирует и добавляет товары
-// Считывает коллекции из файлов и записывает их в файл
+
 public class StockItems {
 
     private ArrayList<Item> items;

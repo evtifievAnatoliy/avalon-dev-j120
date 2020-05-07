@@ -21,18 +21,23 @@ public class MainController {
     
     private String itemsPath;
     private String ordersPath;
+    private String customersPath;
     private StockItems stockItems;
     private OrderManager orderManager;
+    private CustomersManager customersManager;
+    
 
     ItemsReaderWriter itemsReaderWriter = new ItemsReaderWriter();
     OrderReaderWriter orderReaderWriter = new OrderReaderWriter();
+    CustomersReaderWriter customersReaderWriter = new CustomersReaderWriter();
     
-    public MainController(String itemsPath, String ordersPath) throws IOException, ClassNotFoundException {
+    public MainController(String itemsPath, String ordersPath, String customersPath) throws IOException, ClassNotFoundException {
         this.itemsPath = itemsPath;
         this.ordersPath = ordersPath;
+        this.customersPath = customersPath;
         stockItems = new StockItems(itemsReaderWriter.readItems(itemsPath));
         orderManager = new OrderManager(orderReaderWriter.readOrders(ordersPath));
-        
+        customersManager = new CustomersManager(customersReaderWriter.readCustomers(customersPath));
     }
 
     public StockItems getStockItems() {
@@ -42,6 +47,12 @@ public class MainController {
     public OrderManager getOrderManager() {
         return orderManager;
     }
+
+    public CustomersManager getCustomersManager() {
+        return customersManager;
+    }
+    
+    
     
     
     public void writeItems() throws IOException{
@@ -52,7 +63,9 @@ public class MainController {
         orderReaderWriter.writeOrders(ordersPath, orderManager.getOrders());
     }
     
-    
+    public void writeCustomers() throws IOException{
+        customersReaderWriter.writeCustomers(customersPath, customersManager.getCustomersAsList());
+    }
     
     
 }
