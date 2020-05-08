@@ -1,27 +1,73 @@
 package ru.avalon.java.j120.internetShop;
-import ru.avalon.java.j120.internetShop.controllers.MainController;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Container;
+import ru.avalon.java.j120.internetShop.controllers.*;
 import ru.avalon.java.j120.internetShop.models.*;
-import ru.avalon.java.j120.internetShop.controllers.StockItems;
-import ru.avalon.java.j120.internetShop.controllers.OrderManager;
-import ru.avalon.java.j120.internetShop.controllers.CustomersManager;
 import ru.avalon.java.j120.internetShop.commons.*;
 import ru.avalon.java.j120.internetShop.configuration.Configuration;
+import ru.avalon.java.j120.internetShop.ui.MainForm;
 
 import java.io.*;
 import java.util.Properties;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import javax.swing.filechooser.FileView;
 
 
 
 
 
-public class Main {
+
+
+public class Main extends JFrame{
 
     /**
      * @param args the command line arguments
      */
+        
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         // TODO code application logic here
         
+        MainForm mainForm = new MainForm();
+        mainForm.setVisible(true);
+        
+        /*
+        JFrame mainForm = new JFrame("internetShop");
+        mainForm.setBounds(100, 100, 500, 500);
+        mainForm.setVisible(true);
+        mainForm.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        Container container = mainForm.getContentPane();
+        container.setLayout(new BoxLayout( container, BoxLayout.X_AXIS));
+        JPanel p = new JPanel();
+        p.setLayout(new BoxLayout( container, BoxLayout.Y_AXIS));
+        p.add(new JLabel("Label 1"));
+        p.add(new JLabel("Label 2"));        
+        p.add(new JLabel("Label 3"));
+        
+        container.add(p);
+        
+        p = new JPanel();
+        p.setLayout(new BoxLayout( container, BoxLayout.Y_AXIS));
+        p.add(new JLabel("Label 5"));
+        p.add(new JLabel("Label 6"));        
+        p.add(new JLabel("Label 7"));
+        p.setBorder((BorderFactory.createEtchedBorder()));
+        
+        container.add(p);
+        */
+        /*
+        JLabel jLabel = new JLabel("internetShop", SwingConstants.LEFT);
+        mainForm.add(jLabel);
+        */
+        mainForm.setVisible(true);
+        
+        /*
         Configuration configuration = Configuration.getInstance();
         final String  itemsPath = configuration.getProperties().getProperty("items.Path");
         final String  ordersPath = configuration.getProperties().getProperty("orders.Path");
@@ -70,24 +116,9 @@ public class Main {
                 
         //--------------------------------
         
-        System.out.println("Приложение закончило свою работу.");
+        System.out.println("Приложение закончило свою работу.");*/
     }
-    public static Properties getProperties(String path){
-        
-        FileInputStream fis;
-        Properties property = new Properties();
-        
-        try {
-            fis = new FileInputStream(path);
-            property.load(fis);
-
-            return property;
-            
-        } catch (IOException e) {
-            throw new IllegalArgumentException("Error. Путь настройки: " + path + " отсуствует.");
-        }
-                
-    } 
+     
 
    
 }
