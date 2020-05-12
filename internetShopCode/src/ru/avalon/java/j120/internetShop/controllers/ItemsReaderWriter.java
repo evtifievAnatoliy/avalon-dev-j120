@@ -44,7 +44,13 @@ public class ItemsReaderWriter {
     
     // метод чтения из файла. На входе путь записи и  коллекция Товаров
     public ArrayList<Item> readItems() throws IOException{
-                
+        
+        File file = new File(Configuration.getInstance().getProperty("items.Path"));
+        if(!file.exists()){
+            ArrayList<Item> items = new ArrayList<Item>();
+            return items;
+        }
+        
         // создаем коллекцию товаров
         ArrayList<Item> items = new ArrayList<Item>();
             try(BufferedReader br = new BufferedReader(new FileReader(Configuration.getInstance().getProperty("items.Path")))){

@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package ru.avalon.java.j120.internetShop.controllers;
+import java.io.File;
 import ru.avalon.java.j120.internetShop.models.*;
 
 
@@ -48,6 +49,12 @@ public class OrderReaderWriter {
     // метод чтения из файла. На входе путь записи и  коллекция Товаров
     public ArrayList<Order> readOrders() throws IOException, ClassNotFoundException{
                 
+        File file = new File(Configuration.getInstance().getProperty("orders.Path"));
+        if(!file.exists()){
+            ArrayList<Order> orders = new ArrayList<Order>();
+            return orders;
+        }
+        
         try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream(Configuration.getInstance().getProperty("orders.Path")))){
             // пробуем десериализовать коллекцию заказов
             ArrayList<Order> orders = (ArrayList<Order>) ois.readObject();
