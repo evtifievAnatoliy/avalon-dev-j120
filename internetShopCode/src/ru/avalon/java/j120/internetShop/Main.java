@@ -69,12 +69,12 @@ public class Main extends JFrame{
         
         /*
         Configuration configuration = Configuration.getInstance();
-        final String  itemsPath = configuration.getProperties().getProperty("items.Path");
-        final String  ordersPath = configuration.getProperties().getProperty("orders.Path");
-        final String  customersPath= configuration.getProperties().getProperty("customers.Path");
+        final String  itemsPath = configuration.getProperty("items.Path");
+        final String  ordersPath = configuration.getProperty("orders.Path");
+        final String  customersPath= configuration.getProperty("customers.Path");
+        */
         
-        
-        
+        /*
         //общий объект работающий с товарами и заказами
         MainController mainController = new MainController(itemsPath, ordersPath, customersPath);
         

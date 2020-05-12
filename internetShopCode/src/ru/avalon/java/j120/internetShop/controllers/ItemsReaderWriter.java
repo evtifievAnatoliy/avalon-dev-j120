@@ -13,6 +13,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import ru.avalon.java.j120.internetShop.configuration.Configuration;
 import ru.avalon.java.j120.internetShop.models.Item;
 
 /**
@@ -23,13 +24,15 @@ import ru.avalon.java.j120.internetShop.models.Item;
 
 public class ItemsReaderWriter {
     
+    Configuration configuration = Configuration.getInstance();
+           
     // метод записи в файл. На входе путь записи и  коллекция Товаров
-    public void writeItems(String itemsPath, ArrayList<Item> items) throws IOException{
+    public void writeItems(ArrayList<Item> items) throws IOException{
         	
         if (items !=null) // проверяем на наличие элементов в коллекции
         { 
             // пробуем записать в файл
-            try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(itemsPath))){
+            try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(configuration.getProperty("items.Path")))){
                 for (Item item : items)
                 {
                     bufferedWriter.write(item.toString() + "\n");
@@ -41,11 +44,11 @@ public class ItemsReaderWriter {
     }
     
     // метод чтения из файла. На входе путь записи и  коллекция Товаров
-    public ArrayList<Item> readItems(String itemsPath) throws IOException{
+    public ArrayList<Item> readItems() throws IOException{
                 
         // создаем коллекцию товаров
         ArrayList<Item> items = new ArrayList<Item>();
-            try(BufferedReader br = new BufferedReader(new FileReader(itemsPath))){
+            try(BufferedReader br = new BufferedReader(new FileReader(configuration.getProperty("items.Path")))){
                 String str;
                 while ((str = br.readLine()) != null) {
                     String[] strSplit=str.split(";");

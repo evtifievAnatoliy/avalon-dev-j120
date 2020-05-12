@@ -18,12 +18,12 @@ import java.util.ArrayList;
 // класс который работает с созданием и редактированием заказов 
 public class OrderManager {
     
-    private ArrayList<Order> orders;
+    private Order order;
     private ArrayList<OrderPosition> orderItems = new ArrayList<OrderPosition>();
 
     
-    public OrderManager(ArrayList<Order> orders) {
-        this.orders = orders;
+    public OrderManager(Order order) {
+        this.order = order;
     }
           
     
@@ -48,25 +48,13 @@ public class OrderManager {
     
     }
     
-    // метод добавление нового заказа
-    public void addOrder(Person contactPerson, byte disconte, StatusOrder statusOrder){
+// метод добавление нового заказа
+    public void addOrder(Person contactPerson, byte disconte, StatusOfOrder statusOrder){
         
-        if (this.orders == null) //проверка на нулевое значение
-            this.orders = new ArrayList<Order>();
+        if (this.order == null) //проверка на нулевое значение
+            this.order = new Order();
         
         this.orders.add(new Order(this.orders.size(), contactPerson, disconte, statusOrder, this.orderItems));
-                     
     }
-
-   
-    public ArrayList<Order> getOrders() {
-        return orders;
-    }
-
-   
-   
-    
-    
-    
     
 }

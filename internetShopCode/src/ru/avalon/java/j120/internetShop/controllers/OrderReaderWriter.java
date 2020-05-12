@@ -16,6 +16,7 @@ import java.io.IOException;
 
 
 import java.util.ArrayList;
+import ru.avalon.java.j120.internetShop.configuration.Configuration;
 
 
 /**
@@ -26,13 +27,15 @@ import java.util.ArrayList;
 
 public class OrderReaderWriter {
     
+    Configuration configuration = Configuration.getInstance();
+           
     // метод записи в файл. На входе путь записи и  коллекция Товаров
-    public void writeOrders(String ordersPath, ArrayList<Order> orders) throws IOException{
+    public void writeOrders(ArrayList<Order> orders) throws IOException{
         	
         if (orders !=null) // проверяем на наличие элементов в коллекции
         { 
             // пробуем записать в файл коллекцию заказов (сериализовать)
-            try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(ordersPath))){
+            try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(configuration.getProperty("orders.Path")))){
                 //for (Item item : items)
                 //{
                     oos.writeObject(orders);
@@ -44,18 +47,18 @@ public class OrderReaderWriter {
     }
     
     // метод чтения из файла. На входе путь записи и  коллекция Товаров
-    public ArrayList<Order> readOrders(String ordersPath) throws IOException, ClassNotFoundException{
+    public ArrayList<Order> readOrders() throws IOException, ClassNotFoundException{
                 
-        try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream(ordersPath))){
-        // пробуем десериализовать коллекцию заказов
-        ArrayList<Order> orders = (ArrayList<Order>) ois.readObject();
+        try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream(configuration.getProperty("orders.Path")))){
+            // пробуем десериализовать коллекцию заказов
+            ArrayList<Order> orders = (ArrayList<Order>) ois.readObject();
                         
-        return orders;
+            return orders;
             
         }
             
         catch (IOException e){
-            return null;
+            throw new IllegalArgumentException("Error. Ошибка чтения файла списка заказов. ");
         }
     }
 }

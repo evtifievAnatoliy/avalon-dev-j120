@@ -35,9 +35,9 @@ public class MainController {
         this.itemsPath = itemsPath;
         this.ordersPath = ordersPath;
         this.customersPath = customersPath;
-        stockItems = new StockItems(itemsReaderWriter.readItems(itemsPath));
-        orderManager = new OrderManager(orderReaderWriter.readOrders(ordersPath));
-        customersManager = new CustomersManager(customersReaderWriter.readCustomers(customersPath));
+        stockItems = new StockItems(itemsReaderWriter.readItems());
+        orderManager = new OrderManager(orderReaderWriter.readOrders());
+        customersManager = new CustomersManager(customersReaderWriter.readCustomers());
     }
 
     public StockItems getStockItems() {
@@ -56,15 +56,15 @@ public class MainController {
     
     
     public void writeItems() throws IOException{
-        itemsReaderWriter.writeItems(itemsPath, stockItems.getItemsAsList());
+        itemsReaderWriter.writeItems(stockItems.getItemsAsList());
     }
     
     public void writeOrder() throws IOException{
-        orderReaderWriter.writeOrders(ordersPath, orderManager.getOrders());
+        orderReaderWriter.writeOrders(orderManager.getOrders());
     }
     
     public void writeCustomers() throws IOException{
-        customersReaderWriter.writeCustomers(customersPath, customersManager.getCustomersAsList());
+        customersReaderWriter.writeCustomers(customersManager.getCustomersAsList());
     }
     
     

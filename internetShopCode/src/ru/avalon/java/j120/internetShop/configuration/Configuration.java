@@ -22,13 +22,13 @@ public class Configuration {
     private Properties properties;
     
     
-    private Configuration() {
+    private Configuration(){
         Properties defaultProperties = new Properties();
         try{
             defaultProperties.load(new FileInputStream(this.DEFAULT_PATCH));
         }
         catch(IOException e){
-            throw new IllegalArgumentException("Error. Путь к default настройкам: " + this.DEFAULT_PATCH + " отсуствует.");
+            throw new RuntimeException("Error. Файл к default настройкам: " + this.DEFAULT_PATCH + " отсуствует.");
         }
         
         properties = new Properties(defaultProperties);
@@ -36,9 +36,8 @@ public class Configuration {
             defaultProperties.load(new FileInputStream(USER_PATCH));
         }
         catch(IOException e){
-            throw new IllegalArgumentException("Error. Путь настройкам пользователя: " + USER_PATCH + " отсуствует.");
+            throw new RuntimeException("Error. Файл настройкам пользователя: " + USER_PATCH + " отсуствует.");
         }
-
         
     }
     
@@ -48,8 +47,8 @@ public class Configuration {
     return instance;
     }
     
-    public Properties getProperties(){
-        return properties;
+    public String getProperty(String path){
+        return properties.getProperty(path);
     }
     
     

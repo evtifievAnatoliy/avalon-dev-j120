@@ -12,7 +12,7 @@ package ru.avalon.java.j120.internetShop.models;
 // статус заказа
 // выбирается из готовых вариантов
 
-public enum StatusOrder {
+public enum StatusOfOrder {
     ГОТОВИТСЯ,
     ОТГРУЖЕН,
     ОТМЕНЕН

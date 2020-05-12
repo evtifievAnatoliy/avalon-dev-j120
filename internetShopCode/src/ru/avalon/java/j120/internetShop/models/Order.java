@@ -22,17 +22,21 @@ public class Order implements Serializable{
     private LocalDateTime dateTheOrderWasGreated; // текущая дата
     private Person contactPerson; // данные клиента
     private byte disconte; // скидка клиента
-    private StatusOrder statusOrder; // статус заказа
+    private StatusOfOrder statusOfOrder; // статус заказа
     
     private ArrayList<OrderPosition> orderItems; // товары в заказе
 
-    public Order(int orderNumber, Person contactPerson, byte disconte, StatusOrder statusOrder, ArrayList<OrderPosition> orderItems) {
+    public Order(int orderNumber, Person contactPerson, byte disconte, StatusOfOrder statusOfOrder, ArrayList<OrderPosition> orderItems) {
         this.orderNumber = orderNumber;
         this.dateTheOrderWasGreated = LocalDateTime.now();
         this.contactPerson = contactPerson;
         this.disconte = disconte;
-        this.statusOrder = statusOrder;
+        this.statusOfOrder = statusOfOrder;
         this.orderItems = orderItems;
+    }
+
+    public Order() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     public int getOrderNumber() {
