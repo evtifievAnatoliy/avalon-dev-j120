@@ -19,10 +19,8 @@ import ru.avalon.java.j120.internetShop.models.Item;
 
 public class MainController {
     
-    private String itemsPath;
-    private String ordersPath;
-    private String customersPath;
     private StockItems stockItems;
+    private Orders orders;
     private OrderManager orderManager;
     private CustomersManager customersManager;
     
@@ -31,12 +29,10 @@ public class MainController {
     OrderReaderWriter orderReaderWriter = new OrderReaderWriter();
     CustomersReaderWriter customersReaderWriter = new CustomersReaderWriter();
     
-    public MainController(String itemsPath, String ordersPath, String customersPath) throws IOException, ClassNotFoundException {
-        this.itemsPath = itemsPath;
-        this.ordersPath = ordersPath;
-        this.customersPath = customersPath;
+    public MainController() throws IOException, ClassNotFoundException {
         stockItems = new StockItems(itemsReaderWriter.readItems());
-        orderManager = new OrderManager(orderReaderWriter.readOrders());
+        orders = new Orders(orderReaderWriter.readOrders());
+        orderManager = new OrderManager();
         customersManager = new CustomersManager(customersReaderWriter.readCustomers());
     }
 
@@ -51,6 +47,11 @@ public class MainController {
     public CustomersManager getCustomersManager() {
         return customersManager;
     }
+
+    public Orders getOrders() {
+        return orders;
+    }
+    
     
     
     
@@ -60,7 +61,7 @@ public class MainController {
     }
     
     public void writeOrder() throws IOException{
-        orderReaderWriter.writeOrders(orderManager.getOrders());
+        orderReaderWriter.writeOrders(orders.getOrders());
     }
     
     public void writeCustomers() throws IOException{

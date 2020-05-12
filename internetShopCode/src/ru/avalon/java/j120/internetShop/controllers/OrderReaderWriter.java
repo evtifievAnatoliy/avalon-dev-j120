@@ -27,15 +27,14 @@ import ru.avalon.java.j120.internetShop.configuration.Configuration;
 
 public class OrderReaderWriter {
     
-    Configuration configuration = Configuration.getInstance();
-           
+    
     // метод записи в файл. На входе путь записи и  коллекция Товаров
     public void writeOrders(ArrayList<Order> orders) throws IOException{
         	
         if (orders !=null) // проверяем на наличие элементов в коллекции
         { 
             // пробуем записать в файл коллекцию заказов (сериализовать)
-            try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(configuration.getProperty("orders.Path")))){
+            try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(Configuration.getInstance().getProperty("orders.Path")))){
                 //for (Item item : items)
                 //{
                     oos.writeObject(orders);
@@ -49,7 +48,7 @@ public class OrderReaderWriter {
     // метод чтения из файла. На входе путь записи и  коллекция Товаров
     public ArrayList<Order> readOrders() throws IOException, ClassNotFoundException{
                 
-        try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream(configuration.getProperty("orders.Path")))){
+        try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream(Configuration.getInstance().getProperty("orders.Path")))){
             // пробуем десериализовать коллекцию заказов
             ArrayList<Order> orders = (ArrayList<Order>) ois.readObject();
                         

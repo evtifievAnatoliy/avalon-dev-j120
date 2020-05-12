@@ -24,15 +24,14 @@ import ru.avalon.java.j120.internetShop.models.Item;
 
 public class ItemsReaderWriter {
     
-    Configuration configuration = Configuration.getInstance();
-           
+               
     // метод записи в файл. На входе путь записи и  коллекция Товаров
     public void writeItems(ArrayList<Item> items) throws IOException{
         	
         if (items !=null) // проверяем на наличие элементов в коллекции
         { 
             // пробуем записать в файл
-            try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(configuration.getProperty("items.Path")))){
+            try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(Configuration.getInstance().getProperty("items.Path")))){
                 for (Item item : items)
                 {
                     bufferedWriter.write(item.toString() + "\n");
@@ -48,7 +47,7 @@ public class ItemsReaderWriter {
                 
         // создаем коллекцию товаров
         ArrayList<Item> items = new ArrayList<Item>();
-            try(BufferedReader br = new BufferedReader(new FileReader(configuration.getProperty("items.Path")))){
+            try(BufferedReader br = new BufferedReader(new FileReader(Configuration.getInstance().getProperty("items.Path")))){
                 String str;
                 while ((str = br.readLine()) != null) {
                     String[] strSplit=str.split(";");

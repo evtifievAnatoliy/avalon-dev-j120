@@ -26,8 +26,7 @@ import ru.avalon.java.j120.internetShop.configuration.Configuration;
 // класс который работает с записью и чтением базы клиентов
 public class CustomersReaderWriter {
     
-    Configuration configuration = Configuration.getInstance();
-    
+        
 // метод записи в файл. На входе путь записи и  коллекция Заказчиков
     public void writeCustomers(ArrayList<Person> customers) throws IOException{
         	
@@ -35,7 +34,7 @@ public class CustomersReaderWriter {
         { 
             
             // пробуем записать в файл коллекцию Заказчиков (сериализовать)
-            try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(configuration.getProperty("customers.Path")))){
+            try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(Configuration.getInstance().getProperty("customers.Path")))){
                 //for (Item item : items)
                 //{
                     oos.writeObject(customers);
@@ -49,7 +48,7 @@ public class CustomersReaderWriter {
     // метод чтения из файла. На входе путь записи коллекции Заказчиков
     public ArrayList<Person> readCustomers() throws IOException, ClassNotFoundException{
                 
-        try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream(configuration.getProperty("customers.Path")))){
+        try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream(Configuration.getInstance().getProperty("customers.Path")))){
             // пробуем десериализовать коллекцию Заказчиков
             ArrayList<Person> customers = (ArrayList<Person>) ois.readObject();
                         

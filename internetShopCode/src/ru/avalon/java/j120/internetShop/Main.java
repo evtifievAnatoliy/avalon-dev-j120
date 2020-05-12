@@ -32,11 +32,11 @@ public class Main extends JFrame{
         
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         // TODO code application logic here
-        
+        /*
         MainForm mainForm = new MainForm();
         mainForm.setVisible(true);
         
-        /*
+       
         JFrame mainForm = new JFrame("internetShop");
         mainForm.setBounds(100, 100, 500, 500);
         mainForm.setVisible(true);
@@ -64,26 +64,22 @@ public class Main extends JFrame{
         /*
         JLabel jLabel = new JLabel("internetShop", SwingConstants.LEFT);
         mainForm.add(jLabel);
-        */
+        
         mainForm.setVisible(true);
-        
-        /*
-        Configuration configuration = Configuration.getInstance();
-        final String  itemsPath = configuration.getProperty("items.Path");
-        final String  ordersPath = configuration.getProperty("orders.Path");
-        final String  customersPath= configuration.getProperty("customers.Path");
         */
         
-        /*
+        
+        //Configuration configuration = Configuration.getInstance();
+        
         //общий объект работающий с товарами и заказами
-        MainController mainController = new MainController(itemsPath, ordersPath, customersPath);
+        MainController mainController = new MainController();
         
         // методы и объекты работающие с товарами
         StockItems stockItems = mainController.getStockItems();
         //stockItems.addItem(new Item("7000002001007", "Платье трикотажное", "Зеленый", 1800, 9));
         //mainController.writeItems();
         //--------------------------------
-       
+        
         //методы и объекты работающие с заказами
         
         OrderManager orderManager = mainController.getOrderManager();
@@ -91,11 +87,14 @@ public class Main extends JFrame{
         orderManager.addOrderPosition(stockItems.getItemsAsList().get(0), 1);
         orderManager.addOrderPosition(stockItems.getItemsAsList().get(1), 2);
         orderManager.addOrderPosition(stockItems.getItemsAsList().get(2), 10);
-        orderManager.addOrder( 
+        
+        Orders orders = mainController.getOrders();
+        
+        orders.addOrder( 
                 new Person("Анатолий", 
                         new Address("РФ", "Санкт-Петрербург", "ул. Ваиловых", "дом11/1", 1),
                         "89219910012"),
-        (byte)0, StatusOrder.ГОТОВИТСЯ);
+        (byte)0, StatusOfOrder.ГОТОВИТСЯ, orderManager.getOrderItems());
         //mainController.writeOrder();
         
                 
@@ -103,7 +102,7 @@ public class Main extends JFrame{
         
         
         //методы и объекты работающие с базой заказчиков
-        
+        /*
         CustomersManager customersManager = mainController.getCustomersManager();
         
         
@@ -112,11 +111,11 @@ public class Main extends JFrame{
                         new Address("РФ", "Санкт-Петрербург", "ул. Ваиловых", "дом11/1", 1),
                         "89219910010"));
         //mainController.writeCustomers();
-        
+        */
                 
         //--------------------------------
         
-        System.out.println("Приложение закончило свою работу.");*/
+        System.out.println("Приложение закончило свою работу.");
     }
      
 

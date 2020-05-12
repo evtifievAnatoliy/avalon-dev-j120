@@ -17,8 +17,19 @@ import java.util.ArrayList;
 public class Orders {
     
     private ArrayList<Order> orders;
-         
-     
+
+    public Orders(ArrayList<Order> orders) {
+        this.orders = orders;
+    }
+    
+     // метод добавление нового заказа
+    public void addOrder(Person contactPerson, byte disconte, StatusOfOrder statusOrder, ArrayList<OrderPosition> orderItems){
+        
+        if (this.orders == null) //проверка на нулевое значение
+            this.orders = new ArrayList<Order>();
+        
+        this.orders.add(new Order(this.orders.size(), contactPerson, disconte, statusOrder, orderItems));
+    }
 
     public ArrayList<Order> getOrders() {
         return orders;
