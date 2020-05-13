@@ -5,20 +5,12 @@
  */
 package ru.avalon.java.j120.internetShop.ui;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JFrame;
-import javax.swing.JList;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTextArea;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.*;
+import java.util.*;
+import javax.swing.*;
 
 /**
  *
@@ -26,74 +18,139 @@ import javax.swing.JTextArea;
  */
 public class MainForm extends JFrame{
     
+    private JButton add;
+    private JButton del;
+    private JButton ex;
+    
+    private JTextField orderNumber;
+    private JTextField dateTheOrderWasGreated;
+    private JTextField name;  
+    private JTextField contry;
+    private JTextField region;
+    private JTextField street;
+    private JTextField house; 
+    private JTextField flat; 
+    private JTextField phoneNumber;
+    private JTextField disconte; 
+    private JTextField statusOfOrder;
+    
+    
     private JList<String> list;
     private JTextArea content;
-    private File[] files;
+        
     
     public MainForm() {
-        setBounds(300, 200, 900, 600);
+        
+        super("InternetShop"); //название формы
+        setBounds(300, 200, 1100, 800);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         
+        Container c = getContentPane();
+        c.setLayout(new BoxLayout(c, BoxLayout.Y_AXIS));
+        
+        // отрисовываем и наполняем элементами toolBar
+        JPanel jPanelLeft = new JPanel();
+        jPanelLeft.setLayout(new FlowLayout(FlowLayout.LEFT));
+        JPanel jPanelRight = new JPanel();
+        jPanelRight.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        
+        add = new JButton("Add...");
+        del = new JButton("Delite");
+        jPanelLeft.add(add);
+        jPanelLeft.add(del);
+                
+        ex = new JButton("Exit");
+        ex.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
+        
+        jPanelRight.add(ex);
+        
+        JToolBar toolBar = new JToolBar();
+        toolBar.add(jPanelLeft);
+        toolBar.add(jPanelRight);
+        
+        JPanel jPanelToolBar = new JPanel();
+        jPanelToolBar.setLayout(new BoxLayout(jPanelToolBar, BoxLayout.X_AXIS));
+        jPanelToolBar.add(toolBar);
+        //-----------------------------------------
+        
+        
+        // отрисовываем и наполняем элементами JSplitPane Orders
         list = new JList<>();
-        list.addListSelectionListener(p->fileChousen(p.getFirstIndex()));// лямбда разобраться
+        //list.addListSelectionListener(p->fileChousen(p.getFirstIndex()));// лямбда разобраться
+        
         content = new JTextArea();
         content.setEditable(false);// запрет на редактирование
         
-        JSplitPane sp = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
+        // отрисовываем и наполняем элементами JSplitPane Items in Order 
+        
+        orderNumber = new JTextField("№ заказа", 10);
+        dateTheOrderWasGreated = new JTextField("Дата заказа", 15);
+        name = new JTextField("Имя клиента", 30);  
+        phoneNumber = new JTextField("Телефон", 15);
+        contry = new JTextField("Страна", 15);
+        region = new JTextField("Регион", 20);
+        street = new JTextField("Улица", 20);
+        house = new JTextField("Дом", 5); 
+        flat = new JTextField("Кв.", 3); 
+        disconte = new JTextField("Скидка", 5); 
+        statusOfOrder = new JTextField("Статус заказа", 20);
+        
+        JPanel jPanelOrderNumberDatePerson = new JPanel();
+        jPanelOrderNumberDatePerson.setLayout(new FlowLayout(FlowLayout.LEFT));
+        jPanelOrderNumberDatePerson.add(orderNumber);
+        jPanelOrderNumberDatePerson.add(dateTheOrderWasGreated);
+        jPanelOrderNumberDatePerson.add(name);
+        jPanelOrderNumberDatePerson.add(phoneNumber);
+        
+        JPanel jPanelOrderAdress = new JPanel();
+        jPanelOrderAdress.setLayout(new FlowLayout(FlowLayout.LEFT));
+        jPanelOrderAdress.add(contry);
+        jPanelOrderAdress.add(region);
+        jPanelOrderAdress.add(street);
+        jPanelOrderAdress.add(house);
+        jPanelOrderAdress.add(flat);
+        
+        JPanel jPanelOrderDiscountStatus = new JPanel();
+        jPanelOrderDiscountStatus.setLayout(new FlowLayout(FlowLayout.LEFT));
+        jPanelOrderDiscountStatus.add(disconte);
+        jPanelOrderDiscountStatus.add(statusOfOrder);
+        
+        
+        
+        JPanel jPanelOrder = new JPanel();
+        jPanelOrder.setLayout(new BoxLayout(jPanelOrder, BoxLayout.Y_AXIS));
+        jPanelOrder.add(jPanelOrderNumberDatePerson);
+        jPanelOrder.add(jPanelOrderAdress);
+        jPanelOrder.add(jPanelOrderDiscountStatus);
+        
+        
+        JSplitPane splitPaneItems = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
+            jPanelOrder,  
+            new JScrollPane(list)); // добавлена прокрутка
+        splitPaneItems.setDividerLocation(100);
+        
+        // --------------------------------------------------
+        
+        JSplitPane splitPaneOrders = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
             new JScrollPane(list),  // добавлена прокрутка
-            new JScrollPane(content));
-        sp.setDividerLocation(300);
-        add(sp);
+            splitPaneItems);
+        splitPaneOrders.setDividerLocation(200);
+                
+        JPanel jPanelJSplitPaneOrders = new JPanel();
+        jPanelJSplitPaneOrders.setLayout(new BoxLayout(jPanelJSplitPaneOrders, BoxLayout.X_AXIS));
+        jPanelJSplitPaneOrders.add(splitPaneOrders);
         
-        gotoDir(new File(System.getProperty("user.dir")));
-    }
-    public void fileChousen(int indx){
-        if (files[indx].isDirectory()){
-            // clean up content
-            content.setText("");
-                    
-            return;
-        }
-        try(BufferedReader br = new BufferedReader(new FileReader(files[indx]))){
-            StringBuilder sb = new StringBuilder();
-            char[] buf = new char [4_896];
-            int n;
-            while((n = br.read(buf)) != -1){
-                sb.append(buf, 0 , n);
-            }
-            content.setText(sb.toString());
-            content.setCaretPosition(0);// поднимает скрол наверх
-        } 
-        catch (IOException e) {
-            content.setText("Error reading file" + files[indx].getAbsolutePath());
-        }
+        c.add(jPanelToolBar);
+        c.add(jPanelJSplitPaneOrders);
+        //---------------------------------------------------
         
-        
+       
     }
     
-    public void gotoDir(File path){
-        
-        setTitle(path.getAbsolutePath());
-        
-        files = path.listFiles();
-        
-        Arrays.sort(files, MainForm::compareFiles); //реализован ананимный класс только для одного метода в интерфейсе (референс)
-            
-        String[] fileNames = new String[files.length];
-        for (int i =0; i<files.length; i++){
-            fileNames[i]= files[i].getName();
-        }
-        
-        list.setListData(fileNames);
-        
-    } 
-    private static int compareFiles(File f1, File f2){
-        if(f1.isDirectory() && !f2.isDirectory())
-            return -1;
-        if(!f1.isDirectory() && f2.isDirectory())
-            return 1;
-        else
-            return f1.getName().compareTo(f2.getName());
-        }
     
 }
