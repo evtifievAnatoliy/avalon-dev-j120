@@ -28,6 +28,27 @@ public class Address implements Serializable{
         this.flat = flat;
     }
 
+    public String getContry() {
+        return contry;
+    }
+
+    public String getRegion() {
+        return region;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public String getHouse() {
+        return house;
+    }
+
+    public Integer getFlat() {
+        return flat;
+    }
+    
+    
     @Override
     public String toString() {
         return contry + ", " + region + ", " + street + ", дом " + house + ", квартира " + flat + ".";

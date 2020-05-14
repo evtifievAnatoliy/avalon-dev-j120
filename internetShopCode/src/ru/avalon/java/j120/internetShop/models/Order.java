@@ -39,8 +39,29 @@ public class Order implements Serializable{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public int getOrderNumber() {
+    public Integer getOrderNumber() {
         return orderNumber;
     }
+
+    public LocalDateTime getDateTheOrderWasGreated() {
+        return dateTheOrderWasGreated;
+    }
+
+    public Person getContactPerson() {
+        return contactPerson;
+    }
+
+    public Byte getDisconte() {
+        return disconte;
+    }
+
+    public StatusOfOrder getStatusOfOrder() {
+        return statusOfOrder;
+    }
+
+    public ArrayList<OrderPosition> getOrderItems() {
+        return orderItems;
+    }
+    
     
 }

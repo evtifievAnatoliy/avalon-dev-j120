@@ -24,7 +24,6 @@ public class MainController {
     private OrderManager orderManager;
     private CustomersManager customersManager;
     
-
     ItemsReaderWriter itemsReaderWriter = new ItemsReaderWriter();
     OrderReaderWriter orderReaderWriter = new OrderReaderWriter();
     CustomersReaderWriter customersReaderWriter = new CustomersReaderWriter();

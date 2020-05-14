@@ -26,6 +26,16 @@ public class OrderPosition implements Serializable{
     public Item getItem() {
         return item;
     }
+
+    public int getNumberOfItems() {
+        return numberOfItems;
+    }
+
+    public int getAmountOfItems() {
+        return amountOfItems;
+    }
+    
+    
     
     
     

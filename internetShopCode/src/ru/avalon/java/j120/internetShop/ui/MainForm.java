@@ -11,12 +11,22 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.*;
 import javax.swing.*;
+import ru.avalon.java.j120.internetShop.commons.*;
+import ru.avalon.java.j120.internetShop.controllers.*;
+import ru.avalon.java.j120.internetShop.models.*;
 
 /**
  *
  * @author user
  */
 public class MainForm extends JFrame{
+    
+    MainController mainController;
+    StockItems stockItems;
+    ArrayList<OrderPosition> orderItems = new ArrayList<>();
+    OrderManager orderManager;
+    Orders orders;
+    Order[] ordersArray;
     
     private JButton add;
     private JButton del;
@@ -35,16 +45,24 @@ public class MainForm extends JFrame{
     private JTextField statusOfOrder;
     
     
-    private JList<String> list;
-    private JTextArea content;
+    private JList<String> listOrders;
+    private JTable orderPositionTable;
+    OrderPositionTableModel orderPositionTableModel= new OrderPositionTableModel(orderItems);
         
     
-    public MainForm() {
+    public MainForm() throws IOException, ClassNotFoundException {
         
         super("InternetShop"); //название формы
         setBounds(300, 200, 1100, 800);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         
+        
+        //общий объект работающий с товарами и заказами
+        mainController = new MainController();
+        stockItems = mainController.getStockItems();
+        orders = mainController.getOrders();
+        orderManager = mainController.getOrderManager();
+         
         Container c = getContentPane();
         c.setLayout(new BoxLayout(c, BoxLayout.Y_AXIS));
         
@@ -80,15 +98,16 @@ public class MainForm extends JFrame{
         
         
         // отрисовываем и наполняем элементами JSplitPane Orders
-        list = new JList<>();
-        //list.addListSelectionListener(p->fileChousen(p.getFirstIndex()));// лямбда разобраться
+        listOrders = new JList<>();
+        convertOrdersListToStringArray();
+        listOrders.addListSelectionListener(e -> ordersChoosen(e.getFirstIndex()));
         
-        content = new JTextArea();
-        content.setEditable(false);// запрет на редактирование
+        
         
         // отрисовываем и наполняем элементами JSplitPane Items in Order 
         
         orderNumber = new JTextField("№ заказа", 10);
+        orderNumber.setEditable(false);
         dateTheOrderWasGreated = new JTextField("Дата заказа", 15);
         name = new JTextField("Имя клиента", 30);  
         phoneNumber = new JTextField("Телефон", 15);
@@ -129,15 +148,20 @@ public class MainForm extends JFrame{
         jPanelOrder.add(jPanelOrderDiscountStatus);
         
         
+        orderPositionTable = new JTable(orderPositionTableModel);
+        
         JSplitPane splitPaneItems = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
             jPanelOrder,  
-            new JScrollPane(list)); // добавлена прокрутка
+            new JScrollPane(orderPositionTable)); // добавлена прокрутка
         splitPaneItems.setDividerLocation(100);
         
         // --------------------------------------------------
         
+        
+        
+        
         JSplitPane splitPaneOrders = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
-            new JScrollPane(list),  // добавлена прокрутка
+            new JScrollPane(listOrders),  // добавлена прокрутка
             splitPaneItems);
         splitPaneOrders.setDividerLocation(200);
                 
@@ -149,7 +173,39 @@ public class MainForm extends JFrame{
         c.add(jPanelJSplitPaneOrders);
         //---------------------------------------------------
         
-       
+               
+    }
+    
+    private void convertOrdersListToStringArray(){
+        if(this.orders !=null){
+            ordersArray = new Order[this.orders.getOrders().size()];
+            this.orders.getOrders().toArray(ordersArray);
+            String[] ordersNumbers = new String[ordersArray.length];
+            
+            for (int i=0; i<ordersArray.length; i++)
+            {
+                ordersNumbers[i] = ordersArray[i].getOrderNumber().toString();
+                
+            }
+            listOrders.setListData(ordersNumbers);
+        }
+    }
+    
+    private void ordersChoosen (int ndx){
+        orderNumber.setText(ordersArray[ndx].getOrderNumber().toString()); 
+        dateTheOrderWasGreated.setText(ordersArray[ndx].getDateTheOrderWasGreated().toLocalDate().toString());
+        name.setText(ordersArray[ndx].getContactPerson().getName());;  
+        phoneNumber.setText(ordersArray[ndx].getContactPerson().getPhoneNumber());;
+        contry.setText(ordersArray[ndx].getContactPerson().getAdressToDelivery().getContry());;
+        region.setText(ordersArray[ndx].getContactPerson().getAdressToDelivery().getRegion());;
+        street.setText(ordersArray[ndx].getContactPerson().getAdressToDelivery().getStreet());;
+        house.setText(ordersArray[ndx].getContactPerson().getAdressToDelivery().getHouse());;
+        flat.setText(ordersArray[ndx].getContactPerson().getAdressToDelivery().getFlat().toString());;
+        disconte.setText(ordersArray[ndx].getDisconte().toString());
+        statusOfOrder.setText(ordersArray[ndx].getStatusOfOrder().toString());
+        for (OrderPosition op: ordersArray[ndx].getOrderItems())
+            this.orderItems.add(op);
+        orderPositionTableModel.changeTable();
     }
     
     
