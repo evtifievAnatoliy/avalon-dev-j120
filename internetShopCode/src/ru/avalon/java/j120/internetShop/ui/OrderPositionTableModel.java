@@ -34,8 +34,8 @@ public class OrderPositionTableModel implements TableModel{
     
     
     
-    public OrderPositionTableModel(ArrayList<OrderPosition> orderItems) {
-        this.orderItems = orderItems;
+    public OrderPositionTableModel() {
+        this.orderItems = new ArrayList<>();
         
     }
     
@@ -68,8 +68,8 @@ public class OrderPositionTableModel implements TableModel{
             case 1: return orderPosition.getItem().getName();
             case 2: return orderPosition.getItem().getColor();
             case 3: return orderPosition.getItem().getPrice();
-            case 5: return orderPosition.getNumberOfItems();
-            case 6: return orderPosition.getAmountOfItems();
+            case 4: return orderPosition.getNumberOfItems();
+            case 5: return orderPosition.getAmountOfItems();
             default: 
                 throw new Error ("Unreachable place.");
         }
@@ -95,7 +95,8 @@ public class OrderPositionTableModel implements TableModel{
         listeners.remove(tl);
     }
     
-    public void changeTable(){
+    public void setSelectedOrderPositions(ArrayList<OrderPosition> positions){
+        this.orderItems = positions;
         TableModelEvent e = new TableModelEvent(this); 
         for (TableModelListener l: listeners)
             l.tableChanged(e);

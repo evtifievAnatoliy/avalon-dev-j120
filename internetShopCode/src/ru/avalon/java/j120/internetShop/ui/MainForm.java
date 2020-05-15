@@ -28,6 +28,8 @@ public class MainForm extends JFrame{
     Orders orders;
     Order[] ordersArray;
     
+    OrderPositionTableModel orderPositionTableModel = new OrderPositionTableModel();
+    
     private JButton add;
     private JButton del;
     private JButton ex;
@@ -47,8 +49,7 @@ public class MainForm extends JFrame{
     
     private JList<String> listOrders;
     private JTable orderPositionTable;
-    OrderPositionTableModel orderPositionTableModel= new OrderPositionTableModel(orderItems);
-        
+            
     
     public MainForm() throws IOException, ClassNotFoundException {
         
@@ -57,12 +58,16 @@ public class MainForm extends JFrame{
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         
         
+        
         //общий объект работающий с товарами и заказами
         mainController = new MainController();
         stockItems = mainController.getStockItems();
         orders = mainController.getOrders();
         orderManager = mainController.getOrderManager();
          
+        
+        
+        
         Container c = getContentPane();
         c.setLayout(new BoxLayout(c, BoxLayout.Y_AXIS));
         
@@ -100,8 +105,9 @@ public class MainForm extends JFrame{
         // отрисовываем и наполняем элементами JSplitPane Orders
         listOrders = new JList<>();
         convertOrdersListToStringArray();
-        listOrders.addListSelectionListener(e -> ordersChoosen(e.getFirstIndex()));
-        
+        listOrders.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        listOrders.addListSelectionListener(e -> ordersChoosen(listOrders.getSelectedIndex()));
+       
         
         
         // отрисовываем и наполняем элементами JSplitPane Items in Order 
@@ -147,7 +153,7 @@ public class MainForm extends JFrame{
         jPanelOrder.add(jPanelOrderAdress);
         jPanelOrder.add(jPanelOrderDiscountStatus);
         
-        
+       
         orderPositionTable = new JTable(orderPositionTableModel);
         
         JSplitPane splitPaneItems = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
@@ -203,9 +209,10 @@ public class MainForm extends JFrame{
         flat.setText(ordersArray[ndx].getContactPerson().getAdressToDelivery().getFlat().toString());;
         disconte.setText(ordersArray[ndx].getDisconte().toString());
         statusOfOrder.setText(ordersArray[ndx].getStatusOfOrder().toString());
-        for (OrderPosition op: ordersArray[ndx].getOrderItems())
-            this.orderItems.add(op);
-        orderPositionTableModel.changeTable();
+        
+        
+        
+        orderPositionTableModel.setSelectedOrderPositions(ordersArray[ndx].getOrderItems());
     }
     
     
