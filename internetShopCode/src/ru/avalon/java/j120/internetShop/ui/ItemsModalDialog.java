@@ -14,10 +14,14 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import ru.avalon.java.j120.internetShop.models.Item;
+
 
 /**
  *
@@ -53,7 +57,19 @@ public class ItemsModalDialog extends JDialog {
             AddNewItemModalDialog addNewItemModalDialog = new AddNewItemModalDialog(owner);
             addNewItemModalDialog.setVisible(true);
             
-            setVisible(false);
+            if(addNewItemModalDialog.isSuccess()){
+                try
+                    { 
+                    items.add(addNewItemModalDialog.addNewItem());
+                    itemsTableModel.eventAddNewItemEvent(items);    
+                }
+                catch(Exception ex){
+                    JOptionPane.showMessageDialog(this, 
+                            "Неккоректные данные в полях ввода нового товара!!! \n" + "Новый товар не добавлен.",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            }
         });
         
         JButton btnCancel = new JButton("Cancel");
@@ -74,5 +90,7 @@ public class ItemsModalDialog extends JDialog {
     public boolean isSuccess(){
         return addPressed;
     }
+    
+    
     
 }

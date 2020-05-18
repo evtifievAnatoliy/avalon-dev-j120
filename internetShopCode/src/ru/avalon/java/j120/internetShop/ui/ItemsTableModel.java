@@ -97,4 +97,11 @@ public class ItemsTableModel implements TableModel{
             l.tableChanged(e);
     }
     
+    public void eventAddNewItemEvent(ArrayList<Item> items){
+        this.items = items;
+        TableModelEvent e = new TableModelEvent(this); 
+        for (TableModelListener l: listeners)
+            l.tableChanged(e);
+    }
+    
 }
