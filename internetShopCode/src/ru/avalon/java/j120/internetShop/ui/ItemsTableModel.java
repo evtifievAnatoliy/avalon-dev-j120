@@ -10,22 +10,19 @@ import java.util.List;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
-import ru.avalon.java.j120.internetShop.controllers.StockItems;
 import ru.avalon.java.j120.internetShop.models.*;
 
 /**
  *
  * @author eag
  */
-public class OrderPositionTableModel implements TableModel{
-    
-    private List<OrderPosition> orderItems;
-    private final String[] columnNames = {"Артикул", "Название", "Цвет", "Цена за шт.", "Кол-во ед. в заказе", "Цена"};
+public class ItemsTableModel implements TableModel{
+    private List<Item> items;
+    private final String[] columnNames = {"Артикул", "Название", "Цвет", "Цена", "Остаток на складе"};
     private final Class<?>[] columnTypes = {
         String.class,
         String.class,
         String.class,
-        Integer.class,
         Integer.class,
         Integer.class
     };
@@ -33,14 +30,14 @@ public class OrderPositionTableModel implements TableModel{
     
     
     
-    public OrderPositionTableModel() {
-        this.orderItems = new ArrayList<>();
+    public ItemsTableModel() {
+        this.items = new ArrayList<>();
         
     }
     
     @Override
     public int getRowCount() {
-        return orderItems.size();
+        return items.size();
     }
 
     @Override
@@ -60,15 +57,14 @@ public class OrderPositionTableModel implements TableModel{
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        OrderPosition orderPosition = orderItems.get(rowIndex);
+        Item item = items.get(rowIndex);
         switch(columnIndex)
         {
-            case 0: return orderPosition.getItem().getArticle();
-            case 1: return orderPosition.getItem().getName();
-            case 2: return orderPosition.getItem().getColor();
-            case 3: return orderPosition.getItem().getPrice();
-            case 4: return orderPosition.getNumberOfItems();
-            case 5: return orderPosition.getAmountOfItems();
+            case 0: return item.getArticle();
+            case 1: return item.getName();
+            case 2: return item.getColor();
+            case 3: return item.getPrice();
+            case 4: return item.getStockBalance();
             default: 
                 throw new Error ("Unreachable place.");
         }
@@ -94,8 +90,8 @@ public class OrderPositionTableModel implements TableModel{
         listeners.remove(tl);
     }
     
-    public void setSelectedOrderPositions(ArrayList<OrderPosition> positions){
-        this.orderItems = positions;
+    public void setStockItems(ArrayList<Item> items){
+        this.items = items;
         TableModelEvent e = new TableModelEvent(this); 
         for (TableModelListener l: listeners)
             l.tableChanged(e);

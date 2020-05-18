@@ -31,6 +31,7 @@ public class MainForm extends JFrame{
     OrderPositionTableModel orderPositionTableModel = new OrderPositionTableModel();
     
     private JButton add;
+    private JButton items;
     private JButton del;
     private JButton ex;
     
@@ -78,8 +79,31 @@ public class MainForm extends JFrame{
         jPanelRight.setLayout(new FlowLayout(FlowLayout.RIGHT));
         
         add = new JButton("Add...");
+        add.addActionListener(e -> {
+            OrderModalDialog orderModalDialog = new OrderModalDialog(this);
+            orderModalDialog.setVisible(true);
+            if (orderModalDialog.isSuccess())
+            {
+                //добавляем заказ
+            }
+            
+        });
+        
+        items = new JButton("Items...");
+        items.addActionListener(e -> {
+            ItemsModalDialog itemsModalDialog = new ItemsModalDialog(this, "Таблица товаров", stockItems.getItemsAsList());
+            itemsModalDialog.setVisible(true);
+            if (itemsModalDialog.isSuccess())
+            {
+                //добавляем заказ
+            }
+            
+        });
+        
         del = new JButton("Delite");
+        
         jPanelLeft.add(add);
+        jPanelLeft.add(items);
         jPanelLeft.add(del);
                 
         ex = new JButton("Exit");
@@ -184,35 +208,35 @@ public class MainForm extends JFrame{
     
     private void convertOrdersListToStringArray(){
         if(this.orders !=null){
-            ordersArray = new Order[this.orders.getOrders().size()];
-            this.orders.getOrders().toArray(ordersArray);
-            String[] ordersNumbers = new String[ordersArray.length];
+      
+            String[] ordersNumbers = new String[this.orders.getOrders().size()];
             
-            for (int i=0; i<ordersArray.length; i++)
+            for (int i=0; i<this.orders.getOrders().size(); i++)
             {
-                ordersNumbers[i] = ordersArray[i].getOrderNumber().toString();
+                ordersNumbers[i] = this.orders.getOrders().get(i).getOrderNumber().toString();
                 
             }
+            
             listOrders.setListData(ordersNumbers);
         }
     }
     
     private void ordersChoosen (int ndx){
-        orderNumber.setText(ordersArray[ndx].getOrderNumber().toString()); 
-        dateTheOrderWasGreated.setText(ordersArray[ndx].getDateTheOrderWasGreated().toLocalDate().toString());
-        name.setText(ordersArray[ndx].getContactPerson().getName());;  
-        phoneNumber.setText(ordersArray[ndx].getContactPerson().getPhoneNumber());;
-        contry.setText(ordersArray[ndx].getContactPerson().getAdressToDelivery().getContry());;
-        region.setText(ordersArray[ndx].getContactPerson().getAdressToDelivery().getRegion());;
-        street.setText(ordersArray[ndx].getContactPerson().getAdressToDelivery().getStreet());;
-        house.setText(ordersArray[ndx].getContactPerson().getAdressToDelivery().getHouse());;
-        flat.setText(ordersArray[ndx].getContactPerson().getAdressToDelivery().getFlat().toString());;
-        disconte.setText(ordersArray[ndx].getDisconte().toString());
-        statusOfOrder.setText(ordersArray[ndx].getStatusOfOrder().toString());
         
+        orderNumber.setText(this.orders.getOrders().get(ndx).getOrderNumber().toString()); 
+        dateTheOrderWasGreated.setText(this.orders.getOrders().get(ndx).getDateTheOrderWasGreated().toLocalDate().toString());
+        name.setText(this.orders.getOrders().get(ndx).getContactPerson().getName());;  
+        phoneNumber.setText(this.orders.getOrders().get(ndx).getContactPerson().getPhoneNumber());;
+        contry.setText(this.orders.getOrders().get(ndx).getContactPerson().getAdressToDelivery().getContry());;
+        region.setText(this.orders.getOrders().get(ndx).getContactPerson().getAdressToDelivery().getRegion());;
+        street.setText(this.orders.getOrders().get(ndx).getContactPerson().getAdressToDelivery().getStreet());;
+        house.setText(this.orders.getOrders().get(ndx).getContactPerson().getAdressToDelivery().getHouse());;
+        flat.setText(this.orders.getOrders().get(ndx).getContactPerson().getAdressToDelivery().getFlat().toString());;
+        disconte.setText(this.orders.getOrders().get(ndx).getDisconte().toString());
+        statusOfOrder.setText(this.orders.getOrders().get(ndx).getStatusOfOrder().toString());
         
+        orderPositionTableModel.setSelectedOrderPositions(this.orders.getOrders().get(ndx).getOrderItems());
         
-        orderPositionTableModel.setSelectedOrderPositions(ordersArray[ndx].getOrderItems());
     }
     
     

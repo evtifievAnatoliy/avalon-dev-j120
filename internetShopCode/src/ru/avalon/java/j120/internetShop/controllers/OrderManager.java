@@ -31,12 +31,13 @@ public class OrderManager {
                     {
                         throw new IllegalArgumentException("Error. Товар с артикулом: " + item.getArticle() + " в заказе уже есть.");
                     }
-                if(item.getStockBalance() < numberOfItems) //проверка на наличие товара на складе
-                    {
-                        throw new IllegalArgumentException("Error. Товар с артикулом: " + item.getArticle() + " в нужном кол-ве на складе нет.");
-                    }
+                
             }
-               
+        if(item.getStockBalance() < numberOfItems) //проверка на наличие товара на складе
+            {
+                throw new IllegalArgumentException("Error. Товар с артикулом: " + item.getArticle() + " в нужном кол-ве на складе нет.");
+            }
+           
         OrderPosition orderPosition = new OrderPosition(item, numberOfItems);
         orderItems.add(orderPosition);
     

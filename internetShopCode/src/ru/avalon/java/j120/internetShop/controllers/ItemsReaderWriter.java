@@ -53,7 +53,7 @@ public class ItemsReaderWriter {
         
         // создаем коллекцию товаров
         ArrayList<Item> items = new ArrayList<Item>();
-            try(BufferedReader br = new BufferedReader(new FileReader(Configuration.getInstance().getProperty("items.Path")))){
+            try(BufferedReader br = new BufferedReader(new FileReader(file))){
                 String str;
                 while ((str = br.readLine()) != null) {
                     String[] strSplit=str.split(";");
