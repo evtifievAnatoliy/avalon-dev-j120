@@ -67,5 +67,22 @@ public class Item implements Serializable{
     public String toString() {
         return article + ";" + name + ";" + color + ";" + price + ";" + stockBalance;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
+    public void setStockBalance(int stockBalance) {
+        this.stockBalance = stockBalance;
+    }
+    
         
 }

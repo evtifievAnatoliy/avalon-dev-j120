@@ -8,16 +8,27 @@ package ru.avalon.java.j120.internetShop.ui;
 import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
+import ru.avalon.java.j120.internetShop.controllers.MainController;
+import ru.avalon.java.j120.internetShop.models.Item;
 
 /**
  *
  * @author eag
  */
 public class OrderModalDialog extends AbstractModalDialog{
+    
+    private MainController mainController;
+    private ArrayList<Item> items;
+    
     
     private JTextField orderNumber;
     private JTextField dateTheOrderWasGreated;
@@ -31,9 +42,13 @@ public class OrderModalDialog extends AbstractModalDialog{
     private JTextField disconte; 
     private JTextField statusOfOrder;
     
+    JButton addItembtn;
+    private JTable orderPositionTable;
     
-    public OrderModalDialog(Frame owner) {
+    public OrderModalDialog(Frame owner, ArrayList<Item> items, MainController mainController) {
         super(owner, "Новый заказ");
+        this.items = items;
+        this.mainController = mainController;
         
         JPanel controlsPane = getControlsPane();
         
@@ -71,17 +86,38 @@ public class OrderModalDialog extends AbstractModalDialog{
         jPanelOrderDiscountStatus.setLayout(new FlowLayout(FlowLayout.LEFT));
         jPanelOrderDiscountStatus.add(disconte);
         jPanelOrderDiscountStatus.add(statusOfOrder);
-        
-        
-        
+              
         JPanel jPanelOrder = new JPanel();
         jPanelOrder.setLayout(new BoxLayout(jPanelOrder, BoxLayout.Y_AXIS));
         jPanelOrder.add(jPanelOrderNumberDatePerson);
         jPanelOrder.add(jPanelOrderAdress);
         jPanelOrder.add(jPanelOrderDiscountStatus);
         
+        JPanel jPanelOrderButton = new JPanel();
+        jPanelOrderButton.setLayout(new FlowLayout(FlowLayout.LEFT));
+        addItembtn = new JButton("Add Item...");
+        addItembtn.addActionListener(e -> {
+            ItemsModalDialog itemsModalDialog = new ItemsModalDialog(owner, "Таблица товаров", items, mainController);
+            itemsModalDialog.setVisible(true);
+            if (itemsModalDialog.isSuccess())
+            {
+                //добавляем заказ
+            }
+            
+        });
+        jPanelOrderButton.add(addItembtn);
+        jPanelOrder.add(jPanelOrderButton);
         
-        controlsPane.add(jPanelOrder);
+        
+        OrderPositionTableModel orderPositionTableModel = new OrderPositionTableModel();
+        orderPositionTable = new JTable(orderPositionTableModel);
+        
+        JSplitPane splitPaneItems = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
+            jPanelOrder,  
+            new JScrollPane(orderPositionTable)); // добавлена прокрутка
+        splitPaneItems.setDividerLocation(130);
+        
+        controlsPane.add(splitPaneItems);
         pack(); // сформировать правильные размеры окна
         
     }

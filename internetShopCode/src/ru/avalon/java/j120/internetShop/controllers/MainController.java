@@ -6,6 +6,7 @@
 package ru.avalon.java.j120.internetShop.controllers;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import ru.avalon.java.j120.internetShop.models.Item;
@@ -28,7 +29,7 @@ public class MainController {
     OrderReaderWriter orderReaderWriter = new OrderReaderWriter();
     CustomersReaderWriter customersReaderWriter = new CustomersReaderWriter();
     
-    public MainController() throws IOException, ClassNotFoundException {
+    public MainController() throws IOException, ClassNotFoundException, ParseException {
         stockItems = new StockItems(itemsReaderWriter.readItems());
         orders = new Orders(orderReaderWriter.readOrders());
         orderManager = new OrderManager();

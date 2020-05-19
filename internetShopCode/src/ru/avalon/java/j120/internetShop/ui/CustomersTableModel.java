@@ -10,34 +10,28 @@ import java.util.List;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
-import ru.avalon.java.j120.internetShop.models.*;
+import ru.avalon.java.j120.internetShop.commons.*;
 
-/**
- *
- * @author eag
- */
-public class ItemsTableModel implements TableModel{
-    private List<Item> items;
-    private final String[] columnNames = {"Артикул", "Название", "Цвет", "Цена", "Остаток на складе"};
+public class CustomersTableModel implements TableModel{
+    private List<Person> customers;
+    private final String[] columnNames = {"Имя", "Адрес доставки", "Номер телефона"};
     private final Class<?>[] columnTypes = {
         String.class,
         String.class,
-        String.class,
-        Integer.class,
-        Integer.class
+        String.class
     };
     private List<TableModelListener> listeners = new ArrayList<>();
     
     
     
-    public ItemsTableModel() {
-        this.items = new ArrayList<>();
+    public CustomersTableModel() {
+        this.customers = new ArrayList<>();
         
     }
     
     @Override
     public int getRowCount() {
-        return items.size();
+        return customers.size();
     }
 
     @Override
@@ -57,14 +51,12 @@ public class ItemsTableModel implements TableModel{
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        Item item = items.get(rowIndex);
+        Person person = customers.get(rowIndex);
         switch(columnIndex)
         {
-            case 0: return item.getArticle();
-            case 1: return item.getName();
-            case 2: return item.getColor();
-            case 3: return item.getPrice();
-            case 4: return item.getStockBalance();
+            case 0: return person.getName();
+            case 1: return person.getAdressToDelivery().toString();
+            case 2: return person.getPhoneNumber();
             default: 
                 throw new Error ("Unreachable place.");
         }
@@ -78,8 +70,6 @@ public class ItemsTableModel implements TableModel{
             case 0: return false;
             case 1: return false;
             case 2: return false;
-            case 3: return false;
-            case 4: return true;
             default: 
                 throw new Error ("Unreachable place.");
         }
@@ -89,19 +79,7 @@ public class ItemsTableModel implements TableModel{
 
     @Override // метод записи редактируемой ячейки
     public void setValueAt(Object o, int rowIndex, int columnIndex) {
-        
-        Item item = items.get(rowIndex);
-        switch(columnIndex)
-        {
-            case 0: break;
-            case 1: item.setName(o.toString());
-            case 2: item.setColor(o.toString());
-            case 3: item.setPrice(Integer.valueOf(o.toString()));
-            case 4: item.setStockBalance(Integer.valueOf(o.toString()));
-            //default: 
-              //  throw new Error ("Unreachable place.");
-        }
-        eventChangeItem();
+      
     }
     
     @Override
@@ -114,21 +92,15 @@ public class ItemsTableModel implements TableModel{
         listeners.remove(tl);
     }
     
-    public void setStockItems(ArrayList<Item> items){
-        this.items = items;
+    public void setCustomers(ArrayList<Person> customers){
+        this.customers = customers;
         TableModelEvent e = new TableModelEvent(this); 
         for (TableModelListener l: listeners)
             l.tableChanged(e);
     }
     
-    public void eventAddNewItem(ArrayList<Item> items){
-        this.items = items;
-        TableModelEvent e = new TableModelEvent(this); 
-        for (TableModelListener l: listeners)
-            l.tableChanged(e);
-    }
     
-    public void eventChangeItem(){
+    public void eventChangePerson(){
         TableModelEvent e = new TableModelEvent(this); 
         for (TableModelListener l: listeners)
             l.tableChanged(e);

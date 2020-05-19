@@ -20,6 +20,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import ru.avalon.java.j120.internetShop.controllers.MainController;
 import ru.avalon.java.j120.internetShop.models.Item;
 
 
@@ -29,17 +30,21 @@ import ru.avalon.java.j120.internetShop.models.Item;
  */
 public class ItemsModalDialog extends JDialog {
     
+    private MainController mainController;
     private ArrayList<Item> items;
+    
     
     private JPanel controlPane;
     private JTable itemsTable;
     private boolean addPressed;
     
+    
     ItemsTableModel itemsTableModel = new ItemsTableModel();
     
-    public ItemsModalDialog(Frame owner, String title, ArrayList<Item> items){
+    public ItemsModalDialog(Frame owner, String title, ArrayList<Item> items, MainController mainController){
         super(owner, title, true);
         this.items = items;
+        this.mainController = mainController;
         
         controlPane = new JPanel();
         controlPane.setLayout(new BoxLayout(controlPane, BoxLayout.Y_AXIS));
@@ -48,9 +53,24 @@ public class ItemsModalDialog extends JDialog {
         itemsTableModel.setStockItems(this.items);
         itemsTable = new JTable(itemsTableModel);
         add(new JScrollPane(itemsTable));
+        itemsTableModel.addTableModelListener(new TableModelListener() {
+            @Override
+            public void tableChanged(TableModelEvent tme) {
+                try{
+                    mainController.writeItems();
+                }
+                catch(Exception ex){
+                    JOptionPane.showMessageDialog(null, 
+                            "Не удалось сохранить изменения",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+      
         
         JPanel botton = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        JButton btnAdd = new JButton("Add...");
+        JButton btnAdd = new JButton("AddToStockItems...");
         botton.add(btnAdd);
         btnAdd.addActionListener(e ->{
             addPressed = true;
@@ -61,7 +81,8 @@ public class ItemsModalDialog extends JDialog {
                 try
                     { 
                     items.add(addNewItemModalDialog.addNewItem());
-                    itemsTableModel.eventAddNewItemEvent(items);    
+                    itemsTableModel.eventAddNewItem(items);
+                    mainController.writeItems();
                 }
                 catch(Exception ex){
                     JOptionPane.showMessageDialog(this, 

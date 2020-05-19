@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.text.ParseException;
 import java.util.*;
 import javax.swing.*;
 import ru.avalon.java.j120.internetShop.commons.*;
@@ -23,6 +24,7 @@ public class MainForm extends JFrame{
     
     MainController mainController;
     StockItems stockItems;
+    CustomersManager customersManager;
     ArrayList<OrderPosition> orderItems = new ArrayList<>();
     OrderManager orderManager;
     Orders orders;
@@ -30,10 +32,11 @@ public class MainForm extends JFrame{
     
     OrderPositionTableModel orderPositionTableModel = new OrderPositionTableModel();
     
-    private JButton add;
-    private JButton items;
-    private JButton del;
-    private JButton ex;
+    private JButton addbtn;
+    private JButton itemsbtn;
+    private JButton customersbtn;
+    private JButton delbtn;
+    private JButton exbtn;
     
     private JTextField orderNumber;
     private JTextField dateTheOrderWasGreated;
@@ -52,7 +55,7 @@ public class MainForm extends JFrame{
     private JTable orderPositionTable;
             
     
-    public MainForm() throws IOException, ClassNotFoundException {
+    public MainForm() throws IOException, ClassNotFoundException, ParseException {
         
         super("InternetShop"); //название формы
         setBounds(300, 200, 1100, 800);
@@ -63,6 +66,7 @@ public class MainForm extends JFrame{
         //общий объект работающий с товарами и заказами
         mainController = new MainController();
         stockItems = mainController.getStockItems();
+        customersManager = mainController.getCustomersManager();
         orders = mainController.getOrders();
         orderManager = mainController.getOrderManager();
          
@@ -78,9 +82,9 @@ public class MainForm extends JFrame{
         JPanel jPanelRight = new JPanel();
         jPanelRight.setLayout(new FlowLayout(FlowLayout.RIGHT));
         
-        add = new JButton("Add...");
-        add.addActionListener(e -> {
-            OrderModalDialog orderModalDialog = new OrderModalDialog(this);
+        addbtn = new JButton("Add...");
+        addbtn.addActionListener(e -> {
+            OrderModalDialog orderModalDialog = new OrderModalDialog(this, stockItems.getItemsAsList(), mainController);
             orderModalDialog.setVisible(true);
             if (orderModalDialog.isSuccess())
             {
@@ -89,9 +93,17 @@ public class MainForm extends JFrame{
             
         });
         
-        items = new JButton("Items...");
-        items.addActionListener(e -> {
-            ItemsModalDialog itemsModalDialog = new ItemsModalDialog(this, "Таблица товаров", stockItems.getItemsAsList());
+        
+        
+        delbtn = new JButton("Delite");
+        
+        jPanelLeft.add(addbtn);
+        jPanelLeft.add(delbtn);
+        
+        
+        itemsbtn = new JButton("Items...");
+        itemsbtn.addActionListener(e -> {
+            ItemsModalDialog itemsModalDialog = new ItemsModalDialog(this, "Таблица товаров", stockItems.getItemsAsList(), mainController);
             itemsModalDialog.setVisible(true);
             if (itemsModalDialog.isSuccess())
             {
@@ -100,21 +112,26 @@ public class MainForm extends JFrame{
             
         });
         
-        del = new JButton("Delite");
+        customersbtn = new JButton("Customers...");
+        customersbtn.addActionListener(e -> {
+            CustomersModalDialog customersModalDialog = new CustomersModalDialog(this, "Таблица товаров", customersManager.getCustomersAsList(), mainController);
+            customersModalDialog.setVisible(true);
+            
+            
+        });
         
-        jPanelLeft.add(add);
-        jPanelLeft.add(items);
-        jPanelLeft.add(del);
-                
-        ex = new JButton("Exit");
-        ex.addActionListener(new ActionListener() {
+        exbtn = new JButton("Exit");
+        exbtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.exit(0);
             }
         });
         
-        jPanelRight.add(ex);
+        jPanelRight.add(itemsbtn);
+        jPanelRight.add(customersbtn);
+        jPanelRight.add(exbtn);
+        
         
         JToolBar toolBar = new JToolBar();
         toolBar.add(jPanelLeft);

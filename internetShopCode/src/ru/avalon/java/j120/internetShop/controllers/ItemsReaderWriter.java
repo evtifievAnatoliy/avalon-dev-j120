@@ -12,6 +12,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import ru.avalon.java.j120.internetShop.configuration.Configuration;
 import ru.avalon.java.j120.internetShop.models.Item;
@@ -43,14 +45,13 @@ public class ItemsReaderWriter {
     }
     
     // метод чтения из файла. На входе путь записи и  коллекция Товаров
-    public ArrayList<Item> readItems() throws IOException{
+    public ArrayList<Item> readItems() throws IOException, ParseException{
         
         File file = new File(Configuration.getInstance().getProperty("items.Path"));
         if(!file.exists()){
             ArrayList<Item> items = new ArrayList<Item>();
             return items;
         }
-        
         // создаем коллекцию товаров
         ArrayList<Item> items = new ArrayList<Item>();
             try(BufferedReader br = new BufferedReader(new FileReader(file))){
@@ -58,7 +59,7 @@ public class ItemsReaderWriter {
                 while ((str = br.readLine()) != null) {
                     String[] strSplit=str.split(";");
                     // пробуем создать объект товар и добавить его в коллекцию
-                    Item item = new Item(strSplit[0], strSplit[1], strSplit[2], Integer.parseInt(strSplit[3]), Integer.parseInt(strSplit[4]));
+                    Item item = new Item(strSplit[0], strSplit[1], strSplit[2], NumberFormat.getIntegerInstance().parse(strSplit[3]).intValue(), NumberFormat.getIntegerInstance().parse(strSplit[4]).intValue());
                     items.add(item);
             }
             return items;
