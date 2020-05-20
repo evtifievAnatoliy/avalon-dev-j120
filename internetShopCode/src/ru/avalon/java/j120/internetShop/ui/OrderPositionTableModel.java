@@ -7,6 +7,7 @@ package ru.avalon.java.j120.internetShop.ui;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
@@ -77,11 +78,43 @@ public class OrderPositionTableModel implements TableModel{
                 
     @Override // метод разрешающий редактирования ячеек
     public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return false;
+        switch(columnIndex)
+        {
+            case 0: return false;
+            case 1: return false;
+            case 2: return false;
+            case 3: return false;
+            case 4: return true;
+            case 5: return false;
+            default: 
+                throw new Error ("Unreachable place.");
+        }
+                
     }
 
     @Override // метод записи редактируемой ячейки
     public void setValueAt(Object o, int rowIndex, int columnIndex) {
+        OrderPosition orderPosition = orderItems.get(rowIndex);
+        switch(columnIndex)
+        {
+            case 0: break;
+            case 1: break;
+            case 2: break;
+            case 3: break;
+            case 4: try{ 
+                orderPosition.setNumberOfItems(Integer.valueOf(o.toString()));
+            }
+            catch(Exception ex){
+                JOptionPane.showMessageDialog(null, 
+                            ex.getMessage(),
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+            }
+            case 5: break;
+            //default: 
+              //  throw new Error ("Unreachable place.");
+        }
+        eventChangeItemsInOrderPositions();
     }
     
     @Override
@@ -94,8 +127,14 @@ public class OrderPositionTableModel implements TableModel{
         listeners.remove(tl);
     }
     
-    public void setSelectedOrderPositions(ArrayList<OrderPosition> positions){
+    public void eventChangeItemsInOrderPositions(ArrayList<OrderPosition> positions){
         this.orderItems = positions;
+        TableModelEvent e = new TableModelEvent(this); 
+        for (TableModelListener l: listeners)
+            l.tableChanged(e);
+    }
+    
+    public void eventChangeItemsInOrderPositions(){
         TableModelEvent e = new TableModelEvent(this); 
         for (TableModelListener l: listeners)
             l.tableChanged(e);

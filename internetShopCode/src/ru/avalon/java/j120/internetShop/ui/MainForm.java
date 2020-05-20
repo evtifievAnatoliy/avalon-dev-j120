@@ -252,7 +252,7 @@ public class MainForm extends JFrame{
         disconte.setText(this.orders.getOrders().get(ndx).getDisconte().toString());
         statusOfOrder.setText(this.orders.getOrders().get(ndx).getStatusOfOrder().toString());
         
-        orderPositionTableModel.setSelectedOrderPositions(this.orders.getOrders().get(ndx).getOrderItems());
+        orderPositionTableModel.eventChangeItemsInOrderPositions(this.orders.getOrders().get(ndx).getOrderItems());
         
     }
     

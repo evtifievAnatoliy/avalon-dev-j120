@@ -8,10 +8,14 @@ package ru.avalon.java.j120.internetShop.ui;
 import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.text.NumberFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -19,6 +23,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import ru.avalon.java.j120.internetShop.controllers.MainController;
 import ru.avalon.java.j120.internetShop.models.Item;
+import ru.avalon.java.j120.internetShop.models.OrderPosition;
 
 /**
  *
@@ -28,94 +33,170 @@ public class OrderModalDialog extends AbstractModalDialog{
     
     private MainController mainController;
     private ArrayList<Item> items;
+    private ArrayList<OrderPosition> orderItems;
     
-    
-    private JTextField orderNumber;
-    private JTextField dateTheOrderWasGreated;
     private JTextField name;  
     private JTextField contry;
     private JTextField region;
     private JTextField street;
     private JTextField house; 
-    private JTextField flat; 
+    private JFormattedTextField flat; 
     private JTextField phoneNumber;
-    private JTextField disconte; 
-    private JTextField statusOfOrder;
+    private JFormattedTextField disconte; 
+    
     
     JButton addItembtn;
+    JButton delItembtn;
     private JTable orderPositionTable;
     
     public OrderModalDialog(Frame owner, ArrayList<Item> items, MainController mainController) {
         super(owner, "Новый заказ");
         this.items = items;
         this.mainController = mainController;
+        orderItems = new ArrayList<OrderPosition>();
+        OrderPositionTableModel orderPositionTableModel = new OrderPositionTableModel();
+        
         
         JPanel controlsPane = getControlsPane();
-        
-        orderNumber = new JFormattedTextField(NumberFormat.getIntegerInstance());
-        orderNumber.setEditable(false);
-        orderNumber.setColumns(10);
-        orderNumber.setText("1");
-        dateTheOrderWasGreated = new JTextField("Дата заказа", 15);
-        name = new JTextField("Имя клиента", 30);  
-        phoneNumber = new JTextField("Телефон", 15);
-        contry = new JTextField("Страна", 15);
-        region = new JTextField("Регион", 20);
-        street = new JTextField("Улица", 20);
-        house = new JTextField("Дом", 5); 
-        flat = new JTextField("Кв.", 3); 
-        disconte = new JTextField("Скидка", 5); 
-        statusOfOrder = new JTextField("Статус заказа", 20);
-        
-        JPanel jPanelOrderNumberDatePerson = new JPanel();
-        jPanelOrderNumberDatePerson.setLayout(new FlowLayout(FlowLayout.LEFT));
-        jPanelOrderNumberDatePerson.add(orderNumber);
-        jPanelOrderNumberDatePerson.add(dateTheOrderWasGreated);
-        jPanelOrderNumberDatePerson.add(name);
-        jPanelOrderNumberDatePerson.add(phoneNumber);
-        
-        JPanel jPanelOrderAdress = new JPanel();
-        jPanelOrderAdress.setLayout(new FlowLayout(FlowLayout.LEFT));
-        jPanelOrderAdress.add(contry);
-        jPanelOrderAdress.add(region);
-        jPanelOrderAdress.add(street);
-        jPanelOrderAdress.add(house);
-        jPanelOrderAdress.add(flat);
-        
-        JPanel jPanelOrderDiscountStatus = new JPanel();
-        jPanelOrderDiscountStatus.setLayout(new FlowLayout(FlowLayout.LEFT));
-        jPanelOrderDiscountStatus.add(disconte);
-        jPanelOrderDiscountStatus.add(statusOfOrder);
-              
         JPanel jPanelOrder = new JPanel();
         jPanelOrder.setLayout(new BoxLayout(jPanelOrder, BoxLayout.Y_AXIS));
-        jPanelOrder.add(jPanelOrderNumberDatePerson);
-        jPanelOrder.add(jPanelOrderAdress);
-        jPanelOrder.add(jPanelOrderDiscountStatus);
+        JPanel jPanel;
+        
+        
+        NumberFormat numberFormat;
+        JLabel lbl;
+        
+        jPanel = new JPanel();
+        jPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        name = new JTextField(30);
+        lbl = new JLabel("Имя клиента: ");
+        lbl.setLabelFor(name);
+        jPanel.add(lbl);
+        jPanel.add(name);
+        
+        phoneNumber = new JTextField(15);
+        lbl = new JLabel("Телефон: ");
+        lbl.setLabelFor(phoneNumber);
+        jPanel.add(lbl);
+        jPanel.add(phoneNumber);
+        jPanelOrder.add(jPanel);
+        
+        jPanel = new JPanel();
+        jPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        contry = new JTextField("Российская Федерация", 15);
+        lbl = new JLabel("Страна: ");
+        lbl.setLabelFor(contry);
+        jPanel.add(lbl);
+        jPanel.add(contry);
+        region = new JTextField("Санкт-Петербург", 20);
+        lbl = new JLabel("Регион: ");
+        lbl.setLabelFor(region);
+        jPanel.add(lbl);
+        jPanel.add(region);
+        jPanelOrder.add(jPanel);
+        
+        jPanel = new JPanel();
+        jPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        street = new JTextField(20);
+        lbl = new JLabel("Улица: ");
+        lbl.setLabelFor(street);
+        jPanel.add(lbl);
+        jPanel.add(street);
+        house = new JTextField(5); 
+        lbl = new JLabel("Дом: ");
+        lbl.setLabelFor(house);
+        jPanel.add(lbl);
+        jPanel.add(house);
+        numberFormat = NumberFormat.getIntegerInstance();
+        flat = new JFormattedTextField();
+        flat.setColumns(3);
+        lbl = new JLabel("Квартира: ");
+        lbl.setLabelFor(flat);
+        jPanel.add(lbl);
+        jPanel.add(flat);
+        jPanelOrder.add(jPanel);
+        
+        jPanel = new JPanel();
+        jPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        numberFormat = NumberFormat.getIntegerInstance();
+        disconte = new JFormattedTextField();
+        disconte.setColumns(3);
+        lbl = new JLabel("Скидка: ");
+        lbl.setLabelFor(disconte);
+        jPanel.add(lbl);
+        jPanel.add(disconte);
+        jPanelOrder.add(jPanel);
+        
         
         JPanel jPanelOrderButton = new JPanel();
         jPanelOrderButton.setLayout(new FlowLayout(FlowLayout.LEFT));
         addItembtn = new JButton("Add Item...");
         addItembtn.addActionListener(e -> {
-            ItemsModalDialog itemsModalDialog = new ItemsModalDialog(owner, "Таблица товаров", items, mainController);
-            itemsModalDialog.setVisible(true);
-            if (itemsModalDialog.isSuccess())
+            AddNewItemToOrderModalDialog addNewItemToOrderModalDialog = new AddNewItemToOrderModalDialog(owner, "Таблица товаров", items, mainController);
+            addNewItemToOrderModalDialog.setVisible(true);
+            if (addNewItemToOrderModalDialog.isSuccess())
             {
-                //добавляем заказ
+                try{
+                OrderPosition newPosition = new OrderPosition(addNewItemToOrderModalDialog.getItem(), 1);
+                orderItems.add(newPosition);
+                orderPositionTableModel.eventChangeItemsInOrderPositions(orderItems);
+                JOptionPane.showMessageDialog(this, 
+                            "Товар:\n" + newPosition.getItem().getName() + 
+                                    "\nс артикулом \n" + newPosition.getItem().getArticle() + 
+                                    "\nдобавлен.",
+                            "Добавление товара в заказ",
+                            JOptionPane.INFORMATION_MESSAGE);
+                }
+                catch(Exception ex){
+                    JOptionPane.showMessageDialog(this, 
+                            ex.getMessage(),
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            }
+            
+        });
+        delItembtn = new JButton("Delete Item");
+        delItembtn.addActionListener(e -> {
+            if (orderItems.size() > 0)
+            {
+                if(orderPositionTable.getSelectedRow()>=0){
+                orderItems.remove(orderPositionTable.getSelectedRow());
+                orderPositionTableModel.eventChangeItemsInOrderPositions(orderItems);
+                JOptionPane.showMessageDialog(this, 
+                            "Товар: " + orderItems.get(orderPositionTable.getSelectedRow()).getItem().getName() + 
+                                    "\nс артикулом \n" + orderItems.get(orderPositionTable.getSelectedRow()).getItem().getArticle() + 
+                                    "\nудален из заказа.",
+                            "Удаление товара из заказа.",
+                            JOptionPane.INFORMATION_MESSAGE);
+                }
+                else
+                    JOptionPane.showMessageDialog(this, 
+                            "Товар на удаление из заказа не выбран.",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+            }
+            else{
+                JOptionPane.showMessageDialog(this, 
+                            "Товаров в заказе нет.",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
             }
             
         });
         jPanelOrderButton.add(addItembtn);
+        jPanelOrderButton.add(delItembtn);
+        
         jPanelOrder.add(jPanelOrderButton);
         
         
-        OrderPositionTableModel orderPositionTableModel = new OrderPositionTableModel();
         orderPositionTable = new JTable(orderPositionTableModel);
+        // Нужно закрыть доступ к редактированию склада!!!!!!
         
         JSplitPane splitPaneItems = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
             jPanelOrder,  
             new JScrollPane(orderPositionTable)); // добавлена прокрутка
-        splitPaneItems.setDividerLocation(130);
+        splitPaneItems.setDividerLocation(160);
         
         controlsPane.add(splitPaneItems);
         pack(); // сформировать правильные размеры окна

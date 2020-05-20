@@ -83,8 +83,7 @@ public class ItemsTableModel implements TableModel{
             default: 
                 throw new Error ("Unreachable place.");
         }
-        
-        
+                
     }
 
     @Override // метод записи редактируемой ячейки

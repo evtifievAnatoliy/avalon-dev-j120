@@ -9,6 +9,7 @@ import ru.avalon.java.j120.internetShop.configuration.Configuration;
 import ru.avalon.java.j120.internetShop.ui.*;
 
 import java.io.*;
+import java.text.ParseException;
 import java.util.Properties;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -30,7 +31,7 @@ public class Main extends JFrame{
      * @param args the command line arguments
      */
         
-    public static void main(String[] args) throws IOException, ClassNotFoundException {
+    public static void main(String[] args) throws IOException, ClassNotFoundException, ParseException {
         // TODO code application logic here
         
        
