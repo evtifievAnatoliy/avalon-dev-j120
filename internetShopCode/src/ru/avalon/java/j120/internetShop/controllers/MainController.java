@@ -22,7 +22,6 @@ public class MainController {
     
     private StockItems stockItems;
     private Orders orders;
-    private OrderManager orderManager;
     private CustomersManager customersManager;
     
     ItemsReaderWriter itemsReaderWriter = new ItemsReaderWriter();
@@ -32,18 +31,12 @@ public class MainController {
     public MainController() throws IOException, ClassNotFoundException, ParseException {
         stockItems = new StockItems(itemsReaderWriter.readItems());
         orders = new Orders(orderReaderWriter.readOrders());
-        orderManager = new OrderManager();
         customersManager = new CustomersManager(customersReaderWriter.readCustomers());
     }
 
     public StockItems getStockItems() {
         return stockItems;
     }
-
-    public OrderManager getOrderManager() {
-        return orderManager;
-    }
-
     public CustomersManager getCustomersManager() {
         return customersManager;
     }

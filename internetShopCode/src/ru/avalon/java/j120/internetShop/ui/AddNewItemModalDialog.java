@@ -64,7 +64,7 @@ public class AddNewItemModalDialog extends AbstractModalDialog{
         
         panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         numberFormat = NumberFormat.getIntegerInstance();
-        price = new JFormattedTextField();
+        price = new JFormattedTextField(numberFormat);
         price.setColumns(10);
         lbl = new JLabel("Цена товара: ");
         lbl.setLabelFor(price);
@@ -75,7 +75,7 @@ public class AddNewItemModalDialog extends AbstractModalDialog{
         panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         stockBalance = new JFormattedTextField(numberFormat);
         stockBalance.setColumns(10);
-        lbl = new JLabel("Цена товара: ");
+        lbl = new JLabel("Кол-во товара на складе: ");
         lbl.setLabelFor(stockBalance);
         panel.add(lbl);
         panel.add(stockBalance);

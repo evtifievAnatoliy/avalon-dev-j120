@@ -20,7 +20,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-import ru.avalon.java.j120.internetShop.controllers.MainController;
+import ru.avalon.java.j120.internetShop.controllers.*;
 import ru.avalon.java.j120.internetShop.models.Item;
 
 
@@ -31,6 +31,7 @@ import ru.avalon.java.j120.internetShop.models.Item;
 public class ItemsModalDialog extends JDialog {
     
     private MainController mainController;
+    private StockItems stockItems;
     private ArrayList<Item> items;
     
     
@@ -41,10 +42,11 @@ public class ItemsModalDialog extends JDialog {
     
     ItemsTableModel itemsTableModel = new ItemsTableModel();
     
-    public ItemsModalDialog(Frame owner, String title, ArrayList<Item> items, MainController mainController){
+    public ItemsModalDialog(Frame owner, String title, MainController mainController){
         super(owner, title, true);
-        this.items = items;
         this.mainController = mainController;
+        stockItems = mainController.getStockItems();
+        this.items = stockItems.getItemsAsList();
         
         controlPane = new JPanel();
         controlPane.setLayout(new BoxLayout(controlPane, BoxLayout.Y_AXIS));
@@ -80,13 +82,19 @@ public class ItemsModalDialog extends JDialog {
             if(addNewItemModalDialog.isSuccess()){
                 try
                     { 
-                    items.add(addNewItemModalDialog.addNewItem());
+                    stockItems.addItem(addNewItemModalDialog.addNewItem());
                     itemsTableModel.eventAddNewItem(items);
                     mainController.writeItems();
+                    JOptionPane.showMessageDialog(this, 
+                            "Товар:\n" + addNewItemModalDialog.addNewItem().getName() + 
+                                    "\nс артикулом \n" + addNewItemModalDialog.addNewItem().getArticle() + 
+                                    "\nдобавлен на склад.",
+                            "Добавление товара на склад",
+                            JOptionPane.INFORMATION_MESSAGE);
                 }
                 catch(Exception ex){
                     JOptionPane.showMessageDialog(this, 
-                            "Неккоректные данные в полях ввода нового товара!!! \n" + "Новый товар не добавлен.",
+                            ex.getMessage(),
                             "Error",
                             JOptionPane.ERROR_MESSAGE);
                 }

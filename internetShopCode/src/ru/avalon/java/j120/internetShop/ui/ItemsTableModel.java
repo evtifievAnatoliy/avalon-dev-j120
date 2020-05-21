@@ -7,6 +7,7 @@ package ru.avalon.java.j120.internetShop.ui;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
@@ -96,7 +97,16 @@ public class ItemsTableModel implements TableModel{
             case 1: item.setName(o.toString());
             case 2: item.setColor(o.toString());
             case 3: item.setPrice(Integer.valueOf(o.toString()));
-            case 4: item.setStockBalance(Integer.valueOf(o.toString()));
+            case 4: try{ 
+                item.setStockBalance(Integer.valueOf(o.toString()));
+            }
+            catch(Exception ex){
+                JOptionPane.showMessageDialog(null, 
+                            ex.getMessage(),
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+            }
+           
             //default: 
               //  throw new Error ("Unreachable place.");
         }

@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import java.text.ParseException;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 import javax.swing.*;
 import ru.avalon.java.j120.internetShop.commons.*;
 import ru.avalon.java.j120.internetShop.controllers.*;
@@ -23,8 +24,6 @@ import ru.avalon.java.j120.internetShop.models.*;
 public class MainForm extends JFrame{
     
     MainController mainController;
-    StockItems stockItems;
-    CustomersManager customersManager;
     ArrayList<OrderPosition> orderItems = new ArrayList<>();
     OrderManager orderManager;
     Orders orders;
@@ -65,12 +64,7 @@ public class MainForm extends JFrame{
         
         //общий объект работающий с товарами и заказами
         mainController = new MainController();
-        stockItems = mainController.getStockItems();
-        customersManager = mainController.getCustomersManager();
         orders = mainController.getOrders();
-        orderManager = mainController.getOrderManager();
-         
-        
         
         
         Container c = getContentPane();
@@ -84,11 +78,12 @@ public class MainForm extends JFrame{
         
         addbtn = new JButton("Add...");
         addbtn.addActionListener(e -> {
-            OrderModalDialog orderModalDialog = new OrderModalDialog(this, stockItems.getItemsAsList(), mainController);
+            OrderModalDialog orderModalDialog = new OrderModalDialog(this, mainController);
             orderModalDialog.setVisible(true);
             if (orderModalDialog.isSuccess())
             {
-                //добавляем заказ
+                
+                
             }
             
         });
@@ -103,18 +98,14 @@ public class MainForm extends JFrame{
         
         itemsbtn = new JButton("Items...");
         itemsbtn.addActionListener(e -> {
-            ItemsModalDialog itemsModalDialog = new ItemsModalDialog(this, "Таблица товаров", stockItems.getItemsAsList(), mainController);
+            ItemsModalDialog itemsModalDialog = new ItemsModalDialog(this, "Таблица товаров", mainController);
             itemsModalDialog.setVisible(true);
-            if (itemsModalDialog.isSuccess())
-            {
-                //добавляем заказ
-            }
-            
+                        
         });
         
         customersbtn = new JButton("Customers...");
         customersbtn.addActionListener(e -> {
-            CustomersModalDialog customersModalDialog = new CustomersModalDialog(this, "Таблица товаров", customersManager.getCustomersAsList(), mainController);
+            CustomersModalDialog customersModalDialog = new CustomersModalDialog(this, "Таблица товаров", mainController);
             customersModalDialog.setVisible(true);
             
             

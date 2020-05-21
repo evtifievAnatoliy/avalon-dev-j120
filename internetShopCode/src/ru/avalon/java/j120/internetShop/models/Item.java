@@ -22,7 +22,10 @@ public class Item implements Serializable{
     public Item(String article, String name, int price, int stockBalance) {
         if (price <= 0){
             throw new IllegalArgumentException("Цена не может быть меньше или равна 0");
-        }           
+        }   
+        if (stockBalance < 0){
+            throw new IllegalArgumentException("Остаток на складе не может быть отрицательным.");
+        }  
         this.article = article;
         this.name = name;
         this.price = price;
@@ -81,6 +84,8 @@ public class Item implements Serializable{
     }
 
     public void setStockBalance(int stockBalance) {
+        if (stockBalance < 0)
+            throw new IllegalArgumentException("Error. Остаток на складе не может быть отрицательным.");
         this.stockBalance = stockBalance;
     }
     

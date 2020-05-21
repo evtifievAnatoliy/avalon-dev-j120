@@ -38,7 +38,7 @@ public class AddNewItemToOrderModalDialog extends JDialog{
     private boolean addPressed;
     
     
-    ItemsTableModel itemsTableModel = new ItemsTableModel();
+    ItemsTableModelWithOnlyReadRights itemsTableModel = new ItemsTableModelWithOnlyReadRights();
     
     public AddNewItemToOrderModalDialog(Frame owner, String title, ArrayList<Item> items, MainController mainController){
         super(owner, title, true);

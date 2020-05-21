@@ -18,7 +18,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-import ru.avalon.java.j120.internetShop.controllers.MainController;
+import ru.avalon.java.j120.internetShop.controllers.*;
 import ru.avalon.java.j120.internetShop.commons.*;
 
 /**
@@ -27,6 +27,7 @@ import ru.avalon.java.j120.internetShop.commons.*;
  */
 public class CustomersModalDialog extends JDialog{
     MainController mainController;
+    private CustomersManager customersManager;
     private ArrayList<Person> customers;
     
     
@@ -36,10 +37,12 @@ public class CustomersModalDialog extends JDialog{
     
     CustomersTableModel customersTableModel = new CustomersTableModel();
     
-    public CustomersModalDialog(Frame owner, String title, ArrayList<Person> customers, MainController mainController){
+    public CustomersModalDialog(Frame owner, String title, MainController mainController){
         super(owner, title, true);
         this.customers = customers;
         this.mainController = mainController;
+        customersManager = mainController.getCustomersManager();
+        this.customers = customersManager.getCustomersAsList();
         
         controlPane = new JPanel();
         controlPane.setLayout(new BoxLayout(controlPane, BoxLayout.Y_AXIS));

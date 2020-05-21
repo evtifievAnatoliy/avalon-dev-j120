@@ -8,9 +8,12 @@ package ru.avalon.java.j120.internetShop.ui;
 import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
@@ -21,9 +24,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import ru.avalon.java.j120.internetShop.controllers.MainController;
+import ru.avalon.java.j120.internetShop.commons.Address;
+import ru.avalon.java.j120.internetShop.commons.Person;
+import ru.avalon.java.j120.internetShop.configuration.Configuration;
+import ru.avalon.java.j120.internetShop.controllers.*;
 import ru.avalon.java.j120.internetShop.models.Item;
 import ru.avalon.java.j120.internetShop.models.OrderPosition;
+import ru.avalon.java.j120.internetShop.models.StatusOfOrder;
 
 /**
  *
@@ -32,6 +39,10 @@ import ru.avalon.java.j120.internetShop.models.OrderPosition;
 public class OrderModalDialog extends AbstractModalDialog{
     
     private MainController mainController;
+    private OrderManager orderManager;
+    private CustomersManager customersManager;
+    private Orders orders;
+    private StockItems stockItems;
     private ArrayList<Item> items;
     private ArrayList<OrderPosition> orderItems;
     
@@ -49,11 +60,18 @@ public class OrderModalDialog extends AbstractModalDialog{
     JButton delItembtn;
     private JTable orderPositionTable;
     
-    public OrderModalDialog(Frame owner, ArrayList<Item> items, MainController mainController) {
+    public OrderModalDialog(Frame owner, MainController mainController) {
+        
         super(owner, "Новый заказ");
-        this.items = items;
         this.mainController = mainController;
-        orderItems = new ArrayList<OrderPosition>();
+        stockItems = mainController.getStockItems();
+        orders = mainController.getOrders();
+        customersManager = mainController.getCustomersManager();
+        orderManager = new OrderManager();
+        
+        orderItems = orderManager.getOrderItems();
+        this.items = stockItems.getItemsAsList();
+        
         OrderPositionTableModel orderPositionTableModel = new OrderPositionTableModel();
         
         
@@ -121,12 +139,26 @@ public class OrderModalDialog extends AbstractModalDialog{
         numberFormat = NumberFormat.getIntegerInstance();
         disconte = new JFormattedTextField();
         disconte.setColumns(3);
+        disconte.setText(Configuration.getInstance().getProperty("max.Discount"));
         lbl = new JLabel("Скидка: ");
         lbl.setLabelFor(disconte);
         jPanel.add(lbl);
         jPanel.add(disconte);
         jPanelOrder.add(jPanel);
         
+        NumberFormat numberFormatDisconteBtn =  NumberFormat.getIntegerInstance();
+        disconte.addActionListener(e ->{
+            try {
+                orderManager.changeAmountOfItems(numberFormatDisconteBtn.parse(disconte.getText()).byteValue());
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, 
+                            ex.getMessage(),
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+            }
+            orderPositionTableModel.eventChangeItemsInOrderPositions(orderItems);
+        }
+        );
         
         JPanel jPanelOrderButton = new JPanel();
         jPanelOrderButton.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -137,12 +169,12 @@ public class OrderModalDialog extends AbstractModalDialog{
             if (addNewItemToOrderModalDialog.isSuccess())
             {
                 try{
-                OrderPosition newPosition = new OrderPosition(addNewItemToOrderModalDialog.getItem(), 1);
-                orderItems.add(newPosition);
+                NumberFormat numberFormatDisconte =  NumberFormat.getIntegerInstance();
+                orderManager.addOrderPosition (addNewItemToOrderModalDialog.getItem(), 1, numberFormatDisconte.parse(disconte.getText()).byteValue());
                 orderPositionTableModel.eventChangeItemsInOrderPositions(orderItems);
                 JOptionPane.showMessageDialog(this, 
-                            "Товар:\n" + newPosition.getItem().getName() + 
-                                    "\nс артикулом \n" + newPosition.getItem().getArticle() + 
+                            "Товар:\n" + addNewItemToOrderModalDialog.getItem().getName() + 
+                                    "\nс артикулом \n" + addNewItemToOrderModalDialog.getItem().getArticle() + 
                                     "\nдобавлен.",
                             "Добавление товара в заказ",
                             JOptionPane.INFORMATION_MESSAGE);
@@ -158,29 +190,19 @@ public class OrderModalDialog extends AbstractModalDialog{
         });
         delItembtn = new JButton("Delete Item");
         delItembtn.addActionListener(e -> {
-            if (orderItems.size() > 0)
-            {
-                if(orderPositionTable.getSelectedRow()>=0){
-                orderItems.remove(orderPositionTable.getSelectedRow());
+            
+            try{
+                orderManager.removeOrderPosition(orderPositionTable.getSelectedRow());
                 orderPositionTableModel.eventChangeItemsInOrderPositions(orderItems);
                 JOptionPane.showMessageDialog(this, 
-                            "Товар: " + orderItems.get(orderPositionTable.getSelectedRow()).getItem().getName() + 
-                                    "\nс артикулом \n" + orderItems.get(orderPositionTable.getSelectedRow()).getItem().getArticle() + 
-                                    "\nудален из заказа.",
-                            "Удаление товара из заказа.",
-                            JOptionPane.INFORMATION_MESSAGE);
-                }
-                else
-                    JOptionPane.showMessageDialog(this, 
-                            "Товар на удаление из заказа не выбран.",
-                            "Error",
-                            JOptionPane.ERROR_MESSAGE);
+                    "Товар: " + orderItems.get(orderPositionTable.getSelectedRow()).getItem().getName() + 
+                        "\nс артикулом \n" + orderItems.get(orderPositionTable.getSelectedRow()).getItem().getArticle() + 
+                        "\nудален из заказа.",
+                        "Удаление товара из заказа.",
+                        JOptionPane.INFORMATION_MESSAGE);
             }
-            else{
-                JOptionPane.showMessageDialog(this, 
-                            "Товаров в заказе нет.",
-                            "Error",
-                            JOptionPane.ERROR_MESSAGE);
+            catch(Exception ex){
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error",  JOptionPane.ERROR_MESSAGE);
             }
             
         });
@@ -191,8 +213,7 @@ public class OrderModalDialog extends AbstractModalDialog{
         
         
         orderPositionTable = new JTable(orderPositionTableModel);
-        // Нужно закрыть доступ к редактированию склада!!!!!!
-        
+                
         JSplitPane splitPaneItems = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
             jPanelOrder,  
             new JScrollPane(orderPositionTable)); // добавлена прокрутка
@@ -202,6 +223,26 @@ public class OrderModalDialog extends AbstractModalDialog{
         pack(); // сформировать правильные размеры окна
         
     }
-
+    
+    public void newOrder(){
+        try{
+            orders.addOrder( 
+                new Person("Анатолий", 
+                        new Address("РФ", "Санкт-Петрербург", "ул. Ваиловых", "дом11/1", 1),
+                            "89219910012"),
+                            (byte)0, StatusOfOrder.ГОТОВИТСЯ, orderManager.getOrderItems());
+            mainController.writeOrder();
+                    
+            customersManager.addCustomer(
+                new Person("Анатолий", 
+                    new Address("РФ", "Санкт-Петрербург", "ул. Ваиловых", "дом11/1", 1),
+                        "89219910012"));
+            mainController.writeCustomers();
+            }
+        catch(Exception ex){
+                    
+        }
+    }
+    
     
 }
