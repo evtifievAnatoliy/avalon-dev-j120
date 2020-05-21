@@ -29,7 +29,8 @@ public class CustomersManager {
         {
             for (Person p: customers) // проверка наличия такого клиента по номеру телефона 
                 if(p.getPhoneNumber().equals(customer.getPhoneNumber()))
-                    throw new IllegalArgumentException("Error. Не удалось добавить заказчика в базу клиентов. Заказчик с телефоном: " + customer.getPhoneNumber() + " уже есть в базе. ");
+                    return;
+                    //throw new IllegalArgumentException("Error. Не удалось добавить заказчика в базу клиентов. Заказчик с телефоном: " + customer.getPhoneNumber() + " уже есть в базе. ");
         }
         if (this.customers == null) //проверка на нулевое значение
             this.customers = new ArrayList<Person>();

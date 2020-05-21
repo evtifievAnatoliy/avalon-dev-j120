@@ -35,5 +35,29 @@ public class Orders {
         return orders;
     }
     
+    // метод удаления заказа
+    public void removeOrder(int number){
+        
+        
+        if (orders == null)
+            throw new IllegalArgumentException("Error. Системная ошибка. Заказов в заказе нет.");
+        
+        if (orders.size() == 0)
+            throw new IllegalArgumentException("Error. Заказов нет в списке заказов.");
+                
+        if (number < 0)
+            throw new IllegalArgumentException("Error. Заказ в в списке заказов не выбран.");
+                
+        if (orders.size() <= number)
+            throw new IllegalArgumentException("Error. Системная ошибка. Размер коллекци меньше номера удаляемого заказа!!!");
+                
+        if (orders.get(number).getStatusOfOrder() == StatusOfOrder.ГОТОВИТСЯ)
+            orders.get(number).setStatusOfOrder(StatusOfOrder.ОТМЕНЕН);
+         
+        else 
+            throw new IllegalArgumentException("Error. Удалить заказ с № " + number + " не получилось.\n Удалить заказ можно только со статусом ГОТОВИТСЯ.");
+     
+      
+    }
     
 }

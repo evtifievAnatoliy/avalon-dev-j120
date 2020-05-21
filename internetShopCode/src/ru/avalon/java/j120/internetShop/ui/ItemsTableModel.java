@@ -79,7 +79,7 @@ public class ItemsTableModel implements TableModel{
             case 0: return false;
             case 1: return false;
             case 2: return false;
-            case 3: return false;
+            case 3: return true;
             case 4: return true;
             default: 
                 throw new Error ("Unreachable place.");
@@ -96,19 +96,32 @@ public class ItemsTableModel implements TableModel{
             case 0: break;
             case 1: item.setName(o.toString());
             case 2: item.setColor(o.toString());
-            case 3: item.setPrice(Integer.valueOf(o.toString()));
-            case 4: try{ 
-                item.setStockBalance(Integer.valueOf(o.toString()));
-            }
-            catch(Exception ex){
-                JOptionPane.showMessageDialog(null, 
+            case 3: try{ 
+                        item.setPrice(Integer.valueOf(o.toString()));
+                        break;
+                    }
+                    catch(Exception ex){
+                        JOptionPane.showMessageDialog(null, 
                             ex.getMessage(),
                             "Error",
                             JOptionPane.ERROR_MESSAGE);
-            }
+                        break;
+                    }
+                
+            case 4: try{ 
+                        item.setStockBalance(Integer.valueOf(o.toString()));
+                        break;
+                    }
+                    catch(Exception ex){
+                        JOptionPane.showMessageDialog(null, 
+                            ex.getMessage(),
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                        break;
+                    }
            
-            //default: 
-              //  throw new Error ("Unreachable place.");
+            default: 
+                throw new Error ("Unreachable place.");
         }
         eventChangeItem();
     }

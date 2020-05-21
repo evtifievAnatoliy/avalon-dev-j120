@@ -226,21 +226,25 @@ public class OrderModalDialog extends AbstractModalDialog{
     
     public void newOrder(){
         try{
+            NumberFormat numberFormat =  NumberFormat.getIntegerInstance();
             orders.addOrder( 
-                new Person("Анатолий", 
-                        new Address("РФ", "Санкт-Петрербург", "ул. Ваиловых", "дом11/1", 1),
-                            "89219910012"),
-                            (byte)0, StatusOfOrder.ГОТОВИТСЯ, orderManager.getOrderItems());
+                new Person(name.getText(), 
+                        new Address(contry.getText(), region.getText(), street.getText(), house.getText(), numberFormat.parse(flat.getText()).intValue()),
+                            phoneNumber.getText()),
+                            numberFormat.parse(disconte.getText()).byteValue(), StatusOfOrder.ГОТОВИТСЯ, orderManager.getOrderItems());
             mainController.writeOrder();
                     
             customersManager.addCustomer(
-                new Person("Анатолий", 
-                    new Address("РФ", "Санкт-Петрербург", "ул. Ваиловых", "дом11/1", 1),
-                        "89219910012"));
+                new Person(name.getText(), 
+                    new Address(contry.getText(), region.getText(), street.getText(), house.getText(), numberFormat.parse(flat.getText()).intValue()),
+                        phoneNumber.getText()));
             mainController.writeCustomers();
             }
         catch(Exception ex){
-                    
+            JOptionPane.showMessageDialog(this, 
+                            ex.getMessage(),
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);        
         }
     }
     

@@ -18,6 +18,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import javax.swing.table.TableColumn;
 import ru.avalon.java.j120.internetShop.controllers.*;
 import ru.avalon.java.j120.internetShop.commons.*;
 
@@ -69,4 +70,5 @@ public class CustomersModalDialog extends JDialog{
     protected JPanel getControlsPane(){
         return controlPane;
     }
+    
 }

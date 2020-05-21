@@ -80,6 +80,8 @@ public class Item implements Serializable{
     }
 
     public void setPrice(int price) {
+        if(price <= 0)
+            throw new IllegalArgumentException("Error. Цена товара не может быть нулевой или отрицательной.");
         this.price = price;
     }
 

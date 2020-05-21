@@ -31,6 +31,7 @@ public class AddNewItemToOrderModalDialog extends JDialog{
     
     private MainController mainController;
     private ArrayList<Item> items;
+    private ArrayList<Item> itemsHaveInStock;
     private Item item;
     
     private JPanel controlPane;
@@ -44,12 +45,13 @@ public class AddNewItemToOrderModalDialog extends JDialog{
         super(owner, title, true);
         this.items = items;
         this.mainController = mainController;
+        getItemsHaveInStock();
         
         controlPane = new JPanel();
         controlPane.setLayout(new BoxLayout(controlPane, BoxLayout.Y_AXIS));
         add(controlPane, BorderLayout.CENTER);
         
-        itemsTableModel.setStockItems(this.items);
+        itemsTableModel.setStockItems(itemsHaveInStock);
         itemsTable = new JTable(itemsTableModel);
         itemsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         add(new JScrollPane(itemsTable));
@@ -61,7 +63,7 @@ public class AddNewItemToOrderModalDialog extends JDialog{
         botton.add(btnAdd);
         btnAdd.addActionListener(e ->{
             if (itemsTable.getSelectedRow() >= 0){
-                item = items.get(itemsTable.getSelectedRow());
+                item = itemsHaveInStock.get(itemsTable.getSelectedRow());
                 addPressed = true;
                 
                 setVisible(false);
@@ -95,6 +97,14 @@ public class AddNewItemToOrderModalDialog extends JDialog{
 
     public Item getItem() {
         return item;
+    }
+    
+    private void getItemsHaveInStock(){
+        itemsHaveInStock = new ArrayList<>();
+        for (Item i: items){
+            if (i.getStockBalance() > 0)
+                itemsHaveInStock.add(i);
+        }
     }
     
     

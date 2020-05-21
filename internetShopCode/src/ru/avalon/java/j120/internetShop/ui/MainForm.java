@@ -82,8 +82,13 @@ public class MainForm extends JFrame{
             orderModalDialog.setVisible(true);
             if (orderModalDialog.isSuccess())
             {
-                
-                
+                orderModalDialog.newOrder();
+                convertOrdersListToStringArray();
+                JOptionPane.showMessageDialog(this, 
+                    "Новый заказ" + 
+                        "\n добавлен в список заказов.",
+                        "Добавление заказа.",
+                        JOptionPane.INFORMATION_MESSAGE);
             }
             
         });
@@ -91,6 +96,22 @@ public class MainForm extends JFrame{
         
         
         delbtn = new JButton("Delite");
+        delbtn.addActionListener(e -> {
+            try{
+                orders.removeOrder(listOrders.getSelectedIndex());
+                JOptionPane.showMessageDialog(this, 
+                    "Статус заказа: " + listOrders.getSelectedIndex()  + 
+                        "\n изменен на ОТМЕНЕН.",
+                        "Удаление заказа.",
+                        JOptionPane.INFORMATION_MESSAGE);
+                convertOrdersListToStringArray();
+                mainController.writeOrder();
+            }
+            catch(Exception ex){
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error",  JOptionPane.ERROR_MESSAGE);
+            }       
+        });
+               
         
         jPanelLeft.add(addbtn);
         jPanelLeft.add(delbtn);
@@ -105,7 +126,7 @@ public class MainForm extends JFrame{
         
         customersbtn = new JButton("Customers...");
         customersbtn.addActionListener(e -> {
-            CustomersModalDialog customersModalDialog = new CustomersModalDialog(this, "Таблица товаров", mainController);
+            CustomersModalDialog customersModalDialog = new CustomersModalDialog(this, "Таблица клиентов.", mainController);
             customersModalDialog.setVisible(true);
             
             
@@ -147,6 +168,7 @@ public class MainForm extends JFrame{
         orderNumber = new JTextField("№ заказа", 10);
         orderNumber.setEditable(false);
         dateTheOrderWasGreated = new JTextField("Дата заказа", 15);
+        dateTheOrderWasGreated.setEditable(false);
         name = new JTextField("Имя клиента", 30);  
         phoneNumber = new JTextField("Телефон", 15);
         contry = new JTextField("Страна", 15);
@@ -231,20 +253,22 @@ public class MainForm extends JFrame{
     
     private void ordersChoosen (int ndx){
         
-        orderNumber.setText(this.orders.getOrders().get(ndx).getOrderNumber().toString()); 
-        dateTheOrderWasGreated.setText(this.orders.getOrders().get(ndx).getDateTheOrderWasGreated().toLocalDate().toString());
-        name.setText(this.orders.getOrders().get(ndx).getContactPerson().getName());;  
-        phoneNumber.setText(this.orders.getOrders().get(ndx).getContactPerson().getPhoneNumber());;
-        contry.setText(this.orders.getOrders().get(ndx).getContactPerson().getAdressToDelivery().getContry());;
-        region.setText(this.orders.getOrders().get(ndx).getContactPerson().getAdressToDelivery().getRegion());;
-        street.setText(this.orders.getOrders().get(ndx).getContactPerson().getAdressToDelivery().getStreet());;
-        house.setText(this.orders.getOrders().get(ndx).getContactPerson().getAdressToDelivery().getHouse());;
-        flat.setText(this.orders.getOrders().get(ndx).getContactPerson().getAdressToDelivery().getFlat().toString());;
-        disconte.setText(this.orders.getOrders().get(ndx).getDisconte().toString());
-        statusOfOrder.setText(this.orders.getOrders().get(ndx).getStatusOfOrder().toString());
+        if(ndx >= 0)
+        {
+            orderNumber.setText(this.orders.getOrders().get(ndx).getOrderNumber().toString()); 
+            dateTheOrderWasGreated.setText(this.orders.getOrders().get(ndx).getDateTheOrderWasGreated().toLocalDate().toString());
+            name.setText(this.orders.getOrders().get(ndx).getContactPerson().getName());;  
+            phoneNumber.setText(this.orders.getOrders().get(ndx).getContactPerson().getPhoneNumber());;
+            contry.setText(this.orders.getOrders().get(ndx).getContactPerson().getAdressToDelivery().getContry());;
+            region.setText(this.orders.getOrders().get(ndx).getContactPerson().getAdressToDelivery().getRegion());;
+            street.setText(this.orders.getOrders().get(ndx).getContactPerson().getAdressToDelivery().getStreet());;
+            house.setText(this.orders.getOrders().get(ndx).getContactPerson().getAdressToDelivery().getHouse());;
+            flat.setText(this.orders.getOrders().get(ndx).getContactPerson().getAdressToDelivery().getFlat().toString());;
+            disconte.setText(this.orders.getOrders().get(ndx).getDisconte().toString());
+            statusOfOrder.setText(this.orders.getOrders().get(ndx).getStatusOfOrder().toString());
         
-        orderPositionTableModel.eventChangeItemsInOrderPositions(this.orders.getOrders().get(ndx).getOrderItems());
-        
+            orderPositionTableModel.eventChangeItemsInOrderPositions(this.orders.getOrders().get(ndx).getOrderItems());
+        }
     }
     
     

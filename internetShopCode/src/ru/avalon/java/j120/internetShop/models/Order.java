@@ -62,6 +62,10 @@ public class Order implements Serializable{
     public ArrayList<OrderPosition> getOrderItems() {
         return orderItems;
     }
+
+    public void setStatusOfOrder(StatusOfOrder statusOfOrder) {
+        this.statusOfOrder = statusOfOrder;
+    }
     
     
 }
