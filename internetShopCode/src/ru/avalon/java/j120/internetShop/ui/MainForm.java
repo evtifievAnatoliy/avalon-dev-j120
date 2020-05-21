@@ -47,7 +47,7 @@ public class MainForm extends JFrame{
     private JTextField flat; 
     private JTextField phoneNumber;
     private JTextField disconte; 
-    private JTextField statusOfOrder;
+    private JComboBox statusOfOrder;
     
     
     private JList<String> listOrders;
@@ -82,15 +82,21 @@ public class MainForm extends JFrame{
             orderModalDialog.setVisible(true);
             if (orderModalDialog.isSuccess())
             {
-                orderModalDialog.newOrder();
-                convertOrdersListToStringArray();
-                JOptionPane.showMessageDialog(this, 
-                    "Новый заказ" + 
-                        "\n добавлен в список заказов.",
-                        "Добавление заказа.",
+                try{
+                    orderModalDialog.newOrder();
+                    convertOrdersListToStringArray();
+                    listOrders.setSelectedIndex(orders.getOrders().size()-1);
+                    String numberOfOrder = orders.getOrders().get(orders.getOrders().size()-1).getOrderNumber();
+                    JOptionPane.showMessageDialog(this, 
+                        "Новый заказ " + numberOfOrder +
+                            "\n добавлен в список заказов.",
+                            "Добавление заказа.",
                         JOptionPane.INFORMATION_MESSAGE);
+                }
+                catch(Exception ex){
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error",  JOptionPane.ERROR_MESSAGE);
+                }
             }
-            
         });
         
         
@@ -98,13 +104,19 @@ public class MainForm extends JFrame{
         delbtn = new JButton("Delite");
         delbtn.addActionListener(e -> {
             try{
+                String numberOfOrder = orders.getOrders().get(listOrders.getSelectedIndex()).getOrderNumber();
                 orders.removeOrder(listOrders.getSelectedIndex());
                 JOptionPane.showMessageDialog(this, 
-                    "Статус заказа: " + listOrders.getSelectedIndex()  + 
-                        "\n изменен на ОТМЕНЕН.",
+                    "Заказ: " + numberOfOrder  + 
+                        "\n удален.",
                         "Удаление заказа.",
                         JOptionPane.INFORMATION_MESSAGE);
                 convertOrdersListToStringArray();
+                if(orders.getOrders().size() > 0)
+                    listOrders.setSelectedIndex(orders.getOrders().size()-1);
+                
+                
+                
                 mainController.writeOrder();
             }
             catch(Exception ex){
@@ -177,7 +189,7 @@ public class MainForm extends JFrame{
         house = new JTextField("Дом", 5); 
         flat = new JTextField("Кв.", 3); 
         disconte = new JTextField("Скидка", 5); 
-        statusOfOrder = new JTextField("Статус заказа", 20);
+        statusOfOrder = new JComboBox(StatusOfOrder.values());
         
         JPanel jPanelOrderNumberDatePerson = new JPanel();
         jPanelOrderNumberDatePerson.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -243,7 +255,7 @@ public class MainForm extends JFrame{
             
             for (int i=0; i<this.orders.getOrders().size(); i++)
             {
-                ordersNumbers[i] = this.orders.getOrders().get(i).getOrderNumber().toString();
+                ordersNumbers[i] = this.orders.getOrders().get(i).getOrderNumber();
                 
             }
             
@@ -255,7 +267,7 @@ public class MainForm extends JFrame{
         
         if(ndx >= 0)
         {
-            orderNumber.setText(this.orders.getOrders().get(ndx).getOrderNumber().toString()); 
+            orderNumber.setText(this.orders.getOrders().get(ndx).getOrderNumber()); 
             dateTheOrderWasGreated.setText(this.orders.getOrders().get(ndx).getDateTheOrderWasGreated().toLocalDate().toString());
             name.setText(this.orders.getOrders().get(ndx).getContactPerson().getName());;  
             phoneNumber.setText(this.orders.getOrders().get(ndx).getContactPerson().getPhoneNumber());;
@@ -265,7 +277,7 @@ public class MainForm extends JFrame{
             house.setText(this.orders.getOrders().get(ndx).getContactPerson().getAdressToDelivery().getHouse());;
             flat.setText(this.orders.getOrders().get(ndx).getContactPerson().getAdressToDelivery().getFlat().toString());;
             disconte.setText(this.orders.getOrders().get(ndx).getDisconte().toString());
-            statusOfOrder.setText(this.orders.getOrders().get(ndx).getStatusOfOrder().toString());
+            statusOfOrder.setSelectedItem(this.orders.getOrders().get(ndx).getStatusOfOrder());
         
             orderPositionTableModel.eventChangeItemsInOrderPositions(this.orders.getOrders().get(ndx).getOrderItems());
         }

@@ -5,6 +5,8 @@
  */
 package ru.avalon.java.j120.internetShop.controllers;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import ru.avalon.java.j120.internetShop.models.*;
 import ru.avalon.java.j120.internetShop.commons.Person;
 
@@ -17,6 +19,7 @@ import java.util.ArrayList;
 public class Orders {
     
     private ArrayList<Order> orders;
+    
 
     public Orders(ArrayList<Order> orders) {
         this.orders = orders;
@@ -28,7 +31,14 @@ public class Orders {
         if (this.orders == null) //проверка на нулевое значение
             this.orders = new ArrayList<Order>();
         
-        this.orders.add(new Order(this.orders.size(), contactPerson, disconte, statusOrder, orderItems));
+        if(orderItems.size() == 0)
+            throw new IllegalArgumentException("Error. В заказе нет ни одного товара.");
+        
+        LocalDateTime localTime = LocalDateTime.now();
+        
+        String numberOfOrder = String.valueOf(localTime.getYear()) + String.valueOf(localTime.getMonthValue()) + String.valueOf(localTime.getDayOfMonth()
+            + String.valueOf(localTime.getHour()) + String.valueOf(localTime.getMinute()) + String.valueOf(localTime.getSecond()));
+        this.orders.add(new Order(numberOfOrder, contactPerson, disconte, statusOrder, orderItems));
     }
 
     public ArrayList<Order> getOrders() {
@@ -52,7 +62,7 @@ public class Orders {
             throw new IllegalArgumentException("Error. Системная ошибка. Размер коллекци меньше номера удаляемого заказа!!!");
                 
         if (orders.get(number).getStatusOfOrder() == StatusOfOrder.ГОТОВИТСЯ)
-            orders.get(number).setStatusOfOrder(StatusOfOrder.ОТМЕНЕН);
+            orders.remove(number);
          
         else 
             throw new IllegalArgumentException("Error. Удалить заказ с № " + number + " не получилось.\n Удалить заказ можно только со статусом ГОТОВИТСЯ.");

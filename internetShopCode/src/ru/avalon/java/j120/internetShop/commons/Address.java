@@ -18,9 +18,11 @@ public class Address implements Serializable{
     private String region; // регион
     private String street; // улица
     private String house; // дом
-    private int flat; // квартира
+    private String flat; // квартира
 
-    public Address(String contry, String region, String street, String house, int flat) {
+    public Address(String contry, String region, String street, String house, String flat) {
+        if(contry.isEmpty() || region.isEmpty() || street.isEmpty() || house.isEmpty())
+            throw new IllegalArgumentException("Адрес доставки заполнен не полностью. \nНеобходимо обязательно заполнить Страну, Регион, Улицу и Дом.");
         this.contry = contry;
         this.region = region;
         this.street = street;
@@ -44,7 +46,7 @@ public class Address implements Serializable{
         return house;
     }
 
-    public Integer getFlat() {
+    public String getFlat() {
         return flat;
     }
     

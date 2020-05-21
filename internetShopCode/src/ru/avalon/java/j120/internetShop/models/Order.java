@@ -18,7 +18,7 @@ import java.io.Serializable;
 // класс заказа
 public class Order implements Serializable{
     
-    private int orderNumber; //порядковый номер заказа
+    private String orderNumber; //порядковый номер заказа
     private LocalDateTime dateTheOrderWasGreated; // текущая дата
     private Person contactPerson; // данные клиента
     private byte disconte; // скидка клиента
@@ -26,7 +26,7 @@ public class Order implements Serializable{
     
     private ArrayList<OrderPosition> orderItems; // товары в заказе
 
-    public Order(int orderNumber, Person contactPerson, byte disconte, StatusOfOrder statusOfOrder, ArrayList<OrderPosition> orderItems) {
+    public Order(String orderNumber, Person contactPerson, byte disconte, StatusOfOrder statusOfOrder, ArrayList<OrderPosition> orderItems) {
         this.orderNumber = orderNumber;
         this.dateTheOrderWasGreated = LocalDateTime.now();
         this.contactPerson = contactPerson;
@@ -39,7 +39,7 @@ public class Order implements Serializable{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public Integer getOrderNumber() {
+    public String getOrderNumber() {
         return orderNumber;
     }
 

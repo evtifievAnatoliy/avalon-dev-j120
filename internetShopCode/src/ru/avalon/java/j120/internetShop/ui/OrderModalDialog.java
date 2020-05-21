@@ -7,6 +7,7 @@ package ru.avalon.java.j120.internetShop.ui;
 
 import java.awt.FlowLayout;
 import java.awt.Frame;
+import java.io.IOException;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.time.LocalDate;
@@ -146,10 +147,11 @@ public class OrderModalDialog extends AbstractModalDialog{
         jPanel.add(disconte);
         jPanelOrder.add(jPanel);
         
-        NumberFormat numberFormatDisconteBtn =  NumberFormat.getIntegerInstance();
+        
         disconte.addActionListener(e ->{
             try {
-                orderManager.changeAmountOfItems(numberFormatDisconteBtn.parse(disconte.getText()).byteValue());
+                NumberFormat numberFormatDiscount =  NumberFormat.getIntegerInstance();
+                orderManager.changeAmountOfItems(numberFormatDiscount.parse(disconte.getText()).byteValue());
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, 
                             ex.getMessage(),
@@ -224,28 +226,24 @@ public class OrderModalDialog extends AbstractModalDialog{
         
     }
     
-    public void newOrder(){
-        try{
-            NumberFormat numberFormat =  NumberFormat.getIntegerInstance();
-            orders.addOrder( 
-                new Person(name.getText(), 
-                        new Address(contry.getText(), region.getText(), street.getText(), house.getText(), numberFormat.parse(flat.getText()).intValue()),
-                            phoneNumber.getText()),
-                            numberFormat.parse(disconte.getText()).byteValue(), StatusOfOrder.ГОТОВИТСЯ, orderManager.getOrderItems());
-            mainController.writeOrder();
+    public void newOrder() throws ParseException, IOException{
+        
+        NumberFormat numberFormat =  NumberFormat.getIntegerInstance();
+        orders.addOrder( 
+            new Person(name.getText(), 
+                    new Address(contry.getText(), region.getText(), street.getText(), house.getText(), flat.getText()),
+                        phoneNumber.getText()),
+                        numberFormat.parse(disconte.getText()).byteValue(), StatusOfOrder.ГОТОВИТСЯ, orderManager.getOrderItems());
+        mainController.writeOrder();
                     
-            customersManager.addCustomer(
-                new Person(name.getText(), 
-                    new Address(contry.getText(), region.getText(), street.getText(), house.getText(), numberFormat.parse(flat.getText()).intValue()),
-                        phoneNumber.getText()));
-            mainController.writeCustomers();
-            }
-        catch(Exception ex){
-            JOptionPane.showMessageDialog(this, 
-                            ex.getMessage(),
-                            "Error",
-                            JOptionPane.ERROR_MESSAGE);        
-        }
+        customersManager.addCustomer(
+            new Person(name.getText(), 
+                new Address(contry.getText(), region.getText(), street.getText(), house.getText(), flat.getText()),
+                    phoneNumber.getText()));
+        mainController.writeCustomers();
+            
+                   
+        
     }
     
     
