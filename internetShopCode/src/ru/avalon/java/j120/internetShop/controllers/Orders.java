@@ -113,7 +113,7 @@ public class Orders {
             orders.remove(number);
          
         else 
-            throw new IllegalArgumentException("Error. Удалить заказ с № " + number + " не получилось.\nУдалить заказ можно только со статусом ГОТОВИТСЯ.");
+            throw new IllegalArgumentException("Error. Удалить заказ с № " + orders.get(number).getOrderNumber() + " не получилось.\nУдалить заказ можно только со статусом ГОТОВИТСЯ.");
      
       
     }
@@ -143,17 +143,7 @@ public class Orders {
       
     }
     
-     // метод получения заказа по артикулу
-    public Order getOrder(String article){
         
-        for(Order order: this.orders)
-            if(order.getOrderNumber().equals(article))
-                return order;
-                 
-        throw new IllegalArgumentException("Error. Заказ с артикулом: " + article + " не найден.");
-     
-    }
-    
     public ArrayList<Order> getOrders() {
         return orders;
     }
