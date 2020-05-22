@@ -22,7 +22,10 @@ public class Item implements Serializable{
     public Item(String article, String name, int price, int stockBalance) {
         if (price <= 0){
             throw new IllegalArgumentException("Цена не может быть меньше или равна 0");
-        }           
+        }   
+        if (stockBalance < 0){
+            throw new IllegalArgumentException("Остаток на складе не может быть отрицательным.");
+        }  
         this.article = article;
         this.name = name;
         this.price = price;
@@ -67,5 +70,26 @@ public class Item implements Serializable{
     public String toString() {
         return article + ";" + name + ";" + color + ";" + price + ";" + stockBalance;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public void setPrice(int price) {
+        if(price <= 0)
+            throw new IllegalArgumentException("Error. Цена товара не может быть нулевой или отрицательной.");
+        this.price = price;
+    }
+
+    public void setStockBalance(int stockBalance) {
+        if (stockBalance < 0)
+            throw new IllegalArgumentException("Error. Остаток на складе не может быть отрицательным.");
+        this.stockBalance = stockBalance;
+    }
+    
         
 }

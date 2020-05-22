@@ -18,6 +18,8 @@ public class Person implements Serializable{
     private String phoneNumber; // номер телефона
 
     public Person(String name, Address adressToDelivery, String phoneNumber) {
+        if(name.isEmpty() || phoneNumber.isEmpty())
+            throw new IllegalArgumentException("Имя клиента или телефонный номер не заполнены.");
         this.name = name;
         this.adressToDelivery = adressToDelivery;
         this.phoneNumber = phoneNumber;

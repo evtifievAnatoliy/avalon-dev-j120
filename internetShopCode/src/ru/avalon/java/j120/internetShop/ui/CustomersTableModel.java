@@ -7,41 +7,31 @@ package ru.avalon.java.j120.internetShop.ui;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JOptionPane;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
-import ru.avalon.java.j120.internetShop.controllers.StockItems;
-import ru.avalon.java.j120.internetShop.models.*;
+import ru.avalon.java.j120.internetShop.commons.*;
 
-/**
- *
- * @author eag
- */
-public class OrderPositionTableModel implements TableModel{
-    
-    private List<OrderPosition> orderItems;
-    private final String[] columnNames = {"Артикул", "Название", "Цвет", "Цена за шт.", "Кол-во ед. в заказе", "Цена"};
+public class CustomersTableModel implements TableModel{
+    private List<Person> customers;
+    private final String[] columnNames = {"Имя", "Адрес доставки", "Номер телефона"};
     private final Class<?>[] columnTypes = {
         String.class,
         String.class,
-        String.class,
-        Integer.class,
-        Integer.class,
-        Integer.class
+        String.class
     };
     private List<TableModelListener> listeners = new ArrayList<>();
     
     
     
-    public OrderPositionTableModel() {
-        this.orderItems = new ArrayList<>();
+    public CustomersTableModel() {
+        this.customers = new ArrayList<>();
         
     }
     
     @Override
     public int getRowCount() {
-        return orderItems.size();
+        return customers.size();
     }
 
     @Override
@@ -61,15 +51,12 @@ public class OrderPositionTableModel implements TableModel{
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        OrderPosition orderPosition = orderItems.get(rowIndex);
+        Person person = customers.get(rowIndex);
         switch(columnIndex)
         {
-            case 0: return orderPosition.getItem().getArticle();
-            case 1: return orderPosition.getItem().getName();
-            case 2: return orderPosition.getItem().getColor();
-            case 3: return orderPosition.getItem().getPrice();
-            case 4: return orderPosition.getNumberOfItems();
-            case 5: return orderPosition.getAmountOfItems();
+            case 0: return person.getName();
+            case 1: return person.getAdressToDelivery().toString();
+            case 2: return person.getPhoneNumber();
             default: 
                 throw new Error ("Unreachable place.");
         }
@@ -83,38 +70,16 @@ public class OrderPositionTableModel implements TableModel{
             case 0: return false;
             case 1: return false;
             case 2: return false;
-            case 3: return false;
-            case 4: return true;
-            case 5: return false;
             default: 
                 throw new Error ("Unreachable place.");
         }
-                
+        
+        
     }
 
     @Override // метод записи редактируемой ячейки
     public void setValueAt(Object o, int rowIndex, int columnIndex) {
-        OrderPosition orderPosition = orderItems.get(rowIndex);
-        switch(columnIndex)
-        {
-            case 0: break;
-            case 1: break;
-            case 2: break;
-            case 3: break;
-            case 4: try{ 
-                orderPosition.setNumberOfItems(Integer.valueOf(o.toString()));
-            }
-            catch(Exception ex){
-                JOptionPane.showMessageDialog(null, 
-                            ex.getMessage(),
-                            "Error",
-                            JOptionPane.ERROR_MESSAGE);
-            }
-            case 5: break;
-            //default: 
-              //  throw new Error ("Unreachable place.");
-        }
-        eventChangeItemsInOrderPositions();
+      
     }
     
     @Override
@@ -127,17 +92,20 @@ public class OrderPositionTableModel implements TableModel{
         listeners.remove(tl);
     }
     
-    public void eventChangeItemsInOrderPositions(ArrayList<OrderPosition> positions){
-        this.orderItems = positions;
+    public void setCustomers(ArrayList<Person> customers){
+        this.customers = customers;
         TableModelEvent e = new TableModelEvent(this); 
         for (TableModelListener l: listeners)
             l.tableChanged(e);
     }
     
-    public void eventChangeItemsInOrderPositions(){
+    
+    public void eventChangePerson(){
         TableModelEvent e = new TableModelEvent(this); 
         for (TableModelListener l: listeners)
             l.tableChanged(e);
     }
+    
+    
     
 }

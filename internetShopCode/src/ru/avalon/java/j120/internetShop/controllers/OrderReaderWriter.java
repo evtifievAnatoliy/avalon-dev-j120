@@ -55,7 +55,7 @@ public class OrderReaderWriter {
             return orders;
         }
         
-        try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream(Configuration.getInstance().getProperty("orders.Path")))){
+        try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))){
             // пробуем десериализовать коллекцию заказов
             ArrayList<Order> orders = (ArrayList<Order>) ois.readObject();
                         
