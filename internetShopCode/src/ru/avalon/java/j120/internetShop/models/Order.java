@@ -26,17 +26,13 @@ public class Order implements Serializable{
     
     private ArrayList<OrderPosition> orderItems; // товары в заказе
 
-    public Order(String orderNumber, Person contactPerson, byte disconte, StatusOfOrder statusOfOrder, ArrayList<OrderPosition> orderItems) {
+    public Order(String orderNumber, LocalDateTime localDateTime, Person contactPerson, byte disconte, StatusOfOrder statusOfOrder, ArrayList<OrderPosition> orderItems) {
         this.orderNumber = orderNumber;
-        this.dateTheOrderWasGreated = LocalDateTime.now();
+        this.dateTheOrderWasGreated = localDateTime;
         this.contactPerson = contactPerson;
         this.disconte = disconte;
         this.statusOfOrder = statusOfOrder;
         this.orderItems = orderItems;
-    }
-
-    public Order() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     public String getOrderNumber() {

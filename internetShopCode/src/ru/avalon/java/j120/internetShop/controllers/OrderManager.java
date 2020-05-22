@@ -74,6 +74,10 @@ public class OrderManager {
         
                 
     }
+
+    public void setOrderItems(ArrayList<OrderPosition> orderItems) {
+        this.orderItems = orderItems;
+    }
     
     
 }

@@ -10,11 +10,7 @@ import java.awt.Frame;
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
@@ -30,6 +26,7 @@ import ru.avalon.java.j120.internetShop.commons.Person;
 import ru.avalon.java.j120.internetShop.configuration.Configuration;
 import ru.avalon.java.j120.internetShop.controllers.*;
 import ru.avalon.java.j120.internetShop.models.Item;
+import ru.avalon.java.j120.internetShop.models.Order;
 import ru.avalon.java.j120.internetShop.models.OrderPosition;
 import ru.avalon.java.j120.internetShop.models.StatusOfOrder;
 
@@ -46,6 +43,7 @@ public class OrderModalDialog extends AbstractModalDialog{
     private StockItems stockItems;
     private ArrayList<Item> items;
     private ArrayList<OrderPosition> orderItems;
+    private Order editOrder;
     
     private JTextField name;  
     private JTextField contry;
@@ -55,16 +53,17 @@ public class OrderModalDialog extends AbstractModalDialog{
     private JFormattedTextField flat; 
     private JTextField phoneNumber;
     private JFormattedTextField disconte; 
-    
+    private OrderPositionTableModel orderPositionTableModel;
     
     JButton addItembtn;
     JButton delItembtn;
     private JTable orderPositionTable;
     
-    public OrderModalDialog(Frame owner, MainController mainController) {
+    public OrderModalDialog(Frame owner, String nameModalDialog, MainController mainController, Order editOrder) {
         
-        super(owner, "Новый заказ");
+        super(owner, nameModalDialog);
         this.mainController = mainController;
+        this.editOrder = editOrder;
         stockItems = mainController.getStockItems();
         orders = mainController.getOrders();
         customersManager = mainController.getCustomersManager();
@@ -73,7 +72,7 @@ public class OrderModalDialog extends AbstractModalDialog{
         orderItems = orderManager.getOrderItems();
         this.items = stockItems.getItemsAsList();
         
-        OrderPositionTableModel orderPositionTableModel = new OrderPositionTableModel();
+        orderPositionTableModel = new OrderPositionTableModel();
         
         
         JPanel controlsPane = getControlsPane();
@@ -194,11 +193,14 @@ public class OrderModalDialog extends AbstractModalDialog{
         delItembtn.addActionListener(e -> {
             
             try{
+                String numberRemoveOrderItem = orderItems.get(orderPositionTable.getSelectedRow()).getItem().getName();
+                String articleRemoveOrderItem = orderItems.get(orderPositionTable.getSelectedRow()).getItem().getArticle();
+                
                 orderManager.removeOrderPosition(orderPositionTable.getSelectedRow());
                 orderPositionTableModel.eventChangeItemsInOrderPositions(orderItems);
                 JOptionPane.showMessageDialog(this, 
-                    "Товар: " + orderItems.get(orderPositionTable.getSelectedRow()).getItem().getName() + 
-                        "\nс артикулом \n" + orderItems.get(orderPositionTable.getSelectedRow()).getItem().getArticle() + 
+                    "Товар: " + numberRemoveOrderItem + 
+                        "\nс артикулом \n" + articleRemoveOrderItem + 
                         "\nудален из заказа.",
                         "Удаление товара из заказа.",
                         JOptionPane.INFORMATION_MESSAGE);
@@ -224,6 +226,8 @@ public class OrderModalDialog extends AbstractModalDialog{
         controlsPane.add(splitPaneItems);
         pack(); // сформировать правильные размеры окна
         
+        if (editOrder != null)
+            fillOrderMaodalDialog();
     }
     
     public void newOrder() throws ParseException, IOException{
@@ -241,10 +245,37 @@ public class OrderModalDialog extends AbstractModalDialog{
                 new Address(contry.getText(), region.getText(), street.getText(), house.getText(), flat.getText()),
                     phoneNumber.getText()));
         mainController.writeCustomers();
-            
-                   
-        
+   
     }
     
     
+    
+    public void fillOrderMaodalDialog(){
+        name.setText(this.editOrder.getContactPerson().getName());
+        phoneNumber.setText(this.editOrder.getContactPerson().getPhoneNumber());
+        
+        contry.setText(this.editOrder.getContactPerson().getAdressToDelivery().getContry());
+        region.setText(this.editOrder.getContactPerson().getAdressToDelivery().getRegion());
+        street.setText(this.editOrder.getContactPerson().getAdressToDelivery().getStreet());
+        house.setText(this.editOrder.getContactPerson().getAdressToDelivery().getHouse());
+        flat.setText(this.editOrder.getContactPerson().getAdressToDelivery().getFlat());
+        disconte.setText(this.editOrder.getDisconte().toString());
+        
+        orderManager.setOrderItems(this.editOrder.getOrderItems());
+        orderItems = orderManager.getOrderItems();
+        orderPositionTableModel.eventChangeItemsInOrderPositions(orderItems);
+    }
+    
+    public void editOrder() throws ParseException, IOException{
+        
+        NumberFormat numberFormat =  NumberFormat.getIntegerInstance();
+        orders.editOrder(editOrder.getOrderNumber(), editOrder.getDateTheOrderWasGreated(), 
+                new Person(name.getText(), 
+                    new Address(contry.getText(), region.getText(), street.getText(), house.getText(), flat.getText()),
+                        phoneNumber.getText()),
+                        numberFormat.parse(disconte.getText()).byteValue(), StatusOfOrder.ГОТОВИТСЯ, orderManager.getOrderItems()
+        );
+        mainController.writeOrder();
+        
+    }
 }

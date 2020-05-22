@@ -11,9 +11,7 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import java.text.ParseException;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
 import javax.swing.*;
-import ru.avalon.java.j120.internetShop.commons.*;
 import ru.avalon.java.j120.internetShop.controllers.*;
 import ru.avalon.java.j120.internetShop.models.*;
 
@@ -29,13 +27,15 @@ public class MainForm extends JFrame{
     Orders orders;
     Order[] ordersArray;
     
-    OrderPositionTableModel orderPositionTableModel = new OrderPositionTableModel();
+    OrderPositionTableModelWithOnlyReadRights orderPositionTableModel = new OrderPositionTableModelWithOnlyReadRights();
     
     private JButton addbtn;
+    private JButton delbtn;
+    private JButton editbtn;
     private JButton itemsbtn;
     private JButton customersbtn;
-    private JButton delbtn;
     private JButton exbtn;
+    private JButton statusOfOrderbtn;
     
     private JTextField orderNumber;
     private JTextField dateTheOrderWasGreated;
@@ -47,7 +47,7 @@ public class MainForm extends JFrame{
     private JTextField flat; 
     private JTextField phoneNumber;
     private JTextField disconte; 
-    private JComboBox statusOfOrder;
+    private JTextField statusOfOrder;
     
     
     private JList<String> listOrders;
@@ -78,14 +78,14 @@ public class MainForm extends JFrame{
         
         addbtn = new JButton("Add...");
         addbtn.addActionListener(e -> {
-            OrderModalDialog orderModalDialog = new OrderModalDialog(this, mainController);
+            OrderModalDialog orderModalDialog = new OrderModalDialog(this,"Новый заказ", mainController, null);
             orderModalDialog.setVisible(true);
             if (orderModalDialog.isSuccess())
             {
                 try{
                     orderModalDialog.newOrder();
                     convertOrdersListToStringArray();
-                    listOrders.setSelectedIndex(orders.getOrders().size()-1);
+                    listOrders.setSelectedIndex(listOrders.getModel().getSize()-1);
                     String numberOfOrder = orders.getOrders().get(orders.getOrders().size()-1).getOrderNumber();
                     JOptionPane.showMessageDialog(this, 
                         "Новый заказ " + numberOfOrder +
@@ -103,30 +103,61 @@ public class MainForm extends JFrame{
         
         delbtn = new JButton("Delite");
         delbtn.addActionListener(e -> {
-            try{
-                String numberOfOrder = orders.getOrders().get(listOrders.getSelectedIndex()).getOrderNumber();
-                orders.removeOrder(listOrders.getSelectedIndex());
-                JOptionPane.showMessageDialog(this, 
-                    "Заказ: " + numberOfOrder  + 
-                        "\n удален.",
-                        "Удаление заказа.",
-                        JOptionPane.INFORMATION_MESSAGE);
-                convertOrdersListToStringArray();
-                if(orders.getOrders().size() > 0)
-                    listOrders.setSelectedIndex(orders.getOrders().size()-1);
+            ConfirmationModalDialog confirmationModalDialog = new ConfirmationModalDialog(this, "Вы действительно хотите удалить заказ.");
+            confirmationModalDialog.setVisible(true);
+            if (confirmationModalDialog.isSuccess()){
+                try{
+                    String numberOfSelectedOrder = orders.getOrders().get(listOrders.getSelectedIndex()).getOrderNumber();
+                    orders.removeOrder(listOrders.getSelectedIndex());
+                    JOptionPane.showMessageDialog(this, 
+                       "Заказ: " + numberOfSelectedOrder  + 
+                           "\n удален.",
+                            "Удаление заказа.",
+                            JOptionPane.INFORMATION_MESSAGE);
+                    convertOrdersListToStringArray();
+                    if(listOrders.getModel().getSize() > 0)
+                        listOrders.setSelectedIndex(listOrders.getModel().getSize()-1);
+                                    
                 
                 
-                
-                mainController.writeOrder();
+                    mainController.writeOrder();
+                }
+                catch(Exception ex){
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error",  JOptionPane.ERROR_MESSAGE);
+                }       
             }
-            catch(Exception ex){
-                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error",  JOptionPane.ERROR_MESSAGE);
-            }       
         });
                
+        editbtn = new JButton("Edit...");
+        editbtn.addActionListener(e -> {
+            try{
+                Order editOrder = orders.getOrder(listOrders.getSelectedIndex());
+                String numberOfOrder = orders.getOrders().get(listOrders.getSelectedIndex()).getOrderNumber();
+                Integer numberOfSelectedOrder = listOrders.getSelectedIndex();
+                OrderModalDialog orderModalDialog = new OrderModalDialog(this,"Изменение заказа", mainController, editOrder);
+                orderModalDialog.setVisible(true);
+                if (orderModalDialog.isSuccess())
+                {
+                
+                    orderModalDialog.editOrder();
+                    convertOrdersListToStringArray();
+                    listOrders.setSelectedIndex(numberOfSelectedOrder);
+                    JOptionPane.showMessageDialog(this, 
+                        "Заказ " + numberOfOrder +
+                            " изменен.",
+                            "Изменение заказа.",
+                        JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
+                catch(Exception ex){
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error",  JOptionPane.ERROR_MESSAGE);
+            }
+            
+        });
         
         jPanelLeft.add(addbtn);
         jPanelLeft.add(delbtn);
+        jPanelLeft.add(editbtn);
         
         
         itemsbtn = new JButton("Items...");
@@ -171,8 +202,9 @@ public class MainForm extends JFrame{
         listOrders = new JList<>();
         convertOrdersListToStringArray();
         listOrders.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+           
         listOrders.addListSelectionListener(e -> ordersChoosen(listOrders.getSelectedIndex()));
-       
+                
         
         
         // отрисовываем и наполняем элементами JSplitPane Items in Order 
@@ -181,16 +213,57 @@ public class MainForm extends JFrame{
         orderNumber.setEditable(false);
         dateTheOrderWasGreated = new JTextField("Дата заказа", 15);
         dateTheOrderWasGreated.setEditable(false);
-        name = new JTextField("Имя клиента", 30);  
+        name = new JTextField("Имя клиента", 30);
+        name.setEditable(false);
         phoneNumber = new JTextField("Телефон", 15);
+        phoneNumber.setEditable(false);
         contry = new JTextField("Страна", 15);
+        contry.setEditable(false);
         region = new JTextField("Регион", 20);
+        region.setEditable(false);
         street = new JTextField("Улица", 20);
+        street.setEditable(false);
         house = new JTextField("Дом", 5); 
+        house.setEditable(false);
         flat = new JTextField("Кв.", 3); 
+        flat.setEditable(false);
         disconte = new JTextField("Скидка", 5); 
-        statusOfOrder = new JComboBox(StatusOfOrder.values());
+        disconte.setEditable(false);
+        statusOfOrder = new JTextField("Статус заказа", 10); 
+        statusOfOrder.setEditable(false);
         
+        statusOfOrderbtn = new JButton("Change...");
+        statusOfOrderbtn.addActionListener(e -> {
+            if(listOrders.getSelectedIndex() >=0)
+            {
+                StatusOfOrder statusOfOrderBeforeChanging =  orders.getOrders().get(listOrders.getSelectedIndex()).getStatusOfOrder();
+                ChangeStatusOfOrderModalDialog changeStatusOfOrderModalDialog = new ChangeStatusOfOrderModalDialog(this,"Изменение статуса заказа", statusOfOrderBeforeChanging, mainController);
+                changeStatusOfOrderModalDialog.setVisible(true);
+                if (changeStatusOfOrderModalDialog.isSuccess())
+                {
+                    try{
+                        if(statusOfOrderBeforeChanging != changeStatusOfOrderModalDialog.getStatusCimbobox())
+                        {
+                            Integer numberOfSelectedOrder = listOrders.getSelectedIndex();
+                            String numberOfOrder = orders.getOrders().get(listOrders.getSelectedIndex()).getOrderNumber();
+                            changeStatusOfOrderModalDialog.setStatusOrder(numberOfOrder);
+                            convertOrdersListToStringArray();
+                            listOrders.setSelectedIndex(numberOfSelectedOrder);
+                            JOptionPane.showMessageDialog(this, 
+                                "У заказа " + numberOfOrder +
+                                    "\n изменен статус. \nНовый статус заказа: " + changeStatusOfOrderModalDialog.getStatusCimbobox().toString(),
+                                "Изменение статуса заказа.",
+                                JOptionPane.INFORMATION_MESSAGE);
+                        }
+                    }
+                    catch(Exception ex){
+                        JOptionPane.showMessageDialog(this, ex.getMessage(), "Error",  JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+        });
+         
+          
         JPanel jPanelOrderNumberDatePerson = new JPanel();
         jPanelOrderNumberDatePerson.setLayout(new FlowLayout(FlowLayout.LEFT));
         jPanelOrderNumberDatePerson.add(orderNumber);
@@ -209,9 +282,8 @@ public class MainForm extends JFrame{
         JPanel jPanelOrderDiscountStatus = new JPanel();
         jPanelOrderDiscountStatus.setLayout(new FlowLayout(FlowLayout.LEFT));
         jPanelOrderDiscountStatus.add(disconte);
-        jPanelOrderDiscountStatus.add(statusOfOrder);
-        
-        
+        jPanelOrderDiscountStatus.add(statusOfOrder);   
+        jPanelOrderDiscountStatus.add(statusOfOrderbtn);
         
         JPanel jPanelOrder = new JPanel();
         jPanelOrder.setLayout(new BoxLayout(jPanelOrder, BoxLayout.Y_AXIS));
@@ -277,7 +349,7 @@ public class MainForm extends JFrame{
             house.setText(this.orders.getOrders().get(ndx).getContactPerson().getAdressToDelivery().getHouse());;
             flat.setText(this.orders.getOrders().get(ndx).getContactPerson().getAdressToDelivery().getFlat().toString());;
             disconte.setText(this.orders.getOrders().get(ndx).getDisconte().toString());
-            statusOfOrder.setSelectedItem(this.orders.getOrders().get(ndx).getStatusOfOrder());
+            statusOfOrder.setText(this.orders.getOrders().get(ndx).getStatusOfOrder().toString());
         
             orderPositionTableModel.eventChangeItemsInOrderPositions(this.orders.getOrders().get(ndx).getOrderItems());
         }
