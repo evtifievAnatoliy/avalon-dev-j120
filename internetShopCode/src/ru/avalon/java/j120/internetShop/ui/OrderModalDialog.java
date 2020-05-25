@@ -67,7 +67,7 @@ public class OrderModalDialog extends AbstractModalDialog{
         stockItems = mainController.getStockItems();
         orders = mainController.getOrders();
         customersManager = mainController.getCustomersManager();
-        orderManager = new OrderManager();
+        orderManager = mainController.getOrderManager();
         
         orderItems = orderManager.getOrderItems();
         this.items = stockItems.getItemsAsList();
