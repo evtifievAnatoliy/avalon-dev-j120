@@ -78,11 +78,12 @@ public class MainForm extends JFrame{
         
         addbtn = new JButton("Add...");
         addbtn.addActionListener(e -> {
-            OrderModalDialog orderModalDialog = new OrderModalDialog(this,"Новый заказ", mainController, null);
-            orderModalDialog.setVisible(true);
-            if (orderModalDialog.isSuccess())
-            {
-                try{
+            try{
+                OrderModalDialog orderModalDialog = new OrderModalDialog(this,"Новый заказ", mainController, null);
+                orderModalDialog.setVisible(true);
+                if (orderModalDialog.isSuccess())
+                {
+                
                     orderModalDialog.newOrder();
                     convertOrdersListToStringArray();
                     listOrders.setSelectedIndex(listOrders.getModel().getSize()-1);
@@ -92,12 +93,15 @@ public class MainForm extends JFrame{
                             "\n добавлен в список заказов.",
                             "Добавление заказа.",
                         JOptionPane.INFORMATION_MESSAGE);
-                }
-                catch(Exception ex){
-                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error",  JOptionPane.ERROR_MESSAGE);
+                
                 }
             }
+            catch(Exception ex){
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error",  JOptionPane.ERROR_MESSAGE);
+            }
         });
+        
+                
         
         
         
@@ -151,6 +155,8 @@ public class MainForm extends JFrame{
             }
                 catch(Exception ex){
                     JOptionPane.showMessageDialog(this, ex.getMessage(), "Error",  JOptionPane.ERROR_MESSAGE);
+                   
+                    
             }
             
         });

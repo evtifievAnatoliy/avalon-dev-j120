@@ -29,9 +29,6 @@ public class Orders {
      // метод добавление нового заказа
     public void addOrder(Person contactPerson, byte disconte, StatusOfOrder statusOrder, ArrayList<OrderPosition> orderItems){
         
-        if (this.orders == null) //проверка на нулевое значение
-            this.orders = new ArrayList<Order>();
-        
         if(orderItems.size() == 0)
             throw new IllegalArgumentException("Error. В заказе нет ни одного товара.");
         
@@ -43,37 +40,27 @@ public class Orders {
     }
     
      // метод изменения заказа
-    public void editOrder(String orderNumber, LocalDateTime dateTheOrderWasGreated, Person contactPerson, byte disconte, StatusOfOrder statusOrder, ArrayList<OrderPosition> orderItems){
+    public void editOrder(String orderNumber, Person contactPerson, byte disconte,  ArrayList<OrderPosition> orderItems){
                 
-        if (this.orders == null) //проверка на нулевое значение
-            throw new IllegalArgumentException("Error. Системная ошибка. Orders in metod editOrder in class Orders null.");
-        
         if(orderItems.size() == 0)
             throw new IllegalArgumentException("Error. В заказе нет ни одного товара.");
         
-        if (statusOrder == StatusOfOrder.ГОТОВИТСЯ){
-            
-            ArrayList<Order> newOrders = new ArrayList<Order>();
+            //ArrayList<Order> newOrders = new ArrayList<Order>();
             for (Order order: this.orders){
-                if (order.getOrderNumber().equals(orderNumber))
-                    newOrders.add(new Order(orderNumber, dateTheOrderWasGreated, contactPerson, disconte, statusOrder, orderItems));
-                else
-                    newOrders.add(order);
+                if (order.getOrderNumber().equals(orderNumber)){
+                    order.setContactPerson(contactPerson);
+                    order.setDisconte(disconte);
+                    order.setOrderItems(orderItems);
+                    order.setStatusOfOrder(StatusOfOrder.ГОТОВИТСЯ);
+                }
             }
-            this.orders = newOrders;
-        }
-        else
-            throw new IllegalArgumentException("Error. Изменить заказ можно только со статусом " + StatusOfOrder.ГОТОВИТСЯ +
-                    "\nУ изменяемого заказа статус: " + statusOrder);
-                
+     
+              
     }
 
     // метод изменения статуса заказа
     public void setStatusOfOrder(String orderNumber, StatusOfOrder statusOrder, MainController mainController) throws IOException{
                 
-        if (this.orders == null) //проверка на нулевое значение
-            throw new IllegalArgumentException("Error. Системная ошибка. Orders in metod editOrder in class Orders null.");
-        
         for (Order order: this.orders){
             if (order.getOrderNumber().equals(orderNumber))
             {
@@ -95,20 +82,8 @@ public class Orders {
     
     // метод удаления заказа
     public void removeOrder(int number){
-        
-        
-        if (orders == null)
-            throw new IllegalArgumentException("Error. Системная ошибка. Заказов в заказе нет.");
-        
-        if (orders.size() == 0)
-            throw new IllegalArgumentException("Error. Заказов нет в списке заказов.");
                 
-        if (number < 0)
-            throw new IllegalArgumentException("Error. Заказ в в списке заказов не выбран.");
-                
-        if (orders.size() <= number)
-            throw new IllegalArgumentException("Error. Системная ошибка. Размер коллекци меньше номера удаляемого заказа!!!");
-                
+              
         if (orders.get(number).getStatusOfOrder() == StatusOfOrder.ГОТОВИТСЯ)
             orders.remove(number);
          
@@ -121,26 +96,8 @@ public class Orders {
     // метод получения заказа по порядковому номеру
     public Order getOrder(int number){
         
+        return orders.get(number);
         
-        if (orders == null)
-            throw new IllegalArgumentException("Error. Системная ошибка. Заказов в заказе нет.");
-        
-        if (orders.size() == 0)
-            throw new IllegalArgumentException("Error. Заказов нет в списке заказов.");
-                
-        if (number < 0)
-            throw new IllegalArgumentException("Error. Заказ в в списке заказов не выбран.");
-                
-        if (orders.size() <= number)
-            throw new IllegalArgumentException("Error. Системная ошибка. Размер коллекци меньше номера удаляемого заказа!!!");
-                
-        if (orders.get(number).getStatusOfOrder() == StatusOfOrder.ГОТОВИТСЯ)
-            return orders.get(number);
-         
-        else 
-            throw new IllegalArgumentException("Error. Изменить заказ с № " + number + " нельзя.\n  Изменение заказа возможно только для заказов со статусом ГОТОВИТСЯ.");
-     
-      
     }
     
         

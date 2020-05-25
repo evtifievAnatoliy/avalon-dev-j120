@@ -5,6 +5,7 @@
  */
 package ru.avalon.java.j120.internetShop.controllers;
 
+import java.io.IOException;
 import java.text.ParseException;
 import ru.avalon.java.j120.internetShop.models.*;
 import ru.avalon.java.j120.internetShop.commons.Person;
@@ -23,7 +24,9 @@ public class OrderManager {
 
     
     // метод добавление нового товара в коллекцию товаров текущего заказа
-    public void addOrderPosition(Item item, int numberOfItems, byte disconte) throws ParseException{
+    public void addOrderPosition(Item item, int numberOfItems, byte disconte, Order editOrder) throws IOException{
+        
+        checkEditOrder(editOrder);          // проверка на новый заказ и на статус редактируемого заказа 
         
         if (orderItems != null) 
             for (OrderPosition o: orderItems)
@@ -44,20 +47,9 @@ public class OrderManager {
     
     }
     // метод удаления товара из коллекции товаров текущего заказа
-    public void removeOrderPosition(int number){
+    public void removeOrderPosition(int number, Order editOrder){
         
-        if (orderItems == null)
-            throw new IllegalArgumentException("Error. Системная ошибка. Товаров в заказе нет.");
-        
-        if (orderItems.size() == 0)
-            throw new IllegalArgumentException("Error. Товаров в заказе нет.");
-                
-        if (number < 0)
-            throw new IllegalArgumentException("Error. Товар в заказе не выбран.");
-                
-        if (orderItems.size() <= number)
-            throw new IllegalArgumentException("Error. Размер коллекци меньше номера удаляемого товара!!!");
-                
+        checkEditOrder(editOrder);          // проверка на новый заказ и на статус редактируемого заказа 
         orderItems.remove(number);
         
     }
@@ -67,7 +59,7 @@ public class OrderManager {
     }
      
     // метод изменения стоимости товаров в коллекции товаров после измения скидки заказа
-    public void changeAmountOfItems(byte disconte) throws ParseException{
+    public void changeAmountOfItems(byte disconte) throws IOException, ParseException{
         
         for(OrderPosition position : orderItems)
             position.setDisconte(disconte);
@@ -79,5 +71,15 @@ public class OrderManager {
         this.orderItems = orderItems;
     }
     
-    
+    public void checkEditOrder (Order editOrder){
+        if(editOrder == null)  
+            return;
+        else {
+            if (editOrder.getStatusOfOrder() == StatusOfOrder.ГОТОВИТСЯ){
+                return;
+            }
+            else
+                throw new IllegalArgumentException("Error. Изменить заказ с № " + editOrder.getOrderNumber() + " нельзя.\nИзменение заказа возможно только для заказов со статусом ГОТОВИТСЯ.");
+        }
+    }
 }
