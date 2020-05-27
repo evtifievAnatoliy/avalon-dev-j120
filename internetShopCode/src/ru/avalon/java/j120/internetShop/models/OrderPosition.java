@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package ru.avalon.java.j120.internetShop.models;
+import java.io.IOException;
 import java.io.Serializable;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -21,16 +22,13 @@ public class OrderPosition implements Serializable{
     private byte disconte;
     
 
-    public OrderPosition(Item item, int numberOfItems, byte disconte) throws ParseException{
+    public OrderPosition(Item item, int numberOfItems, byte disconte) throws IOException{
         
         this.item = item;
         this.numberOfItems = numberOfItems;
         
         checkDisconte(disconte);
-        
-        this.disconte = disconte;
-        this.amountOfItems = this.item.getPrice() * this.numberOfItems - this.item.getPrice() * this.numberOfItems * this.disconte / 100;
-    
+        setDisconteAndAmountOfItems(disconte);
     }
 
     public Item getItem() {
@@ -58,15 +56,14 @@ public class OrderPosition implements Serializable{
         this.amountOfItems = this.item.getPrice() * this.numberOfItems - this.item.getPrice() * this.numberOfItems * this.disconte / 100;
     }
 
-    public void setDisconte(byte disconte) throws ParseException {
+    public void setDisconte(byte disconte) throws ParseException, IOException {
         checkDisconte(disconte);
-        this.disconte = disconte;
-        this.amountOfItems = this.item.getPrice() * this.numberOfItems - this.item.getPrice() * this.numberOfItems * this.disconte / 100;
+        setDisconteAndAmountOfItems(disconte);
     }
     
-    private void checkDisconte(byte disconte) throws ParseException{
-        NumberFormat numberFormatDisconte =  NumberFormat.getIntegerInstance();
-        if (disconte > numberFormatDisconte.parse(Configuration.getInstance().getProperty("max.Discount")).byteValue())
+    private void checkDisconte(byte disconte) throws IOException{
+         
+        if (disconte > Byte.parseByte(Configuration.getInstance().getProperty("max.Discount")))
             throw new IllegalArgumentException("Скидка для клиента превышает максимальную. \nМаксимальная скидка: " 
                     + Configuration.getInstance().getProperty("max.Discount") + ".");
         
@@ -74,7 +71,11 @@ public class OrderPosition implements Serializable{
             throw new IllegalArgumentException("Скидка не может быть отрицательной." );
     }
     
+    private void setDisconteAndAmountOfItems(byte disconte){
+        this.disconte = disconte;
+        this.amountOfItems = this.item.getPrice() * this.numberOfItems - this.item.getPrice() * this.numberOfItems * this.disconte / 100;
     
+    }
     
     
     

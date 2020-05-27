@@ -23,6 +23,7 @@ public class MainController {
     private StockItems stockItems;
     private Orders orders;
     private CustomersManager customersManager;
+    private OrderManager orderManager;
     
     ItemsReaderWriter itemsReaderWriter = new ItemsReaderWriter();
     OrderReaderWriter orderReaderWriter = new OrderReaderWriter();
@@ -45,7 +46,10 @@ public class MainController {
         return orders;
     }
     
-    
+    public OrderManager getOrderManager(){
+        this.orderManager = new OrderManager();
+        return this.orderManager;
+    }
     
     
     

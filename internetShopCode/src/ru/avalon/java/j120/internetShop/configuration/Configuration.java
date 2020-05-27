@@ -22,26 +22,25 @@ public class Configuration {
     private Properties properties;
     
     
-    private Configuration(){
+    private Configuration() throws FileNotFoundException, IOException{
         Properties defaultProperties = new Properties();
         try{
-            defaultProperties.load(new FileInputStream(this.DEFAULT_PATCH));
+            defaultProperties.load(new FileInputStream(this.USER_PATCH));
+            properties = new Properties(defaultProperties);
         }
-        catch(IOException e){
-            throw new RuntimeException("Error. Файл к default настройкам: " + this.DEFAULT_PATCH + " отсуствует.");
-        }
+        catch(Exception ex){
         
-        properties = new Properties(defaultProperties);
-        try{
-            defaultProperties.load(new FileInputStream(USER_PATCH));
+            properties = new Properties(defaultProperties);
+            try{
+                defaultProperties.load(new FileInputStream(DEFAULT_PATCH));
+            }
+             catch(IOException e){
+                throw new RuntimeException("Error. Ошибка чтения файла с настройкам.");
+            }
         }
-        catch(IOException e){
-            throw new RuntimeException("Error. Файл настройкам пользователя: " + USER_PATCH + " отсуствует.");
-        }
-        
     }
     
-    public static Configuration getInstance(){
+    public static Configuration getInstance() throws IOException{
         if (instance == null)
             instance = new Configuration();
     return instance;

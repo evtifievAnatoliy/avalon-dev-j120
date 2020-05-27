@@ -59,7 +59,7 @@ public class OrderModalDialog extends AbstractModalDialog{
     JButton delItembtn;
     private JTable orderPositionTable;
     
-    public OrderModalDialog(Frame owner, String nameModalDialog, MainController mainController, Order editOrder) {
+    public OrderModalDialog(Frame owner, String nameModalDialog, MainController mainController, Order editOrder) throws IOException {
         
         super(owner, nameModalDialog);
         this.mainController = mainController;
@@ -67,7 +67,7 @@ public class OrderModalDialog extends AbstractModalDialog{
         stockItems = mainController.getStockItems();
         orders = mainController.getOrders();
         customersManager = mainController.getCustomersManager();
-        orderManager = new OrderManager();
+        orderManager = mainController.getOrderManager();
         
         orderItems = orderManager.getOrderItems();
         this.items = stockItems.getItemsAsList();
@@ -171,7 +171,7 @@ public class OrderModalDialog extends AbstractModalDialog{
             {
                 try{
                 NumberFormat numberFormatDisconte =  NumberFormat.getIntegerInstance();
-                orderManager.addOrderPosition (addNewItemToOrderModalDialog.getItem(), 1, numberFormatDisconte.parse(disconte.getText()).byteValue());
+                orderManager.addOrderPosition (addNewItemToOrderModalDialog.getItem(), 1, numberFormatDisconte.parse(disconte.getText()).byteValue(), editOrder);
                 orderPositionTableModel.eventChangeItemsInOrderPositions(orderItems);
                 JOptionPane.showMessageDialog(this, 
                             "Товар:\n" + addNewItemToOrderModalDialog.getItem().getName() + 
@@ -196,7 +196,7 @@ public class OrderModalDialog extends AbstractModalDialog{
                 String numberRemoveOrderItem = orderItems.get(orderPositionTable.getSelectedRow()).getItem().getName();
                 String articleRemoveOrderItem = orderItems.get(orderPositionTable.getSelectedRow()).getItem().getArticle();
                 
-                orderManager.removeOrderPosition(orderPositionTable.getSelectedRow());
+                orderManager.removeOrderPosition(orderPositionTable.getSelectedRow(), editOrder);
                 orderPositionTableModel.eventChangeItemsInOrderPositions(orderItems);
                 JOptionPane.showMessageDialog(this, 
                     "Товар: " + numberRemoveOrderItem + 
@@ -206,7 +206,10 @@ public class OrderModalDialog extends AbstractModalDialog{
                         JOptionPane.INFORMATION_MESSAGE);
             }
             catch(Exception ex){
-                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error",  JOptionPane.ERROR_MESSAGE);
+                if (ex.getMessage().equals("-1"))
+                        JOptionPane.showMessageDialog(this, "Не выбран товар!!!", "Error",  JOptionPane.ERROR_MESSAGE);
+                else
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error",  JOptionPane.ERROR_MESSAGE);
             }
             
         });
@@ -269,11 +272,11 @@ public class OrderModalDialog extends AbstractModalDialog{
     public void editOrder() throws ParseException, IOException{
         
         NumberFormat numberFormat =  NumberFormat.getIntegerInstance();
-        orders.editOrder(editOrder.getOrderNumber(), editOrder.getDateTheOrderWasGreated(), 
+        orders.editOrder(editOrder.getOrderNumber(),  
                 new Person(name.getText(), 
                     new Address(contry.getText(), region.getText(), street.getText(), house.getText(), flat.getText()),
                         phoneNumber.getText()),
-                        numberFormat.parse(disconte.getText()).byteValue(), StatusOfOrder.ГОТОВИТСЯ, orderManager.getOrderItems()
+                        numberFormat.parse(disconte.getText()).byteValue(), orderManager.getOrderItems()
         );
         mainController.writeOrder();
         
