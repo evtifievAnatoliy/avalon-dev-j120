@@ -206,7 +206,10 @@ public class OrderModalDialog extends AbstractModalDialog{
                         JOptionPane.INFORMATION_MESSAGE);
             }
             catch(Exception ex){
-                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error",  JOptionPane.ERROR_MESSAGE);
+                if (ex.getMessage().equals("-1"))
+                        JOptionPane.showMessageDialog(this, "Не выбран товар!!!", "Error",  JOptionPane.ERROR_MESSAGE);
+                else
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error",  JOptionPane.ERROR_MESSAGE);
             }
             
         });

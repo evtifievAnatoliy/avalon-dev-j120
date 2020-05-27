@@ -127,7 +127,10 @@ public class MainForm extends JFrame{
                     mainController.writeOrder();
                 }
                 catch(Exception ex){
-                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error",  JOptionPane.ERROR_MESSAGE);
+                    if (ex.getMessage().equals("-1"))
+                        JOptionPane.showMessageDialog(this, "Не выбран заказ!!!", "Error",  JOptionPane.ERROR_MESSAGE);
+                    else
+                        JOptionPane.showMessageDialog(this, ex.getMessage(), "Error",  JOptionPane.ERROR_MESSAGE);
                 }       
             }
         });
@@ -154,7 +157,10 @@ public class MainForm extends JFrame{
                 }
             }
                 catch(Exception ex){
-                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error",  JOptionPane.ERROR_MESSAGE);
+                    if (ex.getMessage().equals("-1"))
+                        JOptionPane.showMessageDialog(this, "Не выбран заказ!!!", "Error",  JOptionPane.ERROR_MESSAGE);
+                    else
+                        JOptionPane.showMessageDialog(this, ex.getMessage(), "Error",  JOptionPane.ERROR_MESSAGE);
                    
                     
             }
