@@ -27,7 +27,7 @@ public class Orders {
     }
     
      // метод добавление нового заказа
-    public void addOrder(Person contactPerson, byte disconte, StatusOfOrder statusOrder, ArrayList<OrderPosition> orderItems){
+    public void addOrder(Person contactPerson, byte disconte, StatusOfOrder statusOrder, ArrayList<OrderPosition> orderItems, OrderManager orderManager){
         
         if(orderItems.size() == 0)
             throw new IllegalArgumentException("Error. В заказе нет ни одного товара.");
@@ -36,7 +36,7 @@ public class Orders {
                 
         String numberOfOrder = String.valueOf(localTime.getYear()) + String.valueOf(localTime.getMonthValue()) + String.valueOf(localTime.getDayOfMonth()
             + String.valueOf(localTime.getHour()) + String.valueOf(localTime.getMinute()) + String.valueOf(localTime.getSecond()));
-        this.orders.add(new Order(numberOfOrder, localTime.now(), contactPerson, disconte, statusOrder, orderItems));
+        this.orders.add(new Order(numberOfOrder, localTime.now(), contactPerson, disconte, statusOrder, orderManager));
     }
     
      // метод изменения заказа

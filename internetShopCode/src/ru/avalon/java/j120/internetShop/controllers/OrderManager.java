@@ -21,7 +21,10 @@ import java.util.ArrayList;
 public class OrderManager {
     
     private ArrayList<OrderPosition> orderItems = new ArrayList<OrderPosition>();
-
+    
+    public OrderManager(ArrayList<OrderPosition> orderItems){
+        this.orderItems = orderItems;
+    }
     
     // метод добавление нового товара в коллекцию товаров текущего заказа
     public void addOrderPosition(Item item, int numberOfItems, byte disconte, Order editOrder) throws IOException{
