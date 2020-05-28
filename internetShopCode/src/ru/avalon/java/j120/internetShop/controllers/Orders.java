@@ -27,9 +27,9 @@ public class Orders {
     }
     
      // метод добавление нового заказа
-    public void addOrder(Person contactPerson, byte disconte, StatusOfOrder statusOrder, ArrayList<OrderPosition> orderItems, OrderManager orderManager){
+    public void addOrder(Person contactPerson, byte disconte, StatusOfOrder statusOrder, OrderManager orderManager){
         
-        if(orderItems.size() == 0)
+        if(orderManager.getOrderItems().size() == 0)
             throw new IllegalArgumentException("Error. В заказе нет ни одного товара.");
         
         LocalDateTime localTime = LocalDateTime.now();
