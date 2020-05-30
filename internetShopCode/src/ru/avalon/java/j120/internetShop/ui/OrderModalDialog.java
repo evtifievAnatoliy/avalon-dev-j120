@@ -67,8 +67,11 @@ public class OrderModalDialog extends AbstractModalDialog{
         stockItems = mainController.getStockItems();
         orders = mainController.getOrders();
         customersManager = mainController.getCustomersManager();
-        orderManager = mainController.getOrderManager();
-        
+        if (editOrder != null)
+            orderManager = editOrder.getOrderManager();
+        else
+            orderManager = new OrderManager(new ArrayList<OrderPosition>());
+            
         orderItems = orderManager.getOrderItems();
         this.items = stockItems.getItemsAsList();
         
@@ -240,7 +243,7 @@ public class OrderModalDialog extends AbstractModalDialog{
             new Person(name.getText(), 
                     new Address(contry.getText(), region.getText(), street.getText(), house.getText(), flat.getText()),
                         phoneNumber.getText()),
-                        numberFormat.parse(disconte.getText()).byteValue(), StatusOfOrder.ГОТОВИТСЯ, orderManager.getOrderItems());
+                        numberFormat.parse(disconte.getText()).byteValue(), StatusOfOrder.ГОТОВИТСЯ, orderManager);
         mainController.writeOrder();
                     
         customersManager.addCustomer(

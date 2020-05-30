@@ -10,6 +10,7 @@ import ru.avalon.java.j120.internetShop.commons.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.io.Serializable;
+import ru.avalon.java.j120.internetShop.controllers.OrderManager;
 
 /**
  *
@@ -24,17 +25,24 @@ public class Order implements Serializable{
     private byte disconte; // скидка клиента
     private StatusOfOrder statusOfOrder; // статус заказа
     
-    private ArrayList<OrderPosition> orderItems; // товары в заказе
+    private OrderManager orderManager;
+    //private ArrayList<OrderPosition> orderItems; // товары в заказе
 
-    public Order(String orderNumber, LocalDateTime localDateTime, Person contactPerson, byte disconte, StatusOfOrder statusOfOrder, ArrayList<OrderPosition> orderItems) {
+    public Order(String orderNumber, LocalDateTime localDateTime, Person contactPerson, byte disconte, StatusOfOrder statusOfOrder, OrderManager orderManager) {
         this.ORDER_NUMBER = orderNumber;
         this.DATE_THE_WAS_GREATED = localDateTime;
         this.contactPerson = contactPerson;
         this.disconte = disconte;
         this.statusOfOrder = statusOfOrder;
-        this.orderItems = orderItems;
+        this.orderManager = orderManager;
+        //this.orderItems = orderManager.getOrderItems();
+        
     }
 
+    public OrderManager getOrderManager() {
+        return orderManager;
+    }
+    
     public String getOrderNumber() {
         return ORDER_NUMBER;
     }
@@ -56,7 +64,7 @@ public class Order implements Serializable{
     }
 
     public ArrayList<OrderPosition> getOrderItems() {
-        return orderItems;
+        return orderManager.getOrderItems();
     }
 
     public void setContactPerson(Person contactPerson) {
@@ -79,7 +87,7 @@ public class Order implements Serializable{
 
     public void setOrderItems(ArrayList<OrderPosition> orderItems) {
         if (this.statusOfOrder == StatusOfOrder.ГОТОВИТСЯ){
-            this.orderItems = orderItems;
+            this.orderManager.setOrderItems(orderItems);
         }
         else
             throw new IllegalArgumentException("Error. Изменить заказ можно только со статусом " + StatusOfOrder.ГОТОВИТСЯ +

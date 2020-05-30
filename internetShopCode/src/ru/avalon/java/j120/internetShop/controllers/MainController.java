@@ -46,11 +46,6 @@ public class MainController {
         return orders;
     }
     
-    public OrderManager getOrderManager(){
-        this.orderManager = new OrderManager();
-        return this.orderManager;
-    }
-    
     
     
     public void writeItems() throws IOException{
