@@ -8,7 +8,7 @@ package ru.avalon.java.j120.internetShop.ui;
 import java.awt.Frame;
 import java.io.IOException;
 import javax.swing.JComboBox;
-import ru.avalon.java.j120.internetShop.controllers.MainController;
+import ru.avalon.java.j120.internetShop.controllers.interfaces.MainController;
 import ru.avalon.java.j120.internetShop.controllers.StockItems;
 import ru.avalon.java.j120.internetShop.models.Order;
 import ru.avalon.java.j120.internetShop.models.StatusOfOrder;

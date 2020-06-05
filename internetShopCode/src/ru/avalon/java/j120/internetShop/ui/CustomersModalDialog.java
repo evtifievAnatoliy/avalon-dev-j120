@@ -21,6 +21,7 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
 import ru.avalon.java.j120.internetShop.controllers.*;
 import ru.avalon.java.j120.internetShop.commons.*;
+import ru.avalon.java.j120.internetShop.controllers.interfaces.MainController;
 
 /**
  *

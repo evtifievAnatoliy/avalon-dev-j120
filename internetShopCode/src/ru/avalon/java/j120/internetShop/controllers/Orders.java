@@ -12,6 +12,7 @@ import ru.avalon.java.j120.internetShop.models.*;
 import ru.avalon.java.j120.internetShop.commons.Person;
 
 import java.util.ArrayList;
+import ru.avalon.java.j120.internetShop.controllers.interfaces.MainController;
 /**
  *
  * @author user

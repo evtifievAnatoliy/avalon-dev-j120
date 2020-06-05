@@ -6,6 +6,7 @@
 package ru.avalon.java.j120.internetShop.controllers;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.text.ParseException;
 import ru.avalon.java.j120.internetShop.models.*;
 import ru.avalon.java.j120.internetShop.commons.Person;
@@ -18,7 +19,7 @@ import java.util.ArrayList;
  * @author eag
  */
 // класс который работает с созданием и редактированием заказов 
-public class OrderManager {
+public class OrderManager implements Serializable{
     
     private ArrayList<OrderPosition> orderItems = new ArrayList<OrderPosition>();
     

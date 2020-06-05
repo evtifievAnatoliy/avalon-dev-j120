@@ -25,6 +25,7 @@ import ru.avalon.java.j120.internetShop.commons.Address;
 import ru.avalon.java.j120.internetShop.commons.Person;
 import ru.avalon.java.j120.internetShop.configuration.Configuration;
 import ru.avalon.java.j120.internetShop.controllers.*;
+import ru.avalon.java.j120.internetShop.controllers.interfaces.MainController;
 import ru.avalon.java.j120.internetShop.models.Item;
 import ru.avalon.java.j120.internetShop.models.Order;
 import ru.avalon.java.j120.internetShop.models.OrderPosition;
@@ -243,7 +244,7 @@ public class OrderModalDialog extends AbstractModalDialog{
             new Person(name.getText(), 
                     new Address(contry.getText(), region.getText(), street.getText(), house.getText(), flat.getText()),
                         phoneNumber.getText()),
-                        numberFormat.parse(disconte.getText()).byteValue(), StatusOfOrder.ГОТОВИТСЯ, orderManager);
+                        numberFormat.parse(disconte.getText()).byteValue(), StatusOfOrder.ГОТОВИТСЯ, this.orderManager);
         mainController.writeOrder();
                     
         customersManager.addCustomer(

@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import ru.avalon.java.j120.internetShop.controllers.interfaces.MainController;
 import ru.avalon.java.j120.internetShop.models.Item;
 
 /**
@@ -18,18 +19,17 @@ import ru.avalon.java.j120.internetShop.models.Item;
 // Класс который инициализирует заказы и товары
 // Считывает коллекции из файлов и записывает их в файл
 
-public class MainController {
+public class MainControllerFile implements MainController{
     
     private StockItems stockItems;
     private Orders orders;
     private CustomersManager customersManager;
-    private OrderManager orderManager;
-    
+        
     ItemsReaderWriter itemsReaderWriter = new ItemsReaderWriter();
     OrderReaderWriter orderReaderWriter = new OrderReaderWriter();
     CustomersReaderWriter customersReaderWriter = new CustomersReaderWriter();
     
-    public MainController() throws IOException, ClassNotFoundException, ParseException {
+    public MainControllerFile() throws IOException, ClassNotFoundException, ParseException {
         stockItems = new StockItems(itemsReaderWriter.readItems());
         orders = new Orders(orderReaderWriter.readOrders());
         customersManager = new CustomersManager(customersReaderWriter.readCustomers());
