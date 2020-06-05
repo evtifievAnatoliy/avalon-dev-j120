@@ -21,6 +21,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import ru.avalon.java.j120.internetShop.controllers.MainController;
+import ru.avalon.java.j120.internetShop.controllers.interfaces.MainControllerInterface;
 import ru.avalon.java.j120.internetShop.models.Item;
 
 /**
@@ -29,7 +30,7 @@ import ru.avalon.java.j120.internetShop.models.Item;
  */
 public class AddNewItemToOrderModalDialog extends JDialog{
     
-    private MainController mainController;
+    private MainControllerInterface mainController;
     private ArrayList<Item> items;
     private ArrayList<Item> itemsHaveInStock;
     private Item item;
@@ -41,7 +42,7 @@ public class AddNewItemToOrderModalDialog extends JDialog{
     
     ItemsTableModelWithOnlyReadRights itemsTableModel = new ItemsTableModelWithOnlyReadRights();
     
-    public AddNewItemToOrderModalDialog(Frame owner, String title, ArrayList<Item> items, MainController mainController){
+    public AddNewItemToOrderModalDialog(Frame owner, String title, ArrayList<Item> items, MainControllerInterface mainController){
         super(owner, title, true);
         this.items = items;
         this.mainController = mainController;

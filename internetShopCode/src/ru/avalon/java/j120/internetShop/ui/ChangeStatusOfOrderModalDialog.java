@@ -10,6 +10,7 @@ import java.io.IOException;
 import javax.swing.JComboBox;
 import ru.avalon.java.j120.internetShop.controllers.MainController;
 import ru.avalon.java.j120.internetShop.controllers.StockItems;
+import ru.avalon.java.j120.internetShop.controllers.interfaces.MainControllerInterface;
 import ru.avalon.java.j120.internetShop.models.Order;
 import ru.avalon.java.j120.internetShop.models.StatusOfOrder;
 
@@ -19,9 +20,9 @@ import ru.avalon.java.j120.internetShop.models.StatusOfOrder;
  */
 public class ChangeStatusOfOrderModalDialog extends AbstractModalDialog{
     JComboBox statusOfOrder;
-    MainController mainController;
+    MainControllerInterface mainController;
     
-    public ChangeStatusOfOrderModalDialog(Frame owner, String title, StatusOfOrder status, MainController mainController) {
+    public ChangeStatusOfOrderModalDialog(Frame owner, String title, StatusOfOrder status, MainControllerInterface mainController) {
         super(owner, title);
         this.mainController = mainController;
         

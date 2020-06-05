@@ -21,6 +21,7 @@ import javax.swing.JTable;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import ru.avalon.java.j120.internetShop.controllers.*;
+import ru.avalon.java.j120.internetShop.controllers.interfaces.MainControllerInterface;
 import ru.avalon.java.j120.internetShop.models.Item;
 
 
@@ -30,7 +31,7 @@ import ru.avalon.java.j120.internetShop.models.Item;
  */
 public class ItemsModalDialog extends JDialog {
     
-    private MainController mainController;
+    private MainControllerInterface mainController;
     private StockItems stockItems;
     private ArrayList<Item> items;
     
@@ -42,7 +43,7 @@ public class ItemsModalDialog extends JDialog {
     
     ItemsTableModel itemsTableModel = new ItemsTableModel();
     
-    public ItemsModalDialog(Frame owner, String title, MainController mainController){
+    public ItemsModalDialog(Frame owner, String title, MainControllerInterface mainController){
         super(owner, title, true);
         this.mainController = mainController;
         stockItems = mainController.getStockItems();

@@ -21,13 +21,14 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
 import ru.avalon.java.j120.internetShop.controllers.*;
 import ru.avalon.java.j120.internetShop.commons.*;
+import ru.avalon.java.j120.internetShop.controllers.interfaces.MainControllerInterface;
 
 /**
  *
  * @author eag
  */
 public class CustomersModalDialog extends JDialog{
-    MainController mainController;
+    MainControllerInterface mainController;
     private CustomersManager customersManager;
     private ArrayList<Person> customers;
     
@@ -38,7 +39,7 @@ public class CustomersModalDialog extends JDialog{
     
     CustomersTableModel customersTableModel = new CustomersTableModel();
     
-    public CustomersModalDialog(Frame owner, String title, MainController mainController){
+    public CustomersModalDialog(Frame owner, String title, MainControllerInterface mainController){
         super(owner, title, true);
         this.customers = customers;
         this.mainController = mainController;

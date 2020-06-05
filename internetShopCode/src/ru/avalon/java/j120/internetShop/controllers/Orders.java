@@ -12,6 +12,7 @@ import ru.avalon.java.j120.internetShop.models.*;
 import ru.avalon.java.j120.internetShop.commons.Person;
 
 import java.util.ArrayList;
+import ru.avalon.java.j120.internetShop.controllers.interfaces.MainControllerInterface;
 /**
  *
  * @author user
@@ -59,7 +60,7 @@ public class Orders {
     }
 
     // метод изменения статуса заказа
-    public void setStatusOfOrder(String orderNumber, StatusOfOrder statusOrder, MainController mainController) throws IOException{
+    public void setStatusOfOrder(String orderNumber, StatusOfOrder statusOrder, MainControllerInterface mainController) throws IOException{
                 
         for (Order order: this.orders){
             if (order.getOrderNumber().equals(orderNumber))

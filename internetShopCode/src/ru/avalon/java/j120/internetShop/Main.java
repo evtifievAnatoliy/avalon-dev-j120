@@ -32,61 +32,11 @@ public class Main extends JFrame{
      */
         
     public static void main(String[] args) throws IOException, ClassNotFoundException, ParseException {
-        // TODO code application logic here
         
-       
         
         MainForm mainForm = new MainForm();
         mainForm.setVisible(true);
         
-       
-        
-        
-        //Configuration configuration = Configuration.getInstance();
-        /*
-        //общий объект работающий с товарами и заказами
-        MainController mainController = new MainController();
-        
-        // методы и объекты работающие с товарами
-        StockItems stockItems = mainController.getStockItems();
-        stockItems.addItem(new Item("7000002001001", "Платье трикотажное", "Зеленый", 1800, 9));
-        mainController.writeItems();
-        //--------------------------------
-        /*
-        //методы и объекты работающие с заказами
-        /*
-        OrderManager orderManager = mainController.getOrderManager();
-        
-        orderManager.addOrderPosition(stockItems.getItemsAsList().get(0), 1);
-        orderManager.addOrderPosition(stockItems.getItemsAsList().get(1), 2);
-        orderManager.addOrderPosition(stockItems.getItemsAsList().get(2), 7);
-        
-        Orders orders = mainController.getOrders();
-        
-        orders.addOrder( 
-                new Person("Анатолий", 
-                        new Address("РФ", "Санкт-Петрербург", "ул. Ваиловых", "дом11/1", 1),
-                        "89219910012"),
-        (byte)0, StatusOfOrder.ГОТОВИТСЯ, orderManager.getOrderItems());
-        mainController.writeOrder();
-        */
-                
-        //--------------------------------
-        
-        
-        //методы и объекты работающие с базой заказчиков
-        /*
-        CustomersManager customersManager = mainController.getCustomersManager();
-        
-        
-        customersManager.addCustomer(
-                new Person("Анатолий", 
-                        new Address("РФ", "Санкт-Петрербург", "ул. Ваиловых", "дом11/1", 1),
-                        "89219910012"));
-        mainController.writeCustomers();
-        */
-                
-        //--------------------------------
         
         System.out.println("Приложение закончило свою работу.");
     }

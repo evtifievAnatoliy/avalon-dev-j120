@@ -25,6 +25,7 @@ import ru.avalon.java.j120.internetShop.commons.Address;
 import ru.avalon.java.j120.internetShop.commons.Person;
 import ru.avalon.java.j120.internetShop.configuration.Configuration;
 import ru.avalon.java.j120.internetShop.controllers.*;
+import ru.avalon.java.j120.internetShop.controllers.interfaces.MainControllerInterface;
 import ru.avalon.java.j120.internetShop.models.Item;
 import ru.avalon.java.j120.internetShop.models.Order;
 import ru.avalon.java.j120.internetShop.models.OrderPosition;
@@ -36,7 +37,7 @@ import ru.avalon.java.j120.internetShop.models.StatusOfOrder;
  */
 public class OrderModalDialog extends AbstractModalDialog{
     
-    private MainController mainController;
+    private MainControllerInterface mainController;
     private OrderManager orderManager;
     private CustomersManager customersManager;
     private Orders orders;
@@ -59,7 +60,7 @@ public class OrderModalDialog extends AbstractModalDialog{
     JButton delItembtn;
     private JTable orderPositionTable;
     
-    public OrderModalDialog(Frame owner, String nameModalDialog, MainController mainController, Order editOrder) throws IOException {
+    public OrderModalDialog(Frame owner, String nameModalDialog, MainControllerInterface mainController, Order editOrder) throws IOException {
         
         super(owner, nameModalDialog);
         this.mainController = mainController;

@@ -13,6 +13,7 @@ import java.text.ParseException;
 import java.util.*;
 import javax.swing.*;
 import ru.avalon.java.j120.internetShop.controllers.*;
+import ru.avalon.java.j120.internetShop.controllers.interfaces.MainControllerInterface;
 import ru.avalon.java.j120.internetShop.models.*;
 
 /**
@@ -21,7 +22,7 @@ import ru.avalon.java.j120.internetShop.models.*;
  */
 public class MainForm extends JFrame{
     
-    MainController mainController;
+    MainControllerInterface mainController;
     ArrayList<OrderPosition> orderItems = new ArrayList<>();
     OrderManager orderManager;
     Orders orders;

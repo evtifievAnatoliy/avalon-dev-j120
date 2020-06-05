@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import ru.avalon.java.j120.internetShop.controllers.interfaces.MainControllerInterface;
 import ru.avalon.java.j120.internetShop.models.Item;
 
 /**
@@ -18,7 +19,7 @@ import ru.avalon.java.j120.internetShop.models.Item;
 // Класс который инициализирует заказы и товары
 // Считывает коллекции из файлов и записывает их в файл
 
-public class MainController {
+public class MainController implements MainControllerInterface {
     
     private StockItems stockItems;
     private Orders orders;
@@ -50,7 +51,6 @@ public class MainController {
         this.orderManager = new OrderManager();
         return this.orderManager;
     }
-    
     
     
     public void writeItems() throws IOException{
