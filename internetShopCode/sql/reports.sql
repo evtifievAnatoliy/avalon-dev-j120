@@ -21,4 +21,11 @@ CREATE TABLE ORDER_POSITIONS(
     number_of_items int not null,
     amount_OF_items int not null,
     disconte int not null
-)
+);
+
+insert INTO ITEMS (ARTICLE, NAME, COLOR, PRICE, STOCK_BALANCE) VALUES ('1', '1', '1', 1800, 1);
+
+SELECT * FROM ITEMS;  
+
+DELETE FROM ITEMS i
+    WHERE i.ARTICLE = '1';

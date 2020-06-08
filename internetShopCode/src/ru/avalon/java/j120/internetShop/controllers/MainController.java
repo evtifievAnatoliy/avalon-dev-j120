@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 import ru.avalon.java.j120.internetShop.configuration.Configuration;
 import ru.avalon.java.j120.internetShop.controllers.rwfiles.*;
+import ru.avalon.java.j120.internetShop.controllers.sql.*;
 import ru.avalon.java.j120.internetShop.models.Item;
 
 /**
@@ -42,9 +43,9 @@ public class MainController{
                     Configuration.getInstance().getProperty("user.Db"),
                     Configuration.getInstance().getProperty("password.Db"))){
             
-                this.itemsReaderWriter = new ItemsReaderWriterFiles();
-                this.orderReaderWriter = new OrderReaderWriterFiles();
-                this.customersReaderWriter = new CustomersReaderWriterFiles();
+                this.itemsReaderWriter = new ItemsReaderWriterSql();
+                this.orderReaderWriter = new OrderReaderWriterSql();
+                this.customersReaderWriter = new CustomersReaderWriterSql();
             
                 stockItems = new StockItems(itemsReaderWriter.readItems());
                 orders = new Orders(orderReaderWriter.readOrders());
