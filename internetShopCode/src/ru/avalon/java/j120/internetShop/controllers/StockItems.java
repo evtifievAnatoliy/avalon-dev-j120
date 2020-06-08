@@ -19,6 +19,8 @@ public class StockItems {
 
     private ArrayList<Item> items;
     
+    
+    
     public StockItems( ArrayList<Item> items) {
         this.items = items;
     }

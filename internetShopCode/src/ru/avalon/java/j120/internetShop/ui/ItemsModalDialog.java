@@ -59,7 +59,11 @@ public class ItemsModalDialog extends JDialog {
             @Override
             public void tableChanged(TableModelEvent tme) {
                 try{
-                    mainController.writeItems();
+                    ArrayList<Item> list = new ArrayList<>();
+                    if (itemsTable.getEditingRow() >= 0){ //проверяем на редактирование таблица Товаров (в самой таблице)
+                        list.add(findItem((String) itemsTableModel.getValueAt(itemsTable.getEditingRow(),0)));
+                        mainController.writeItems(null, list);
+                    }
                 }
                 catch(Exception ex){
                     JOptionPane.showMessageDialog(null, 
@@ -82,12 +86,12 @@ public class ItemsModalDialog extends JDialog {
             if(addNewItemModalDialog.isSuccess()){
                 try
                     { 
-                    stockItems.addItem(addNewItemModalDialog.addNewItem());
+                    stockItems.addItem(addNewItemModalDialog.getNewItem());
                     itemsTableModel.eventAddNewItem(items);
-                    mainController.writeItems();
+                    mainController.writeItems(addNewItemModalDialog.getNewItem(), null);
                     JOptionPane.showMessageDialog(this, 
-                            "Товар:\n" + addNewItemModalDialog.addNewItem().getName() + 
-                                    "\nс артикулом \n" + addNewItemModalDialog.addNewItem().getArticle() + 
+                            "Товар:\n" + addNewItemModalDialog.getNewItem().getName() + 
+                                    "\nс артикулом \n" + addNewItemModalDialog.getNewItem().getArticle() + 
                                     "\nдобавлен на склад.",
                             "Добавление товара на склад",
                             JOptionPane.INFORMATION_MESSAGE);
@@ -120,6 +124,12 @@ public class ItemsModalDialog extends JDialog {
         return addPressed;
     }
     
+    public Item findItem(String article){
+        for (Item item: items)
+            if(item.getArticle() == article)
+                return item;
+        return null;
+    }
     
     
 }

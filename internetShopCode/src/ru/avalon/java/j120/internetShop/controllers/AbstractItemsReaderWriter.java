@@ -17,6 +17,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import ru.avalon.java.j120.internetShop.configuration.Configuration;
 import ru.avalon.java.j120.internetShop.models.Item;
+import ru.avalon.java.j120.internetShop.models.OrderPosition;
 
 /**
  *
@@ -28,7 +29,7 @@ public interface AbstractItemsReaderWriter {
     
                
     // метод записи в файл. На входе путь записи и  коллекция Товаров
-    public void writeItems(ArrayList<Item> items) throws IOException;
+    public void writeItems(ArrayList<Item> items, Item newItem, ArrayList<Item> updateItems) throws IOException;
         	
     
     // метод чтения из файла. На входе путь записи и  коллекция Товаров

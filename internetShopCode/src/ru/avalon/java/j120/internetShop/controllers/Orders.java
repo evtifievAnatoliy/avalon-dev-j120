@@ -67,7 +67,7 @@ public class Orders {
                 if (order.getStatusOfOrder() == StatusOfOrder.ГОТОВИТСЯ){
                     if(statusOrder == StatusOfOrder.ОТГРУЖЕН){
                         mainController.getStockItems().reduceTheStockBalance(order.getOrderItems());
-                        mainController.writeItems();
+                        mainController.writeItems(null, order.getOrderManager().getItems());
                     }
                     order.setStatusOfOrder(statusOrder);
                 }

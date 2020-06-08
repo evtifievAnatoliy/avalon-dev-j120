@@ -26,6 +26,7 @@ import java.util.logging.Logger;
 import ru.avalon.java.j120.internetShop.configuration.Configuration;
 import ru.avalon.java.j120.internetShop.controllers.AbstractItemsReaderWriter;
 import ru.avalon.java.j120.internetShop.models.Item;
+import ru.avalon.java.j120.internetShop.models.OrderPosition;
 
 /**
  *
@@ -37,22 +38,13 @@ public class ItemsReaderWriterSql implements AbstractItemsReaderWriter{
     
                
     // метод записи в файл. На входе путь записи и  коллекция Товаров
-    public void writeItems(ArrayList<Item> items) throws IOException{
+    public void writeItems(ArrayList<Item> items, Item newItem, ArrayList<Item> updateItems) throws IOException{
         	
         try(Connection connection = DriverManager.getConnection(Configuration.getInstance().getProperty("url.Db"), 
                     Configuration.getInstance().getProperty("user.Db"),
                     Configuration.getInstance().getProperty("password.Db"))){
-            for(Item i : items){
-                String report = "INSERT INTO ITEMS (ARTICLE, NAME, COLOR, PRICE, STOCK_BALANCE) VALUES (?, ?, ?, ?, ?)";
-                try(PreparedStatement predStat = connection.prepareStatement(report)){
-                    predStat.setObject(1, i.getArticle());
-                    predStat.setObject(2, i.getName());
-                    predStat.setObject(3, i.getColor());
-                    predStat.setObject(4, i.getPrice());
-                    predStat.setObject(5, i.getStockBalance());
-                    predStat.execute();
-                }
-            }
+            if (newItem != null)
+                
         }
         
         catch(SQLException ex){

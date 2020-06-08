@@ -61,7 +61,16 @@ public class OrderManager implements Serializable{
     public ArrayList<OrderPosition> getOrderItems() {
         return orderItems;
     }
-     
+    
+    public ArrayList<Item> getItems() {
+        ArrayList<Item> items = new ArrayList<>();
+        for (OrderPosition orderPosition : orderItems)
+            items.add(orderPosition.getItem());
+        
+        return items;
+    }
+    
+    
     // метод изменения стоимости товаров в коллекции товаров после измения скидки заказа
     public void changeAmountOfItems(byte disconte) throws IOException, ParseException{
         
