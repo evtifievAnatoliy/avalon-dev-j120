@@ -44,7 +44,7 @@ public class ItemsReaderWriterSql implements AbstractItemsReaderWriter{
                     Configuration.getInstance().getProperty("user.Db"),
                     Configuration.getInstance().getProperty("password.Db"))){
             if (newItem != null){
-                final String report = "INSERT INTO ITEMS (ARTICLE, NAME, COLOR, PRICE, STOCK_BALANCE) VALUES (?, ?, ?, ?, ?)";
+                String report = "INSERT INTO ITEMS (ARTICLE, NAME, COLOR, PRICE, STOCK_BALANCE) VALUES (?, ?, ?, ?, ?)";
                 try(PreparedStatement predStat = connection.prepareStatement(report)){
                     predStat.setObject(1, newItem.getArticle());
                     predStat.setObject(2, newItem.getName());
@@ -56,7 +56,17 @@ public class ItemsReaderWriterSql implements AbstractItemsReaderWriter{
             
             }
             if (updateItems != null){
-                
+                for(Item i : updateItems){
+                String report = "UPDATE ITEMS SET NAME = ?, COLOR = ?, PRICE = ?, STOCK_BALANCE = ? WHERE ARTICLE = ?";
+                try(PreparedStatement predStat = connection.prepareStatement(report)){
+                    predStat.setObject(1, i.getName());
+                    predStat.setObject(2, i.getColor());
+                    predStat.setObject(3, i.getPrice());
+                    predStat.setObject(4, i.getStockBalance());
+                    predStat.setObject(5, i.getArticle());
+                    predStat.execute();
+                }
+            }
             }
                 
         }
