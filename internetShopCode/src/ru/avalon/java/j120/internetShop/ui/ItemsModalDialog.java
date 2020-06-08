@@ -21,7 +21,6 @@ import javax.swing.JTable;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import ru.avalon.java.j120.internetShop.controllers.*;
-import ru.avalon.java.j120.internetShop.controllers.interfaces.MainController;
 import ru.avalon.java.j120.internetShop.models.Item;
 
 

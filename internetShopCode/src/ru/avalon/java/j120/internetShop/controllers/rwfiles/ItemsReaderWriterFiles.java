@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ru.avalon.java.j120.internetShop.controllers;
+package ru.avalon.java.j120.internetShop.controllers.rwfiles;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -16,6 +16,7 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import ru.avalon.java.j120.internetShop.configuration.Configuration;
+import ru.avalon.java.j120.internetShop.controllers.AbstractItemsReaderWriter;
 import ru.avalon.java.j120.internetShop.models.Item;
 
 /**
@@ -24,7 +25,7 @@ import ru.avalon.java.j120.internetShop.models.Item;
  */
 // класс который работает с записью и чтением каталогов товаров из файла
 
-public class ItemsReaderWriter {
+public class ItemsReaderWriterFiles implements AbstractItemsReaderWriter{
     
                
     // метод записи в файл. На входе путь записи и  коллекция Товаров

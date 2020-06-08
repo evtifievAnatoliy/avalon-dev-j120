@@ -15,7 +15,7 @@ CREATE TABLE ORDERS(
 );
 
 CREATE TABLE ORDER_POSITIONS(
-    id int not null primary key,
+    order_positions_id int not null primary key,
     order_id varchar(100) not null references ORDERS,
     item_id varchar(100) not null references ITEMS,
     number_of_items int not null,

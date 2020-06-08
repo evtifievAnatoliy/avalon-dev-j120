@@ -9,11 +9,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.*;
 import javax.swing.*;
 import ru.avalon.java.j120.internetShop.controllers.*;
-import ru.avalon.java.j120.internetShop.controllers.interfaces.MainController;
 import ru.avalon.java.j120.internetShop.models.*;
 
 /**
@@ -55,7 +55,7 @@ public class MainForm extends JFrame{
     private JTable orderPositionTable;
             
     
-    public MainForm() throws IOException, ClassNotFoundException, ParseException {
+    public MainForm() throws IOException, ClassNotFoundException, ParseException, SQLException {
         
         super("InternetShop"); //название формы
         setBounds(300, 200, 1100, 800);
@@ -64,7 +64,7 @@ public class MainForm extends JFrame{
         
         
         //общий объект работающий с товарами и заказами
-        mainController = new MainControllerFile();
+        mainController = new MainController();
         orders = mainController.getOrders();
         
         
