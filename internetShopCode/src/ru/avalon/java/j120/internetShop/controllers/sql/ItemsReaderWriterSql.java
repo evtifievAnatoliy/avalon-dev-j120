@@ -43,7 +43,21 @@ public class ItemsReaderWriterSql implements AbstractItemsReaderWriter{
         try(Connection connection = DriverManager.getConnection(Configuration.getInstance().getProperty("url.Db"), 
                     Configuration.getInstance().getProperty("user.Db"),
                     Configuration.getInstance().getProperty("password.Db"))){
-            if (newItem != null)
+            if (newItem != null){
+                final String report = "INSERT INTO ITEMS (ARTICLE, NAME, COLOR, PRICE, STOCK_BALANCE) VALUES (?, ?, ?, ?, ?)";
+                try(PreparedStatement predStat = connection.prepareStatement(report)){
+                    predStat.setObject(1, newItem.getArticle());
+                    predStat.setObject(2, newItem.getName());
+                    predStat.setObject(3, newItem.getColor());
+                    predStat.setObject(4, newItem.getPrice());
+                    predStat.setObject(5, newItem.getStockBalance());
+                    predStat.execute();
+                }
+            
+            }
+            if (updateItems != null){
+                
+            }
                 
         }
         
