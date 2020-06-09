@@ -93,8 +93,8 @@ public class ItemsReaderWriterSql implements AbstractItemsReaderWriter{
                     ArrayList<Item> items = new ArrayList<Item>();
                     while (rs.next()) {
                         // пробуем создать объект товар и добавить его в коллекцию
-                        Item item = new Item(rs.getString(1), rs.getString(2), rs.getString(3), 
-                                rs.getInt(4), rs.getInt(5));
+                        Item item = new Item(rs.getString("ARTICLE"), rs.getString("NAME"), rs.getString("COLOR"), 
+                                rs.getInt("PRICE"), rs.getInt("STOCK_BALANCE"));
                         items.add(item);
                     }
                     return items;
