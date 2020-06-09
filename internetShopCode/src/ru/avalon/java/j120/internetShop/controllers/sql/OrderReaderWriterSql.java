@@ -14,6 +14,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -24,8 +25,11 @@ import java.sql.Timestamp;
 
 
 import java.util.ArrayList;
+import ru.avalon.java.j120.internetShop.commons.Address;
+import ru.avalon.java.j120.internetShop.commons.Person;
 import ru.avalon.java.j120.internetShop.configuration.Configuration;
 import ru.avalon.java.j120.internetShop.controllers.AbstractOrderReaderWriter;
+import ru.avalon.java.j120.internetShop.controllers.OrderManager;
 
 
 /**
@@ -73,7 +77,7 @@ public class OrderReaderWriterSql implements AbstractOrderReaderWriter{
                 final String reportOrders = "INSERT INTO ORDERS (ORDER_NUMBER, DATE_THE_ORDER_WAS_GREATED, CONTACT_PERSON, DISCONTE, STATUS_OF_ORDER) VALUES (?, ?, ?, ?, ?)";
                 try(PreparedStatement predStat = connection.prepareStatement(reportOrders)){
                     predStat.setObject(1, newOrder.getOrderNumber());
-                    predStat.setObject(2, Timestamp.valueOf(newOrder.getDateTheOrderWasGreated()));
+                    predStat.setObject(2, Date.valueOf(newOrder.getDateTheOrderWasGreated()));
                     predStat.setObject(3, personId);
                     predStat.setObject(4, (int)newOrder.getDisconte());
                     predStat.setObject(5, newOrder.getStatusOfOrder().name());
@@ -115,26 +119,41 @@ public class OrderReaderWriterSql implements AbstractOrderReaderWriter{
         }    
     }
     
-    // метод чтения из файла. На входе путь записи и  коллекция Товаров
+    // метод чтения из базы данных коллекции Товаров
     public ArrayList<Order> readOrders() throws IOException, ClassNotFoundException{
                 
-        File file = new File(Configuration.getInstance().getProperty("orders.Path"));
-        if(!file.exists()){
-            ArrayList<Order> orders = new ArrayList<Order>();
-            return orders;
-        }
-        
-        try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))){
-            // пробуем десериализовать коллекцию заказов
-            ArrayList<Order> orders = (ArrayList<Order>) ois.readObject();
+        try(Connection connection = DriverManager.getConnection(Configuration.getInstance().getProperty("url.Db"), 
+                    Configuration.getInstance().getProperty("user.Db"),
+                    Configuration.getInstance().getProperty("password.Db"))){
+            
+            try(Statement st = connection.createStatement()){
+                final String report = "SELECT * FROM ORDERS ord " +
+                        "inner join PERSONS per on ord.CONTACT_PERSON = per.PERSON_ID " +
+                        "inner join ADDRESSES adr on per.ADDRESS_TO_DELIVERY = adr.ADDRESS_ID";
+                try (ResultSet rs = st.executeQuery(report)){
+                    // создаем коллекцию товаров
+                    ArrayList<Order> orders = new ArrayList<Order>();
+                    while (rs.next()) {
+                        // пробуем создать объект товар и добавить его в коллекцию
+                        Order order = new Order(rs.getString("ORDER_NUMBER"), rs.getDate("DATE_THE_ORDER_WAS_GREATED").toLocalDate(), 
+                                new Person(rs.getString("PERSON_NAME"),
+                                    new Address(rs.getString("CONTRY"), rs.getString("REGION"), rs.getString("STREET"), rs.getString("HOUSE"), 
+                                            rs.getString("FLAT")),
+                                rs.getString("PHONE_NUMBER")),
+                                rs.getByte("DISCONTE"), 
+                                StatusOfOrder.ГОТОВИТСЯ/*rs.getString("STATUS_OF_ORDER")*/, 
+                                        null);
                         
-            return orders;
+                        orders.add(order);
+                    }
+                    return orders;
+                }
+            }
             
-        }
-            
-        catch (IOException e){
-            throw new IllegalArgumentException("Error. Ошибка чтения файла списка заказов. ");
-        }
+        }   
+        catch(SQLException ex){
+            throw new IllegalArgumentException("Error. Прочитать заказы не удалось!!!\n" + ex.getMessage());
+        } 
     }
     
     

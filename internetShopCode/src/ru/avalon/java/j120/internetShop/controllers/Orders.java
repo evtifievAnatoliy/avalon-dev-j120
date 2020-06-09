@@ -36,7 +36,7 @@ public class Orders {
                 
         String numberOfOrder = String.valueOf(localTime.getYear()) + String.valueOf(localTime.getMonthValue()) + String.valueOf(localTime.getDayOfMonth()
             + String.valueOf(localTime.getHour()) + String.valueOf(localTime.getMinute()) + String.valueOf(localTime.getSecond()));
-        Order newOrder = new Order(numberOfOrder, localTime.now(), contactPerson, disconte, statusOrder, orderManager);
+        Order newOrder = new Order(numberOfOrder, localTime.toLocalDate(), contactPerson, disconte, statusOrder, orderManager);
         this.orders.add(newOrder);
         return newOrder;
         

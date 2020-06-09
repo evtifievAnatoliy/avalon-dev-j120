@@ -353,7 +353,7 @@ public class MainForm extends JFrame{
         if(ndx >= 0)
         {
             orderNumber.setText(this.orders.getOrders().get(ndx).getOrderNumber()); 
-            dateTheOrderWasGreated.setText(this.orders.getOrders().get(ndx).getDateTheOrderWasGreated().toLocalDate().toString());
+            dateTheOrderWasGreated.setText(this.orders.getOrders().get(ndx).getDateTheOrderWasGreated().toString());
             name.setText(this.orders.getOrders().get(ndx).getContactPerson().getName());;  
             phoneNumber.setText(this.orders.getOrders().get(ndx).getContactPerson().getPhoneNumber());;
             contry.setText(this.orders.getOrders().get(ndx).getContactPerson().getAdressToDelivery().getContry());;

@@ -52,3 +52,6 @@ UPDATE ITEMS SET NAME = 'Стол обеденный', COLOR = 'орех', PRICE
 
 ALTER TABLE PERSONS ADD COLUMN phone_number varchar(100);
 
+SELECT * FROM ORDERS ord 
+    inner join PERSONS per on ord.CONTACT_PERSON = per.PERSON_ID
+    inner join ADDRESSES adr on per.ADDRESS_TO_DELIVERY = adr.ADDRESS_ID;
