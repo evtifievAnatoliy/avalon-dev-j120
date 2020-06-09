@@ -43,6 +43,7 @@ public class ItemsReaderWriterSql implements AbstractItemsReaderWriter{
         try(Connection connection = DriverManager.getConnection(Configuration.getInstance().getProperty("url.Db"), 
                     Configuration.getInstance().getProperty("user.Db"),
                     Configuration.getInstance().getProperty("password.Db"))){
+            
             if (newItem != null){
                 String report = "INSERT INTO ITEMS (ARTICLE, NAME, COLOR, PRICE, STOCK_BALANCE) VALUES (?, ?, ?, ?, ?)";
                 try(PreparedStatement predStat = connection.prepareStatement(report)){
@@ -57,16 +58,16 @@ public class ItemsReaderWriterSql implements AbstractItemsReaderWriter{
             }
             if (updateItems != null){
                 for(Item i : updateItems){
-                String report = "UPDATE ITEMS SET NAME = ?, COLOR = ?, PRICE = ?, STOCK_BALANCE = ? WHERE ARTICLE = ?";
-                try(PreparedStatement predStat = connection.prepareStatement(report)){
-                    predStat.setObject(1, i.getName());
-                    predStat.setObject(2, i.getColor());
-                    predStat.setObject(3, i.getPrice());
-                    predStat.setObject(4, i.getStockBalance());
-                    predStat.setObject(5, i.getArticle());
-                    predStat.execute();
+                    String report = "UPDATE ITEMS SET NAME = ?, COLOR = ?, PRICE = ?, STOCK_BALANCE = ? WHERE ARTICLE = ?";
+                    try(PreparedStatement predStat = connection.prepareStatement(report)){
+                        predStat.setObject(1, i.getName());
+                        predStat.setObject(2, i.getColor());
+                        predStat.setObject(3, i.getPrice());
+                        predStat.setObject(4, i.getStockBalance());
+                        predStat.setObject(5, i.getArticle());
+                        predStat.execute();
+                    }
                 }
-            }
             }
                 
         }
@@ -77,7 +78,10 @@ public class ItemsReaderWriterSql implements AbstractItemsReaderWriter{
     }
     
     // метод чтения из файла. На входе путь записи и  коллекция Товаров
+    
+    
     public ArrayList<Item> readItems() throws IOException, ParseException{
+        
         // создаем коллекцию товаров
         try(Connection connection = DriverManager.getConnection(Configuration.getInstance().getProperty("url.Db"), 
                     Configuration.getInstance().getProperty("user.Db"),
