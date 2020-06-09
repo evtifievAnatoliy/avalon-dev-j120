@@ -15,7 +15,6 @@ CREATE TABLE ORDERS(
 );
 
 CREATE TABLE ORDER_POSITIONS(
-    order_positions_id int not null primary key,
     order_id varchar(100) not null references ORDERS (order_number),
     item_id varchar(100) not null references ITEMS (article),
     number_of_items int not null,
@@ -35,17 +34,21 @@ CREATE TABLE ADDRESSES(
 CREATE TABLE PERSONS(
     person_id int not null primary key,
     person_name varchar(100) not null,
+    phone_number varchar(100) not null,
     address_to_delivery int not null references ADDRESSES (address_id)
 );
 
 insert INTO ITEMS (ARTICLE, NAME, COLOR, PRICE, STOCK_BALANCE) VALUES ('1', '1', '1', 1800, 1);
 
-SELECT * FROM ITEMS;  
+SELECT * FROM PERSONS;  
+SELECT * FROM ADDRESSES;  
+SELECT * FROM ORDERS;  
+SELECT * FROM ORDER_POSITIONS;
 
-DELETE FROM ITEMS i
-    WHERE i.ARTICLE = '1';
+DELETE FROM ADDRESSES;
+    
 
 UPDATE ITEMS SET NAME = 'Стол обеденный', COLOR = 'орех', PRICE = 15000, STOCK_BALANCE = 1  WHERE ARTICLE = '32516028337712';
 
-ALTER TABLE ORDERS ADD COLUMN contact_person int references PERSONS (person_id);
+ALTER TABLE PERSONS ADD COLUMN phone_number varchar(100);
 
