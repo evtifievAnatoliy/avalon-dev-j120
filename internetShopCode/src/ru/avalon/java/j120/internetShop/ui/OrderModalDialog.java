@@ -239,17 +239,15 @@ public class OrderModalDialog extends AbstractModalDialog{
     public void newOrder() throws ParseException, IOException{
         
         NumberFormat numberFormat =  NumberFormat.getIntegerInstance();
-        orders.addOrder( 
-            new Person(name.getText(), 
+        
+        Person newPerson = new Person(name.getText(), 
                     new Address(contry.getText(), region.getText(), street.getText(), house.getText(), flat.getText()),
-                        phoneNumber.getText()),
+                        phoneNumber.getText());
+        Order newOrder = orders.addOrder(newPerson,
                         numberFormat.parse(disconte.getText()).byteValue(), StatusOfOrder.ГОТОВИТСЯ, this.orderManager);
-        mainController.writeOrder();
+        mainController.writeOrder(newOrder, null, null);
                     
-        customersManager.addCustomer(
-            new Person(name.getText(), 
-                new Address(contry.getText(), region.getText(), street.getText(), house.getText(), flat.getText()),
-                    phoneNumber.getText()));
+        customersManager.addCustomer(newPerson);
         mainController.writeCustomers();
    
     }
@@ -275,13 +273,13 @@ public class OrderModalDialog extends AbstractModalDialog{
     public void editOrder() throws ParseException, IOException{
         
         NumberFormat numberFormat =  NumberFormat.getIntegerInstance();
-        orders.editOrder(editOrder.getOrderNumber(),  
+        Order eOrder =orders.editOrder(editOrder.getOrderNumber(),  
                 new Person(name.getText(), 
                     new Address(contry.getText(), region.getText(), street.getText(), house.getText(), flat.getText()),
                         phoneNumber.getText()),
                         numberFormat.parse(disconte.getText()).byteValue(), orderManager.getOrderItems()
         );
-        mainController.writeOrder();
+        mainController.writeOrder(null, null, eOrder);
         
     }
 }

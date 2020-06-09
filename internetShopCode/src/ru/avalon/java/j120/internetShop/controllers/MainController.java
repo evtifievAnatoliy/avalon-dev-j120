@@ -17,6 +17,7 @@ import ru.avalon.java.j120.internetShop.configuration.Configuration;
 import ru.avalon.java.j120.internetShop.controllers.rwfiles.*;
 import ru.avalon.java.j120.internetShop.controllers.sql.*;
 import ru.avalon.java.j120.internetShop.models.Item;
+import ru.avalon.java.j120.internetShop.models.Order;
 import ru.avalon.java.j120.internetShop.models.OrderPosition;
 
 /**
@@ -84,8 +85,8 @@ public class MainController{
         itemsReaderWriter.writeItems(stockItems.getItemsAsList(), newItem, updateItems);
     }
     
-    public void writeOrder() throws IOException{
-        orderReaderWriter.writeOrders(orders.getOrders());
+    public void writeOrder(Order newOrder, Order delOrder, Order updateOrder) throws IOException{
+        orderReaderWriter.writeOrders(orders.getOrders(), newOrder, delOrder, updateOrder);
     }
     
     public void writeCustomers() throws IOException{

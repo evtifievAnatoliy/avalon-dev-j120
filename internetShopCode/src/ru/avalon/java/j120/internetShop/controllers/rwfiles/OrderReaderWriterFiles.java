@@ -30,7 +30,7 @@ public class OrderReaderWriterFiles implements AbstractOrderReaderWriter{
     
     
     // метод записи в файл. На входе путь записи и  коллекция Товаров
-    public void writeOrders(ArrayList<Order> orders) throws IOException{
+    public void writeOrders(ArrayList<Order> orders, Order newOrder, Order delOrder, Order updateOrder) throws IOException{
         	
         if (orders !=null) // проверяем на наличие элементов в коллекции
         { 

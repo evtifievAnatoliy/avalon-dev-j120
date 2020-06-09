@@ -29,7 +29,7 @@ public interface AbstractOrderReaderWriter {
     
     
     // метод записи в файл. На входе путь записи и  коллекция Товаров
-    public void writeOrders(ArrayList<Order> orders) throws IOException;
+    public void writeOrders(ArrayList<Order> orders, Order newOrder, Order delOrder, Order updateOrder) throws IOException;
         	
     
     // метод чтения из файла. На входе путь записи и  коллекция Товаров

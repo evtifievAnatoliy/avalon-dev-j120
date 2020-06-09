@@ -27,7 +27,7 @@ public class Orders {
     }
     
      // метод добавление нового заказа
-    public void addOrder(Person contactPerson, byte disconte, StatusOfOrder statusOrder, OrderManager orderManager){
+    public Order addOrder(Person contactPerson, byte disconte, StatusOfOrder statusOrder, OrderManager orderManager){
         
         if(orderManager.getOrderItems().size() == 0)
             throw new IllegalArgumentException("Error. В заказе нет ни одного товара.");
@@ -36,11 +36,14 @@ public class Orders {
                 
         String numberOfOrder = String.valueOf(localTime.getYear()) + String.valueOf(localTime.getMonthValue()) + String.valueOf(localTime.getDayOfMonth()
             + String.valueOf(localTime.getHour()) + String.valueOf(localTime.getMinute()) + String.valueOf(localTime.getSecond()));
-        this.orders.add(new Order(numberOfOrder, localTime.now(), contactPerson, disconte, statusOrder, orderManager));
+        Order newOrder = new Order(numberOfOrder, localTime.now(), contactPerson, disconte, statusOrder, orderManager);
+        this.orders.add(newOrder);
+        return newOrder;
+        
     }
     
      // метод изменения заказа
-    public void editOrder(String orderNumber, Person contactPerson, byte disconte,  ArrayList<OrderPosition> orderItems){
+    public Order editOrder(String orderNumber, Person contactPerson, byte disconte,  ArrayList<OrderPosition> orderItems){
                 
         if(orderItems.size() == 0)
             throw new IllegalArgumentException("Error. В заказе нет ни одного товара.");
@@ -52,14 +55,16 @@ public class Orders {
                     order.setDisconte(disconte);
                     order.setOrderItems(orderItems);
                     order.setStatusOfOrder(StatusOfOrder.ГОТОВИТСЯ);
+                
+                    return order;
                 }
             }
-     
+            return null;
               
     }
 
     // метод изменения статуса заказа
-    public void setStatusOfOrder(String orderNumber, StatusOfOrder statusOrder, MainController mainController) throws IOException{
+    public Order setStatusOfOrder(String orderNumber, StatusOfOrder statusOrder, MainController mainController) throws IOException{
                 
         for (Order order: this.orders){
             if (order.getOrderNumber().equals(orderNumber))
@@ -70,13 +75,14 @@ public class Orders {
                         mainController.writeItems(null, order.getOrderManager().getItems());
                     }
                     order.setStatusOfOrder(statusOrder);
+                    return order;
                 }
                 else
                     throw new IllegalArgumentException("Error. Изменить заказ можно только со статусом " + StatusOfOrder.ГОТОВИТСЯ +
                     "\nУ изменяемого заказа статус: " + order.getStatusOfOrder());
             }
         }
-        
+        return null;
                 
     }
     

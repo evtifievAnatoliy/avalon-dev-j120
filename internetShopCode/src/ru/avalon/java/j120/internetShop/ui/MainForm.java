@@ -125,7 +125,7 @@ public class MainForm extends JFrame{
                                     
                 
                 
-                    mainController.writeOrder();
+                    mainController.writeOrder(null, orders.getOrders().get(listOrders.getSelectedIndex()), null);
                 }
                 catch(Exception ex){
                     if (ex.getMessage().equals("-1"))

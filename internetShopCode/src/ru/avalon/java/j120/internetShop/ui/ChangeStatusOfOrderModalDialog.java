@@ -36,14 +36,14 @@ public class ChangeStatusOfOrderModalDialog extends AbstractModalDialog{
     }
     
     public void setStatusOrder(String numberOfOrder) throws IOException{
-        mainController.getOrders().setStatusOfOrder(numberOfOrder, (StatusOfOrder) statusOfOrder.getSelectedItem(),  mainController);
+        Order editOrder = mainController.getOrders().setStatusOfOrder(numberOfOrder, (StatusOfOrder) statusOfOrder.getSelectedItem(),  mainController);
         /*if(statusOfOrder.getSelectedItem() == StatusOfOrder.ОТГРУЖЕН){
             mainController.getStockItems().reduceTheStockBalance(mainController.getOrders().getOrder(numberOfOrder).getOrderItems());
            
         
         }*/
         
-        mainController.writeOrder();
+        mainController.writeOrder(null, null, editOrder);
         
     }
 }
