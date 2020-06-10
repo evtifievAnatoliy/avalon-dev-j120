@@ -29,6 +29,8 @@ public class Order implements Serializable{
     private OrderManager orderManager;
     //private ArrayList<OrderPosition> orderItems; // товары в заказе
 
+    
+
     public Order(String orderNumber, LocalDate localDate, Person contactPerson, byte disconte, StatusOfOrder statusOfOrder, OrderManager orderManager) {
         this.ORDER_NUMBER = orderNumber;
         this.DATE_THE_WAS_GREATED = localDate;
@@ -67,7 +69,11 @@ public class Order implements Serializable{
     public ArrayList<OrderPosition> getOrderItems() {
         return orderManager.getOrderItems();
     }
-
+    
+    public void setOrderManager(OrderManager orderManager) {
+        this.orderManager = orderManager;
+    }
+    
     public void setContactPerson(Person contactPerson) {
         if (this.statusOfOrder == StatusOfOrder.ГОТОВИТСЯ){
             this.contactPerson = contactPerson;

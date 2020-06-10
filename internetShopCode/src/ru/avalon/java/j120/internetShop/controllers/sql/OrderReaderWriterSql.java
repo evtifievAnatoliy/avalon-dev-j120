@@ -50,9 +50,109 @@ public class OrderReaderWriterSql implements AbstractOrderReaderWriter{
                 Configuration.getInstance().getProperty("user.Db"),
                 Configuration.getInstance().getProperty("password.Db"))){
             
-            if (newOrder != null){
+            if (newOrder != null)
+                addNewOrderToSqlBase(connection, newOrder);
+            
+            if (delOrder != null)
+                delOrderFromSqlBase(connection, delOrder);
+            
+            
+            /*
+            if (updateItems != null){
+                for(Item i : updateItems){
+                    String report = "UPDATE ITEMS SET NAME = ?, COLOR = ?, PRICE = ?, STOCK_BALANCE = ? WHERE ARTICLE = ?";
+                    try(PreparedStatement predStat = connection.prepareStatement(report)){
+                        predStat.setObject(1, i.getName());
+                        predStat.setObject(2, i.getColor());
+                        predStat.setObject(3, i.getPrice());
+                        predStat.setObject(4, i.getStockBalance());
+                        predStat.setObject(5, i.getArticle());
+                        predStat.execute();
+                    }
+                }
+            }*/
+        }
+        catch(SQLException ex){
+            throw new IllegalArgumentException("Error. Записать заказы не удалось!!!\n" + ex.getMessage());
+        }    
+    }
+    
+    // метод чтения из базы данных коллекции Заказов
+    public ArrayList<Order> readOrders() throws IOException, ClassNotFoundException{
                 
-                final int adreesId = findLastId (connection, "ADDRESSES") + 1;
+        try(Connection connection = DriverManager.getConnection(Configuration.getInstance().getProperty("url.Db"), 
+                    Configuration.getInstance().getProperty("user.Db"),
+                    Configuration.getInstance().getProperty("password.Db"))){
+            
+            try(Statement st = connection.createStatement()){
+                final String report = "SELECT * FROM ORDERS ord " +
+                        "inner join PERSONS per on ord.CONTACT_PERSON = per.PERSON_ID " +
+                        "inner join ADDRESSES adr on per.ADDRESS_TO_DELIVERY = adr.ADDRESS_ID";
+                try (ResultSet rs = st.executeQuery(report)){
+                    // создаем коллекцию заказов
+                    ArrayList<Order> orders = new ArrayList<Order>();
+                    while (rs.next()) {
+                        // пробуем создать объект заказ и добавить его в коллекцию
+                        // заказ создается без товаров
+                        Order order = new Order(rs.getString("ORDER_NUMBER"), rs.getDate("DATE_THE_ORDER_WAS_GREATED").toLocalDate(), 
+                                new Person(rs.getString("PERSON_NAME"),
+                                    new Address(rs.getString("CONTRY"), rs.getString("REGION"), rs.getString("STREET"), rs.getString("HOUSE"), 
+                                            rs.getString("FLAT")),
+                                rs.getString("PHONE_NUMBER")),
+                                rs.getByte("DISCONTE"), 
+                                StatusOfOrder.ГОТОВИТСЯ/*rs.getString("STATUS_OF_ORDER")*/, 
+                                        null);
+                        orders.add(order);
+                    }
+                    // добавляем товары в заказы
+                    for (Order order: orders){
+                        
+                        String reportOrderPositions = "SELECT * FROM ORDER_POSITIONS ordPos " +
+                            " inner join ITEMS item on ordPos.ITEM_ID = item.ARTICLE" +
+                            " where  ordPos.ORDER_ID = '" + order.getOrderNumber() + "'";
+                        OrderManager orderManager = null;
+                        try (ResultSet rsOrderPositions = st.executeQuery(reportOrderPositions)){
+                            ArrayList<OrderPosition> orderItems = new ArrayList<OrderPosition>();
+                            while (rsOrderPositions.next()){
+                                OrderPosition Item = new OrderPosition(
+                                        new Item(rsOrderPositions.getString("ARTICLE"), rsOrderPositions.getString("NAME"), 
+                                                rsOrderPositions.getString("COLOR"), rsOrderPositions.getInt("PRICE"),
+                                                rsOrderPositions.getInt("STOCK_BALANCE")), 
+                                        rsOrderPositions.getInt("NUMBER_OF_ITEMS"), 
+                                        rsOrderPositions.getByte("DISCONTE"));
+                                orderItems.add(Item);
+                            }
+                            orderManager = new OrderManager(orderItems);
+                            order.setOrderManager(orderManager);
+                        }
+                    }
+                                       
+                    return orders;
+                }
+            }
+            
+        }   
+        catch(SQLException ex){
+            throw new IllegalArgumentException("Error. Прочитать заказы не удалось!!!\n" + ex.getMessage());
+        } 
+    }
+    
+    
+    private int findLastId (Connection connection, String nameOfTheBase) throws SQLException{
+        try (Statement st = connection.createStatement()){
+                    String query = "select * from " + nameOfTheBase;
+                    try(ResultSet rs = st.executeQuery(query)){
+                        int i = 0;
+                        while(rs.next()){
+                            i = rs.getInt(1);
+                        }
+                        return i;
+                    }
+                }
+    } 
+    
+    private void addNewOrderToSqlBase(Connection connection, Order newOrder) throws SQLException{
+        final int adreesId = findLastId (connection, "ADDRESSES") + 1;
                 final String reportAddress = "INSERT INTO ADDRESSES (ADDRESS_ID, CONTRY, REGION, STREET, HOUSE, FLAT) VALUES (?, ?, ?, ?, ?, ?)";
                 try(PreparedStatement predStat = connection.prepareStatement(reportAddress)){
                     predStat.setObject(1, adreesId);
@@ -97,76 +197,44 @@ public class OrderReaderWriterSql implements AbstractOrderReaderWriter{
                     }
                       
                 }
-                
-            
-            }/*
-            if (updateItems != null){
-                for(Item i : updateItems){
-                    String report = "UPDATE ITEMS SET NAME = ?, COLOR = ?, PRICE = ?, STOCK_BALANCE = ? WHERE ARTICLE = ?";
-                    try(PreparedStatement predStat = connection.prepareStatement(report)){
-                        predStat.setObject(1, i.getName());
-                        predStat.setObject(2, i.getColor());
-                        predStat.setObject(3, i.getPrice());
-                        predStat.setObject(4, i.getStockBalance());
-                        predStat.setObject(5, i.getArticle());
-                        predStat.execute();
-                    }
-                }
-            }*/
-        }
-        catch(SQLException ex){
-            throw new IllegalArgumentException("Error. Записать заказы не удалось!!!\n" + ex.getMessage());
-        }    
-    }
     
-    // метод чтения из базы данных коллекции Товаров
-    public ArrayList<Order> readOrders() throws IOException, ClassNotFoundException{
-                
-        try(Connection connection = DriverManager.getConnection(Configuration.getInstance().getProperty("url.Db"), 
-                    Configuration.getInstance().getProperty("user.Db"),
-                    Configuration.getInstance().getProperty("password.Db"))){
-            
-            try(Statement st = connection.createStatement()){
-                final String report = "SELECT * FROM ORDERS ord " +
+    }
+    private void delOrderFromSqlBase(Connection connection, Order delOrder) throws SQLException{
+        
+        
+        try(Statement st = connection.createStatement()){
+            final String reportOrderPosition = "DELETE FROM ORDER_POSITIONS WHERE ORDER_ID = '"
+                                            + delOrder.getOrderNumber() + "'";
+            st.executeUpdate(reportOrderPosition);
+        
+            final String reportSelectOrder = "SELECT * FROM ORDERS ord " +
                         "inner join PERSONS per on ord.CONTACT_PERSON = per.PERSON_ID " +
-                        "inner join ADDRESSES adr on per.ADDRESS_TO_DELIVERY = adr.ADDRESS_ID";
-                try (ResultSet rs = st.executeQuery(report)){
-                    // создаем коллекцию товаров
-                    ArrayList<Order> orders = new ArrayList<Order>();
-                    while (rs.next()) {
-                        // пробуем создать объект товар и добавить его в коллекцию
-                        Order order = new Order(rs.getString("ORDER_NUMBER"), rs.getDate("DATE_THE_ORDER_WAS_GREATED").toLocalDate(), 
-                                new Person(rs.getString("PERSON_NAME"),
-                                    new Address(rs.getString("CONTRY"), rs.getString("REGION"), rs.getString("STREET"), rs.getString("HOUSE"), 
-                                            rs.getString("FLAT")),
-                                rs.getString("PHONE_NUMBER")),
-                                rs.getByte("DISCONTE"), 
-                                StatusOfOrder.ГОТОВИТСЯ/*rs.getString("STATUS_OF_ORDER")*/, 
-                                        null);
-                        
-                        orders.add(order);
-                    }
-                    return orders;
+                        "inner join ADDRESSES adr on per.ADDRESS_TO_DELIVERY = adr.ADDRESS_ID " +
+                        "WHERE ord.ORDER_NUMBER = '" + delOrder.getOrderNumber() + "'";
+            int addressId = 0;
+            int personId = 0;
+            try (ResultSet rs = st.executeQuery(reportSelectOrder)){
+                while(rs.next()){
+                    addressId = rs.getInt("ADDRESS_ID");
+                    personId = rs.getInt("PERSON_ID");
                 }
             }
             
-        }   
-        catch(SQLException ex){
-            throw new IllegalArgumentException("Error. Прочитать заказы не удалось!!!\n" + ex.getMessage());
-        } 
+            final String reportOrder = "DELETE FROM ORDERS WHERE ORDER_NUMBER = '"
+                                            + delOrder.getOrderNumber() + "'";
+            st.executeUpdate(reportOrder);
+            
+            final String reportPerson = "DELETE FROM PERSONS WHERE PERSON_ID = "
+                                            + personId;
+            st.executeUpdate(reportPerson);
+            
+            final String reportAdress = "DELETE FROM ADDRESSES WHERE ADDRESS_ID = "
+                                            + addressId;
+            st.executeUpdate(reportAdress);
+            
+        }
+         
+               
     }
     
-    
-    private int findLastId (Connection connection, String nameOfTheBase) throws SQLException{
-        try (Statement st = connection.createStatement()){
-                    String query = "select * from " + nameOfTheBase;
-                    try(ResultSet rs = st.executeQuery(query)){
-                        int i = 0;
-                        while(rs.next()){
-                            i = rs.getInt(1);
-                        }
-                        return i;
-                    }
-                }
-    } 
 }

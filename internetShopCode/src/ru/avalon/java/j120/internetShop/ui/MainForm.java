@@ -112,8 +112,11 @@ public class MainForm extends JFrame{
             confirmationModalDialog.setVisible(true);
             if (confirmationModalDialog.isSuccess()){
                 try{
+                    
                     String numberOfSelectedOrder = orders.getOrders().get(listOrders.getSelectedIndex()).getOrderNumber();
-                    orders.removeOrder(listOrders.getSelectedIndex());
+                    mainController.writeOrder(null, 
+                            orders.removeOrder(listOrders.getSelectedIndex()), null);
+                
                     JOptionPane.showMessageDialog(this, 
                        "Заказ: " + numberOfSelectedOrder  + 
                            "\n удален.",

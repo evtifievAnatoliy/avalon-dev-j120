@@ -87,15 +87,18 @@ public class Orders {
     }
     
     // метод удаления заказа
-    public void removeOrder(int number){
+    public Order removeOrder(int number){
                 
-              
-        if (orders.get(number).getStatusOfOrder() == StatusOfOrder.ГОТОВИТСЯ)
+        Order order = null;
+        
+        if (orders.get(number).getStatusOfOrder() == StatusOfOrder.ГОТОВИТСЯ){
+            order = orders.get(number);
             orders.remove(number);
-         
-        else 
+            return order; 
+        }
+        else {
             throw new IllegalArgumentException("Error. Удалить заказ с № " + orders.get(number).getOrderNumber() + " не получилось.\nУдалить заказ можно только со статусом ГОТОВИТСЯ.");
-     
+        }
       
     }
     

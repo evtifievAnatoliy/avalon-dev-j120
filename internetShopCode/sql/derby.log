@@ -1,14 +1,21 @@
-Tue Jun 09 13:07:43 GMT+03:00 2020 : Сетевой сервер Apache Derby Network Server - 10.10.2.0 - (1582446) запущен и готов принимать соединения на порту 1527 на {3} 
+Wed Jun 10 17:32:20 GMT+03:00 2020 : Сетевой сервер Apache Derby Network Server - 10.10.2.0 - (1582446) запущен и готов принимать соединения на порту 1527 на {3} 
 ----------------------------------------------------------------
-Tue Jun 09 13:07:44 GMT+03:00 2020:
- Производится загрузка Derby версии The Apache Software Foundation - Apache Derby - 10.10.2.0 - (1582446): экземпляр a816c00e-0172-988c-cc88-ffffaf6b05bb
-в каталоге базы данных D:\Java\avalon-dev-j120\internetShopCode\sql\base_java_db sun.misc.Launcher$AppClassLoader@6f94fa3e 
+Wed Jun 10 17:32:21 GMT+03:00 2020:
+ Производится загрузка Derby версии The Apache Software Foundation - Apache Derby - 10.10.2.0 - (1582446): экземпляр a816c00e-0172-9ea5-6b35-000037f39490
+в каталоге базы данных D:\Толик учеба\Java\avalon-dev-j120\internetShopCode\sql\base_java_db sun.misc.Launcher$AppClassLoader@6f94fa3e 
 
 java.vendor=Oracle Corporation
 java.runtime.version=1.8.0_111-b14
-user.dir=D:\Java\glassfish-4.1.1\glassfish4\javadb
+user.dir=D:\Толик учеба\Java\glassfish4\javadb
 os.name=Windows 7
 os.arch=amd64
 os.version=6.1
-derby.system.home=D:\Java\avalon-dev-j120\internetShopCode\sql
+derby.system.home=D:\Толик учеба\Java\avalon-dev-j120\internetShopCode\sql
 Запущен загрузчик классов базы данных - derby.database.classpath=''
+----------------------------------------------------------------
+Wed Jun 10 17:33:20 GMT+03:00 2020:
+Завершается работа экземпляра a816c00e-0172-9ea5-6b35-000037f39490
+Wed Jun 10 17:33:20 GMT+03:00 2020 Thread[DRDAConnThread_2,5,main] (DATABASE = base_java_db), (DRDAID = {2}), База данных 'base_java_db' завершила работу.
+----------------------------------------------------------------
+Wed Jun 10 17:34:08 GMT+03:00 2020: Shutting down Derby engine
+----------------------------------------------------------------
