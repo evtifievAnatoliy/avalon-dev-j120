@@ -86,7 +86,7 @@ public class AddNewItemModalDialog extends AbstractModalDialog{
         
     }
     
-    public Item addNewItem() throws ParseException{
+    public Item getNewItem() throws ParseException{
         
         item = new Item(article.getText(), 
             name.getText(), 

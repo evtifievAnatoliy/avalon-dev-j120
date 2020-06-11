@@ -24,18 +24,20 @@ public class CustomersManager {
     }
     
     // метод добавление нового клиента в базу клиентов
-    public void addCustomer(Person customer){
+    public Person addCustomer(Person customer){
+        Person newCustomer = null;
         if(this.customers != null)
         {
             for (Person p: customers) // проверка наличия такого клиента по номеру телефона 
                 if(p.getPhoneNumber().equals(customer.getPhoneNumber()))
-                    return;
+                    return null;
                     //throw new IllegalArgumentException("Error. Не удалось добавить заказчика в базу клиентов. Заказчик с телефоном: " + customer.getPhoneNumber() + " уже есть в базе. ");
         }
         if (this.customers == null) //проверка на нулевое значение
             this.customers = new ArrayList<Person>();
         
         this.customers.add(customer);
+        return customer;
     }
 
     public ArrayList<Person> getCustomersAsList() {

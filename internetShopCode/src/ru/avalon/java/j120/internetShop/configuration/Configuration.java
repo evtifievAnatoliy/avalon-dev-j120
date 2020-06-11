@@ -49,6 +49,12 @@ public class Configuration {
     public String getProperty(String path){
         return properties.getProperty(path);
     }
-    
+    public boolean isProperty(String path){
+        String str = properties.getProperty(path, "Error");
+        if (str == "Error")
+            return false;
+        else
+            return true;
+    }
     
 }

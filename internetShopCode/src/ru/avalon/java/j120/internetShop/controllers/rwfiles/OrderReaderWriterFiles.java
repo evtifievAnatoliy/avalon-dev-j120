@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ru.avalon.java.j120.internetShop.controllers;
+package ru.avalon.java.j120.internetShop.controllers.rwfiles;
 import java.io.File;
 import ru.avalon.java.j120.internetShop.models.*;
 
@@ -17,6 +17,7 @@ import java.io.IOException;
 
 import java.util.ArrayList;
 import ru.avalon.java.j120.internetShop.configuration.Configuration;
+import ru.avalon.java.j120.internetShop.controllers.AbstractOrderReaderWriter;
 
 
 /**
@@ -25,11 +26,11 @@ import ru.avalon.java.j120.internetShop.configuration.Configuration;
  */
 // класс который работает с записью и чтением каталогов заказов из файла
 
-public class OrderReaderWriter {
+public class OrderReaderWriterFiles implements AbstractOrderReaderWriter{
     
     
     // метод записи в файл. На входе путь записи и  коллекция Товаров
-    public void writeOrders(ArrayList<Order> orders) throws IOException{
+    public void writeOrders(ArrayList<Order> orders, Order newOrder, Order delOrder, Order updateOrder) throws IOException{
         	
         if (orders !=null) // проверяем на наличие элементов в коллекции
         { 

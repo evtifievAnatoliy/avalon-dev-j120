@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.*;
 import javax.swing.*;
@@ -54,7 +55,7 @@ public class MainForm extends JFrame{
     private JTable orderPositionTable;
             
     
-    public MainForm() throws IOException, ClassNotFoundException, ParseException {
+    public MainForm() throws IOException, ClassNotFoundException, ParseException, SQLException {
         
         super("InternetShop"); //название формы
         setBounds(300, 200, 1100, 800);
@@ -111,8 +112,11 @@ public class MainForm extends JFrame{
             confirmationModalDialog.setVisible(true);
             if (confirmationModalDialog.isSuccess()){
                 try{
+                    
                     String numberOfSelectedOrder = orders.getOrders().get(listOrders.getSelectedIndex()).getOrderNumber();
-                    orders.removeOrder(listOrders.getSelectedIndex());
+                    mainController.writeOrder(null, 
+                            orders.removeOrder(listOrders.getSelectedIndex()), null);
+                
                     JOptionPane.showMessageDialog(this, 
                        "Заказ: " + numberOfSelectedOrder  + 
                            "\n удален.",
@@ -124,7 +128,7 @@ public class MainForm extends JFrame{
                                     
                 
                 
-                    mainController.writeOrder();
+                    mainController.writeOrder(null, orders.getOrders().get(listOrders.getSelectedIndex()), null);
                 }
                 catch(Exception ex){
                     if (ex.getMessage().equals("-1"))
@@ -352,7 +356,7 @@ public class MainForm extends JFrame{
         if(ndx >= 0)
         {
             orderNumber.setText(this.orders.getOrders().get(ndx).getOrderNumber()); 
-            dateTheOrderWasGreated.setText(this.orders.getOrders().get(ndx).getDateTheOrderWasGreated().toLocalDate().toString());
+            dateTheOrderWasGreated.setText(this.orders.getOrders().get(ndx).getDateTheOrderWasGreated().toString());
             name.setText(this.orders.getOrders().get(ndx).getContactPerson().getName());;  
             phoneNumber.setText(this.orders.getOrders().get(ndx).getContactPerson().getPhoneNumber());;
             contry.setText(this.orders.getOrders().get(ndx).getContactPerson().getAdressToDelivery().getContry());;

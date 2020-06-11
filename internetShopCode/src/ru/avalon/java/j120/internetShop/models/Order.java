@@ -10,6 +10,7 @@ import ru.avalon.java.j120.internetShop.commons.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.io.Serializable;
+import java.time.LocalDate;
 import ru.avalon.java.j120.internetShop.controllers.OrderManager;
 
 /**
@@ -20,7 +21,7 @@ import ru.avalon.java.j120.internetShop.controllers.OrderManager;
 public class Order implements Serializable{
     
     private final String ORDER_NUMBER; //порядковый номер заказа
-    private final LocalDateTime DATE_THE_WAS_GREATED; // текущая дата
+    private final LocalDate DATE_THE_WAS_GREATED; // текущая дата
     private Person contactPerson; // данные клиента
     private byte disconte; // скидка клиента
     private StatusOfOrder statusOfOrder; // статус заказа
@@ -28,9 +29,11 @@ public class Order implements Serializable{
     private OrderManager orderManager;
     //private ArrayList<OrderPosition> orderItems; // товары в заказе
 
-    public Order(String orderNumber, LocalDateTime localDateTime, Person contactPerson, byte disconte, StatusOfOrder statusOfOrder, OrderManager orderManager) {
+    
+
+    public Order(String orderNumber, LocalDate localDate, Person contactPerson, byte disconte, StatusOfOrder statusOfOrder, OrderManager orderManager) {
         this.ORDER_NUMBER = orderNumber;
-        this.DATE_THE_WAS_GREATED = localDateTime;
+        this.DATE_THE_WAS_GREATED = localDate;
         this.contactPerson = contactPerson;
         this.disconte = disconte;
         this.statusOfOrder = statusOfOrder;
@@ -47,7 +50,7 @@ public class Order implements Serializable{
         return ORDER_NUMBER;
     }
 
-    public LocalDateTime getDateTheOrderWasGreated() {
+    public LocalDate getDateTheOrderWasGreated() {
         return DATE_THE_WAS_GREATED;
     }
 
@@ -66,7 +69,11 @@ public class Order implements Serializable{
     public ArrayList<OrderPosition> getOrderItems() {
         return orderManager.getOrderItems();
     }
-
+    
+    public void setOrderManager(OrderManager orderManager) {
+        this.orderManager = orderManager;
+    }
+    
     public void setContactPerson(Person contactPerson) {
         if (this.statusOfOrder == StatusOfOrder.ГОТОВИТСЯ){
             this.contactPerson = contactPerson;
