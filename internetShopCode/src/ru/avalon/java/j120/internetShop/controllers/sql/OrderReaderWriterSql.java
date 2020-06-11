@@ -270,13 +270,13 @@ public class OrderReaderWriterSql implements AbstractOrderReaderWriter{
                         predStat.execute();
                     }
             
-            final String reportOrderPositionToDel = "DELETE FROM ORDER_POSITIONS WHERE ORDER_ID = '"
+            final String reportDelOrderPositions = "DELETE FROM ORDER_POSITIONS WHERE ORDER_ID = '"
                                             + updateOrder.getOrderNumber() + "'";
-            st.executeUpdate(reportOrderPositionToDel);
+            st.executeUpdate(reportDelOrderPositions);
             
             for(OrderPosition orderPosition : updateOrder.getOrderManager().getOrderItems()){
-                    String reportOrderPosition = "INSERT INTO ORDER_POSITIONS (ORDER_ID, ITEM_ID, NUMBER_OF_ITEMS, AMOUNT_OF_ITEMS, DISCONTE) VALUES (?, ?, ?, ?, ?)";
-                    try(PreparedStatement predStat = connection.prepareStatement(reportOrderPosition)){
+                    String reportAddOrderPosition = "INSERT INTO ORDER_POSITIONS (ORDER_ID, ITEM_ID, NUMBER_OF_ITEMS, AMOUNT_OF_ITEMS, DISCONTE) VALUES (?, ?, ?, ?, ?)";
+                    try(PreparedStatement predStat = connection.prepareStatement(reportAddOrderPosition)){
                         predStat.setObject(1, updateOrder.getOrderNumber());
                         predStat.setObject(2, orderPosition.getItem().getArticle());
                         predStat.setObject(3, orderPosition.getNumberOfItems());
