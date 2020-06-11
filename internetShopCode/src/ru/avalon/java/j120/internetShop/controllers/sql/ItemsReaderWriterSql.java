@@ -36,44 +36,46 @@ import ru.avalon.java.j120.internetShop.models.OrderPosition;
 
 public class ItemsReaderWriterSql implements AbstractItemsReaderWriter{
     
+    private Object monitorWriteItems = new Object();
+    private Object monitorReadItems = new Object();
                
     // метод записи в файл. На входе путь записи и  коллекция Товаров
     public void writeItems(ArrayList<Item> items, Item newItem, ArrayList<Item> updateItems) throws IOException{
         	
-        try(Connection connection = DriverManager.getConnection(Configuration.getInstance().getProperty("url.Db"), 
+        synchronized(monitorWriteItems){
+            try(Connection connection = DriverManager.getConnection(Configuration.getInstance().getProperty("url.Db"), 
                     Configuration.getInstance().getProperty("user.Db"),
                     Configuration.getInstance().getProperty("password.Db"))){
             
-            if (newItem != null){
-                String report = "INSERT INTO ITEMS (ARTICLE, NAME, COLOR, PRICE, STOCK_BALANCE) VALUES (?, ?, ?, ?, ?)";
-                try(PreparedStatement predStat = connection.prepareStatement(report)){
-                    predStat.setObject(1, newItem.getArticle());
-                    predStat.setObject(2, newItem.getName());
-                    predStat.setObject(3, newItem.getColor());
-                    predStat.setObject(4, newItem.getPrice());
-                    predStat.setObject(5, newItem.getStockBalance());
-                    predStat.execute();
-                }
-            
-            }
-            if (updateItems != null){
-                for(Item i : updateItems){
-                    String report = "UPDATE ITEMS SET NAME = ?, COLOR = ?, PRICE = ?, STOCK_BALANCE = ? WHERE ARTICLE = ?";
+                if (newItem != null){
+                    String report = "INSERT INTO ITEMS (ARTICLE, NAME, COLOR, PRICE, STOCK_BALANCE) VALUES (?, ?, ?, ?, ?)";
                     try(PreparedStatement predStat = connection.prepareStatement(report)){
-                        predStat.setObject(1, i.getName());
-                        predStat.setObject(2, i.getColor());
-                        predStat.setObject(3, i.getPrice());
-                        predStat.setObject(4, i.getStockBalance());
-                        predStat.setObject(5, i.getArticle());
+                        predStat.setObject(1, newItem.getArticle());
+                        predStat.setObject(2, newItem.getName());
+                        predStat.setObject(3, newItem.getColor());
+                        predStat.setObject(4, newItem.getPrice());
+                        predStat.setObject(5, newItem.getStockBalance());
                         predStat.execute();
                     }
                 }
-            }
-                
-        }
+                if (updateItems != null){
+                    for(Item i : updateItems){
+                        String report = "UPDATE ITEMS SET NAME = ?, COLOR = ?, PRICE = ?, STOCK_BALANCE = ? WHERE ARTICLE = ?";
+                        try(PreparedStatement predStat = connection.prepareStatement(report)){
+                            predStat.setObject(1, i.getName());
+                            predStat.setObject(2, i.getColor());
+                            predStat.setObject(3, i.getPrice());
+                            predStat.setObject(4, i.getStockBalance());
+                            predStat.setObject(5, i.getArticle());
+                            predStat.execute();
+                        }
+                    }
+                }
+           }
         
-        catch(SQLException ex){
-            throw new IllegalArgumentException("Error. Записать товары не удалось!!!\n" + ex.getMessage());
+            catch(SQLException ex){
+                throw new IllegalArgumentException("Error. Записать товары не удалось!!!\n" + ex.getMessage());
+            }
         }
     }
     
@@ -82,29 +84,31 @@ public class ItemsReaderWriterSql implements AbstractItemsReaderWriter{
     
     public ArrayList<Item> readItems() throws IOException, ParseException{
         
-        // создаем коллекцию товаров
-        try(Connection connection = DriverManager.getConnection(Configuration.getInstance().getProperty("url.Db"), 
+        synchronized(monitorReadItems){
+            // создаем коллекцию товаров
+            try(Connection connection = DriverManager.getConnection(Configuration.getInstance().getProperty("url.Db"), 
                     Configuration.getInstance().getProperty("user.Db"),
                     Configuration.getInstance().getProperty("password.Db"))){
-            try(Statement st = connection.createStatement()){
-                final String report = "SELECT * FROM ITEMS";
-                try (ResultSet rs = st.executeQuery(report)){
-                    // создаем коллекцию товаров
-                    ArrayList<Item> items = new ArrayList<Item>();
-                    while (rs.next()) {
-                        // пробуем создать объект товар и добавить его в коллекцию
-                        Item item = new Item(rs.getString("ARTICLE"), rs.getString("NAME"), rs.getString("COLOR"), 
+                try(Statement st = connection.createStatement()){
+                    final String report = "SELECT * FROM ITEMS";
+                    try (ResultSet rs = st.executeQuery(report)){
+                        // создаем коллекцию товаров
+                        ArrayList<Item> items = new ArrayList<Item>();
+                        while (rs.next()) {
+                            // пробуем создать объект товар и добавить его в коллекцию
+                            Item item = new Item(rs.getString("ARTICLE"), rs.getString("NAME"), rs.getString("COLOR"), 
                                 rs.getInt("PRICE"), rs.getInt("STOCK_BALANCE"));
-                        items.add(item);
+                            items.add(item);
+                        }
+                        return items;
                     }
-                    return items;
                 }
-            }
             
-        }      
+            }      
         
-        catch(SQLException ex){
-            throw new IllegalArgumentException("Error. Прочитать товары не удалось!!!\n" + ex.getMessage());
+            catch(SQLException ex){
+                throw new IllegalArgumentException("Error. Прочитать товары не удалось!!!\n" + ex.getMessage());
+            }
         }
     }
 }

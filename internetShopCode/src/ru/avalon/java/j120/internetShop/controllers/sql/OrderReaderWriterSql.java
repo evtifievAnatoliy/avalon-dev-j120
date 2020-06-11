@@ -40,50 +40,54 @@ import ru.avalon.java.j120.internetShop.controllers.OrderManager;
 
 public class OrderReaderWriterSql implements AbstractOrderReaderWriter{
     
+    private Object monitorWriteOrders = new Object();
+    private Object monitorReadOrders = new Object();
     
     // метод записи в файл. На входе путь записи и  коллекция Товаров
     public void writeOrders(ArrayList<Order> orders, Order newOrder, Order delOrder, Order updateOrder) throws IOException{
         	
-        
-    // пробуем записатьколлекцию заказов 
-        try(Connection connection = DriverManager.getConnection(Configuration.getInstance().getProperty("url.Db"), 
+        synchronized(monitorWriteOrders){
+        // пробуем записатьколлекцию заказов 
+            try(Connection connection = DriverManager.getConnection(Configuration.getInstance().getProperty("url.Db"), 
                 Configuration.getInstance().getProperty("user.Db"),
                 Configuration.getInstance().getProperty("password.Db"))){
             
-            if (newOrder != null)
-                addNewOrderToSqlBase(connection, newOrder);
+                if (newOrder != null)
+                    addNewOrderToSqlBase(connection, newOrder);
             
-            if (delOrder != null)
-                delOrderFromSqlBase(connection, delOrder);
+                if (delOrder != null)
+                    delOrderFromSqlBase(connection, delOrder);
                         
-            if (updateOrder != null){
-                updateOrderInSqlBase(connection, updateOrder);
+                if (updateOrder != null){
+                    updateOrderInSqlBase(connection, updateOrder);
                                 
+                }
             }
+            catch(SQLException ex){
+                throw new IllegalArgumentException("Error. Записать заказы не удалось!!!\n" + ex.getMessage());
+            }    
         }
-        catch(SQLException ex){
-            throw new IllegalArgumentException("Error. Записать заказы не удалось!!!\n" + ex.getMessage());
-        }    
     }
     
     // метод чтения из базы данных коллекции Заказов
     public ArrayList<Order> readOrders() throws IOException, ClassNotFoundException{
-                
-        try(Connection connection = DriverManager.getConnection(Configuration.getInstance().getProperty("url.Db"), 
+           
+        synchronized(monitorReadOrders){
+            try(Connection connection = DriverManager.getConnection(Configuration.getInstance().getProperty("url.Db"), 
                     Configuration.getInstance().getProperty("user.Db"),
                     Configuration.getInstance().getProperty("password.Db"))){
             
-            try(Statement st = connection.createStatement()){
-                final String report = "SELECT * FROM ORDERS ord " +
+                try(Statement st = connection.createStatement()){
+                    final String report = "SELECT * FROM ORDERS ord " +
                         "inner join PERSONS per on ord.CONTACT_PERSON = per.PERSON_ID " +
                         "inner join ADDRESSES adr on per.ADDRESS_TO_DELIVERY = adr.ADDRESS_ID";
-                try (ResultSet rs = st.executeQuery(report)){
-                    // создаем коллекцию заказов
-                    ArrayList<Order> orders = new ArrayList<Order>();
-                    while (rs.next()) {
-                        // пробуем создать объект заказ и добавить его в коллекцию
-                        // заказ создается без товаров
-                        Order order = new Order(rs.getString("ORDER_NUMBER"), rs.getDate("DATE_THE_ORDER_WAS_GREATED").toLocalDate(), 
+                    try (ResultSet rs = st.executeQuery(report)){
+                        // создаем коллекцию заказов
+                        ArrayList<Order> orders = new ArrayList<Order>();
+                        while (rs.next()) {
+                            // пробуем создать объект заказ и добавить его в коллекцию
+                            // заказ создается без товаров
+                            Order order = new Order(rs.getString("ORDER_NUMBER"), rs.getDate("DATE_THE_ORDER_WAS_GREATED").toLocalDate(), 
                                 new Person(rs.getString("PERSON_NAME"),
                                     new Address(rs.getString("CONTRY"), rs.getString("REGION"), rs.getString("STREET"), rs.getString("HOUSE"), 
                                             rs.getString("FLAT")),
@@ -91,39 +95,38 @@ public class OrderReaderWriterSql implements AbstractOrderReaderWriter{
                                 rs.getByte("DISCONTE"), 
                                 StatusOfOrder.valueOf(rs.getString("STATUS_OF_ORDER")), 
                                         null);
-                        orders.add(order);
-                    }
-                    // добавляем товары в заказы
-                    for (Order order: orders){
+                            orders.add(order);
+                        }
+                        // добавляем товары в заказы
+                        for (Order order: orders){
                         
-                        String reportOrderPositions = "SELECT * FROM ORDER_POSITIONS ordPos " +
-                            " inner join ITEMS item on ordPos.ITEM_ID = item.ARTICLE" +
-                            " where  ordPos.ORDER_ID = '" + order.getOrderNumber() + "'";
-                        OrderManager orderManager = null;
-                        try (ResultSet rsOrderPositions = st.executeQuery(reportOrderPositions)){
-                            ArrayList<OrderPosition> orderItems = new ArrayList<OrderPosition>();
-                            while (rsOrderPositions.next()){
-                                OrderPosition Item = new OrderPosition(
+                            String reportOrderPositions = "SELECT * FROM ORDER_POSITIONS ordPos " +
+                                " inner join ITEMS item on ordPos.ITEM_ID = item.ARTICLE" +
+                                " where  ordPos.ORDER_ID = '" + order.getOrderNumber() + "'";
+                            OrderManager orderManager = null;
+                            try (ResultSet rsOrderPositions = st.executeQuery(reportOrderPositions)){
+                                ArrayList<OrderPosition> orderItems = new ArrayList<OrderPosition>();
+                                while (rsOrderPositions.next()){
+                                    OrderPosition Item = new OrderPosition(
                                         new Item(rsOrderPositions.getString("ARTICLE"), rsOrderPositions.getString("NAME"), 
                                                 rsOrderPositions.getString("COLOR"), rsOrderPositions.getInt("PRICE"),
                                                 rsOrderPositions.getInt("STOCK_BALANCE")), 
                                         rsOrderPositions.getInt("NUMBER_OF_ITEMS"), 
                                         rsOrderPositions.getByte("DISCONTE"));
-                                orderItems.add(Item);
+                                    orderItems.add(Item);
+                                }
+                                orderManager = new OrderManager(orderItems);
+                                order.setOrderManager(orderManager);
+                                }
                             }
-                            orderManager = new OrderManager(orderItems);
-                            order.setOrderManager(orderManager);
+                            return orders;
                         }
-                    }
-                                       
-                    return orders;
                 }
-            }
-            
-        }   
-        catch(SQLException ex){
-            throw new IllegalArgumentException("Error. Прочитать заказы не удалось!!!\n" + ex.getMessage());
-        } 
+            }   
+            catch(SQLException ex){
+                throw new IllegalArgumentException("Error. Прочитать заказы не удалось!!!\n" + ex.getMessage());
+            } 
+        }
     }
     
     
