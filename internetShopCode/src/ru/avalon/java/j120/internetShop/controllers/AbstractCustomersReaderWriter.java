@@ -30,7 +30,7 @@ public interface AbstractCustomersReaderWriter {
     
         
 // метод записи в файл. На входе путь записи и  коллекция Заказчиков
-    public void writeCustomers(ArrayList<Person> customers) throws IOException;
+    public void writeCustomers(ArrayList<Person> customers, Person newCustomer) throws IOException;
         	
     
     // метод чтения из файла. На входе путь записи коллекции Заказчиков

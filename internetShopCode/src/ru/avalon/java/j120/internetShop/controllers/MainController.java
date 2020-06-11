@@ -13,6 +13,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
+import ru.avalon.java.j120.internetShop.commons.Person;
 import ru.avalon.java.j120.internetShop.configuration.Configuration;
 import ru.avalon.java.j120.internetShop.controllers.rwfiles.*;
 import ru.avalon.java.j120.internetShop.controllers.sql.*;
@@ -89,8 +90,8 @@ public class MainController{
         orderReaderWriter.writeOrders(orders.getOrders(), newOrder, delOrder, updateOrder);
     }
     
-    public void writeCustomers() throws IOException{
-        customersReaderWriter.writeCustomers(customersManager.getCustomersAsList());
+    public void writeCustomers(Person newCustomer) throws IOException{
+        customersReaderWriter.writeCustomers(customersManager.getCustomersAsList(), newCustomer);
     }
     
     

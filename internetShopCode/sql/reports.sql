@@ -38,13 +38,25 @@ CREATE TABLE PERSONS(
     address_to_delivery int not null references ADDRESSES (address_id)
 );
 
+CREATE TABLE CUSTOMERS(
+    person_name varchar(100) not null,
+    phone_number varchar(100) not null,
+    contry varchar(100) not null,
+    region varchar(150) not null,
+    street varchar(100),
+    house varchar(20) not null,
+    flat varchar(20)
+);
+
 insert INTO ITEMS (ARTICLE, NAME, COLOR, PRICE, STOCK_BALANCE) VALUES ('1', '1', '1', 1800, 1);
+INSERT INTO CUSTOMERS (PERSON_NAME, PHONE_NUMBER, CONTRY, REGION, STREET, HOUSE, FLAT) VALUES (?, ?, ?, ?, ?, ?, ?);
 
 SELECT * FROM ITEMS;  
 SELECT * FROM PERSONS;  
 SELECT * FROM ADDRESSES;  
 SELECT * FROM ORDERS;  
 SELECT * FROM ORDER_POSITIONS;
+SELECT * FROM CUSTOMERS;
 
 DELETE FROM ADDRESSES WHERE ADDRESS_ID = 2;
 DELETE FROM ORDER_POSITIONS WHERE ORDER_ID = '202061017430';

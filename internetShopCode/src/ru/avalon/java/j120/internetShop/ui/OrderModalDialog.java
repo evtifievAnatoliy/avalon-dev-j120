@@ -246,9 +246,8 @@ public class OrderModalDialog extends AbstractModalDialog{
         Order newOrder = orders.addOrder(newPerson,
                         numberFormat.parse(disconte.getText()).byteValue(), StatusOfOrder.ГОТОВИТСЯ, this.orderManager);
         mainController.writeOrder(newOrder, null, null);
-                    
-        customersManager.addCustomer(newPerson);
-        mainController.writeCustomers();
+        
+        mainController.writeCustomers(customersManager.addCustomer(newPerson));
    
     }
     

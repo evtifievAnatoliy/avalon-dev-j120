@@ -31,7 +31,7 @@ public class CustomersReaderWriterFiles implements AbstractCustomersReaderWriter
     
         
 // метод записи в файл. На входе путь записи и  коллекция Заказчиков
-    public void writeCustomers(ArrayList<Person> customers) throws IOException{
+    public void writeCustomers(ArrayList<Person> customers, Person newCustomer) throws IOException{
         	
         if (customers !=null) // проверяем на наличие элементов в коллекции
         { 
