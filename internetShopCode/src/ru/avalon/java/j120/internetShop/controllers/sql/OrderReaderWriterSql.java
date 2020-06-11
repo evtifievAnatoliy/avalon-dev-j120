@@ -55,22 +55,11 @@ public class OrderReaderWriterSql implements AbstractOrderReaderWriter{
             
             if (delOrder != null)
                 delOrderFromSqlBase(connection, delOrder);
-            
-            
-            /*
-            if (updateItems != null){
-                for(Item i : updateItems){
-                    String report = "UPDATE ITEMS SET NAME = ?, COLOR = ?, PRICE = ?, STOCK_BALANCE = ? WHERE ARTICLE = ?";
-                    try(PreparedStatement predStat = connection.prepareStatement(report)){
-                        predStat.setObject(1, i.getName());
-                        predStat.setObject(2, i.getColor());
-                        predStat.setObject(3, i.getPrice());
-                        predStat.setObject(4, i.getStockBalance());
-                        predStat.setObject(5, i.getArticle());
-                        predStat.execute();
-                    }
-                }
-            }*/
+                        
+            if (updateOrder != null){
+                updateOrderInSqlBase(connection, updateOrder);
+                                
+            }
         }
         catch(SQLException ex){
             throw new IllegalArgumentException("Error. Записать заказы не удалось!!!\n" + ex.getMessage());
@@ -100,7 +89,7 @@ public class OrderReaderWriterSql implements AbstractOrderReaderWriter{
                                             rs.getString("FLAT")),
                                 rs.getString("PHONE_NUMBER")),
                                 rs.getByte("DISCONTE"), 
-                                StatusOfOrder.ГОТОВИТСЯ/*rs.getString("STATUS_OF_ORDER")*/, 
+                                StatusOfOrder.valueOf(rs.getString("STATUS_OF_ORDER")), 
                                         null);
                         orders.add(order);
                     }
@@ -237,4 +226,67 @@ public class OrderReaderWriterSql implements AbstractOrderReaderWriter{
                
     }
     
+    private void updateOrderInSqlBase(Connection connection, Order updateOrder) throws SQLException{
+                
+        try(Statement st = connection.createStatement()){
+            
+            final String reportSelectOrder = "SELECT * FROM ORDERS ord " +
+                        "inner join PERSONS per on ord.CONTACT_PERSON = per.PERSON_ID " +
+                        "inner join ADDRESSES adr on per.ADDRESS_TO_DELIVERY = adr.ADDRESS_ID " +
+                        "WHERE ord.ORDER_NUMBER = '" + updateOrder.getOrderNumber() + "'";
+            int addressId = 0;
+            int personId = 0;
+            try (ResultSet rs = st.executeQuery(reportSelectOrder)){
+                while(rs.next()){
+                    addressId = rs.getInt("ADDRESS_ID");
+                    personId = rs.getInt("PERSON_ID");
+                }
+            }
+            
+            final String reportOrder = "UPDATE ORDERS SET DISCONTE = ?, STATUS_OF_ORDER = ? WHERE ORDER_NUMBER = ?";
+            try(PreparedStatement predStat = connection.prepareStatement(reportOrder)){
+                        predStat.setObject(1, (int)updateOrder.getDisconte());
+                        predStat.setObject(2, updateOrder.getStatusOfOrder().name());
+                        predStat.setObject(3, updateOrder.getOrderNumber());
+                        predStat.execute();
+                    }
+            
+            final String reportPerson = "UPDATE PERSONS SET PERSON_NAME = ?, PHONE_NUMBER = ? WHERE PERSON_ID = ?";
+            try(PreparedStatement predStat = connection.prepareStatement(reportPerson)){
+                        predStat.setObject(1, updateOrder.getContactPerson().getName());
+                        predStat.setObject(2, updateOrder.getContactPerson().getPhoneNumber());
+                        predStat.setObject(3, personId);
+                        predStat.execute();
+                    }
+            
+            final String reportAdress = "UPDATE ADDRESSES SET CONTRY = ?, REGION = ?, STREET = ?, HOUSE = ?, FLAT = ? WHERE ADDRESS_ID = ?";
+            try(PreparedStatement predStat = connection.prepareStatement(reportAdress)){
+                        predStat.setObject(1, updateOrder.getContactPerson().getAdressToDelivery().getContry());
+                        predStat.setObject(2, updateOrder.getContactPerson().getAdressToDelivery().getRegion());
+                        predStat.setObject(3, updateOrder.getContactPerson().getAdressToDelivery().getStreet());
+                        predStat.setObject(4, updateOrder.getContactPerson().getAdressToDelivery().getHouse());
+                        predStat.setObject(5, updateOrder.getContactPerson().getAdressToDelivery().getFlat());
+                        predStat.setObject(6, addressId);
+                        predStat.execute();
+                    }
+            
+            final String reportOrderPositionToDel = "DELETE FROM ORDER_POSITIONS WHERE ORDER_ID = '"
+                                            + updateOrder.getOrderNumber() + "'";
+            st.executeUpdate(reportOrderPositionToDel);
+            
+            for(OrderPosition orderPosition : updateOrder.getOrderManager().getOrderItems()){
+                    String reportOrderPosition = "INSERT INTO ORDER_POSITIONS (ORDER_ID, ITEM_ID, NUMBER_OF_ITEMS, AMOUNT_OF_ITEMS, DISCONTE) VALUES (?, ?, ?, ?, ?)";
+                    try(PreparedStatement predStat = connection.prepareStatement(reportOrderPosition)){
+                        predStat.setObject(1, updateOrder.getOrderNumber());
+                        predStat.setObject(2, orderPosition.getItem().getArticle());
+                        predStat.setObject(3, orderPosition.getNumberOfItems());
+                        predStat.setObject(4, orderPosition.getAmountOfItems());
+                        predStat.setObject(5, updateOrder.getDisconte());
+                        predStat.execute();
+                    }
+                      
+                }
+            
+        }          
+    }
 }
