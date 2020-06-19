@@ -39,53 +39,55 @@ import ru.avalon.java.j120.internetShop.models.OrderPosition;
 // класс который работает с записью и чтением базы клиентов SQL
 public class CustomersReaderWriterSql implements AbstractCustomersReaderWriter{
     
-        
+    private Object monitorWriteCustomers = new Object();
+    private Object monitorReadCustomers = new Object();
+    
 // метод записи в SQL. Используется только объект Person newCustomer
     public void writeCustomers(ArrayList<Person> customers, Person newCustomer) throws IOException{
         	
-        try(Connection connection = DriverManager.getConnection(Configuration.getInstance().getProperty("url.Db"), 
+        synchronized(monitorWriteCustomers){
+            try(Connection connection = DriverManager.getConnection(Configuration.getInstance().getProperty("url.Db"), 
                 Configuration.getInstance().getProperty("user.Db"),
                 Configuration.getInstance().getProperty("password.Db"))){
             
-            if (newCustomer != null)
-                addNewCustomerToSqlBase(connection, newCustomer);
+                if (newCustomer != null)
+                    addNewCustomerToSqlBase(connection, newCustomer);
             
-            
+            }
+            catch(SQLException ex){
+                throw new IllegalArgumentException("Error. Записать нового клиента в базу клиентов не удалось!!!\n" + ex.getMessage());
+            }    
         }
-        catch(SQLException ex){
-            throw new IllegalArgumentException("Error. Записать нового клиента в базу клиентов не удалось!!!\n" + ex.getMessage());
-        }    
     }
     
     // метод чтения из SQL. 
     public ArrayList<Person> readCustomers() throws IOException, ClassNotFoundException{
                 
+        synchronized(monitorReadCustomers){
         
-        
-        try(Connection connection = DriverManager.getConnection(Configuration.getInstance().getProperty("url.Db"), 
+            try(Connection connection = DriverManager.getConnection(Configuration.getInstance().getProperty("url.Db"), 
                     Configuration.getInstance().getProperty("user.Db"),
                     Configuration.getInstance().getProperty("password.Db"))){
-            try(Statement st = connection.createStatement()){
-                final String report = "SELECT * FROM CUSTOMERS";
-                try (ResultSet rs = st.executeQuery(report)){
-                    // создаем коллекцию товаров
-                    ArrayList<Person> customers = new ArrayList<Person>();
-                    while (rs.next()) {
-                        // пробуем создать объект товар и добавить его в коллекцию
-                        Person customer = new Person(rs.getString("PERSON_NAME"), 
+                try(Statement st = connection.createStatement()){
+                    final String report = "SELECT * FROM CUSTOMERS";
+                    try (ResultSet rs = st.executeQuery(report)){
+                        // создаем коллекцию товаров
+                        ArrayList<Person> customers = new ArrayList<Person>();
+                        while (rs.next()) {
+                            // пробуем создать объект товар и добавить его в коллекцию
+                            Person customer = new Person(rs.getString("PERSON_NAME"), 
                                 new Address(rs.getString("CONTRY"), rs.getString("REGION"), rs.getString("STREET"), 
                                         rs.getString("HOUSE"), rs.getString("FLAT")), 
                                 rs.getString("PHONE_NUMBER"));
-                        customers.add(customer);
+                            customers.add(customer);
+                        }
+                        return customers;
                     }
-                    return customers;
                 }
+            }      
+            catch(SQLException ex){
+                throw new IllegalArgumentException("Error. Прочитать товары не удалось!!!\n" + ex.getMessage());
             }
-            
-        }      
-        
-        catch(SQLException ex){
-            throw new IllegalArgumentException("Error. Прочитать товары не удалось!!!\n" + ex.getMessage());
         }
     }
     

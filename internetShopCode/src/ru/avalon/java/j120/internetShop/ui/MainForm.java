@@ -64,7 +64,7 @@ public class MainForm extends JFrame{
         
         
         //общий объект работающий с товарами и заказами
-        mainController = new MainController();
+        mainController = MainController.getInstance();
         orders = mainController.getOrders();
         
         

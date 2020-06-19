@@ -13,6 +13,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import ru.avalon.java.j120.internetShop.commons.Person;
 import ru.avalon.java.j120.internetShop.configuration.Configuration;
 import ru.avalon.java.j120.internetShop.controllers.rwfiles.*;
@@ -30,10 +32,11 @@ import ru.avalon.java.j120.internetShop.models.OrderPosition;
 
 public class MainController{
     
+    private static MainController instance;
+    
     private StockItems stockItems;
     private Orders orders;
     private CustomersManager customersManager;
-    
         
     AbstractItemsReaderWriter itemsReaderWriter;
     AbstractOrderReaderWriter orderReaderWriter;
@@ -68,6 +71,25 @@ public class MainController{
             customersManager = new CustomersManager(customersReaderWriter.readCustomers());
         }
     }
+
+    public static MainController getInstance() {
+        if (instance == null){
+            try {
+                instance = new MainController();
+            } catch (IOException ex) {
+                Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ParseException ex) {
+                Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return instance;
+    }
+    
+    
 
     public StockItems getStockItems() {
         return stockItems;
