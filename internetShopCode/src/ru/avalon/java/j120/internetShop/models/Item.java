@@ -59,7 +59,7 @@ public class Item implements Serializable{
     }
     
     // метод уменьшения остатка
-    public void reduceTheStockBalance(int numberReduce) {
+    public synchronized void reduceTheStockBalance(int numberReduce) {
         if (this.stockBalance >= numberReduce)
             this.stockBalance = this.stockBalance - numberReduce;
         else
